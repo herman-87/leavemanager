@@ -1,7 +1,7 @@
 package com.app.leavemanager.controller;
 
-import com.app.leavemanager.dto.EmployeeDTO;
-import com.app.leavemanager.service.EmployeeService;
+import com.app.leavemanager.dto.HolidayDTO;
+import com.app.leavemanager.service.HolidayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,33 +18,33 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/employee")
-public class EmployeeController {
+@RequestMapping("/holiday")
+public class HolidayController {
 
-    private final EmployeeService employeeService;
+    private final HolidayService holidayService;
 
     @PostMapping
-    public ResponseEntity<Integer> createEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
+    public ResponseEntity<Integer> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.createHoliday(holidayDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployee() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.getAllEmployee());
+    public ResponseEntity<List<HolidayDTO>> getAllHoliday() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHoliday());
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
+    public ResponseEntity<Void> updateHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
 
-        employeeService.updateEmployee(employeeDTO);
+        holidayService.updateHoliday(holidayDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
+    @DeleteMapping("/{holidayId}")
+    public ResponseEntity<Void> deleteHoliday(@PathVariable("holidayId") Integer holidayId) {
 
-        employeeService.deleteEmployee(employeeId);
+        holidayService.deleteHoliday(holidayId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

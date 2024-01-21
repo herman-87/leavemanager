@@ -46,6 +46,17 @@ public class EmployeeService {
 
     @Transactional
     public void updateEmployee(EmployeeDTO employeeDTO) {
-//        employeeRepository.findById(employeeDTO.getId()).orElseThrow(() -> new ReNF)
+        Employee employee = employeeRepository.findById(employeeDTO.getId())
+                .orElseThrow();
+        employee.update(
+                employeeDTO.getFirstname(),
+                employeeDTO.getLastname(),
+                employeeDTO.getDateOfBirth()
+        );
+    }
+
+    @Transactional
+    public void deleteEmployee(Integer employeeId) {
+        employeeRepository.deleteById(employeeId);
     }
 }

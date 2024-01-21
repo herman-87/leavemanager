@@ -33,4 +33,13 @@ public class Employee {
     private String lastname;
     @Column(name = "c_date_of_birth")
     private LocalDate dateOfBirth;
+
+    public void update(String firstname,
+                       String lastname,
+                       LocalDate dateOfBirth) {
+
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateOfBirth = dateOfBirth;
+    }
 }
