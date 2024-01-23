@@ -90,8 +90,18 @@ public class HolidayService {
     }
 
     @Transactional
-    public void publish(Integer holidayId) {
+    public void publishHoliday(Integer holidayId) {
         holidaySpringRepository.findById(holidayId)
                 .ifPresent(holiday -> holiday.publish(new DefaultHolidayRepository(holidaySpringRepository)));
+    }
+
+    public void unapprovedHoliday(Integer holidayId) {
+        holidaySpringRepository.findById(holidayId)
+                .ifPresent(holiday -> holiday.unapprovedHoliday(new DefaultHolidayRepository(holidaySpringRepository)));
+    }
+
+    public void unpublishedHoliday(Integer holidayId) {
+        holidaySpringRepository.findById(holidayId)
+                .ifPresent(holiday -> holiday.unpublished(new DefaultHolidayRepository(holidaySpringRepository)));
     }
 }

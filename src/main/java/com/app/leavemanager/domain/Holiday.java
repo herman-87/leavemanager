@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
@@ -96,6 +97,26 @@ public class Holiday {
             holidayRepository.save(this);
         } else {
             log.error("The publish is not possible");
+        }
+    }
+
+    public void unpublished(HolidayRepository holidayRepository) {
+
+        if(HolidayStatus.PUBLISH.equals(this.status)) {
+            this.status = HolidayStatus.DRAFT;
+            holidayRepository.save(this);
+        } else {
+            log.error("this unpublished is not possible");
+        }
+    }
+
+    public void unapprovedHoliday(HolidayRepository holidayRepository) {
+
+        if (HolidayStatus.APPROVED.equals(this.status)) {
+            this.status = HolidayStatus.PUBLISH;
+            holidayRepository.save(this);
+        } else {
+            log.error("This operation is not possible");
         }
     }
 }
