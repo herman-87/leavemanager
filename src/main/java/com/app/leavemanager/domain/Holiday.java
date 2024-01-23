@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Data
+@Slf4j
 public class Holiday {
 
     @Id
@@ -75,5 +77,15 @@ public class Holiday {
         this.title = title;
         this.description = description;
         holidayRepository.save(this);
+    }
+
+    public void approve(HolidayRepository holidayRepository) {
+
+        if (HolidayStatus.PUBLISH.equals(this.status)) {
+            this.status = HolidayStatus.APPROVED;
+            holidayRepository.save(this);
+        } else {
+            log.error("this improvement is not possible");
+        }
     }
 }

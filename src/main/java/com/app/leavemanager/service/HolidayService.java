@@ -39,6 +39,7 @@ public class HolidayService {
                                 .id(holiday.getId())
                                 .title(holiday.getTitle())
                                 .type(holiday.getType())
+                                .status(holiday.getStatus())
                                 .description(holiday.getDescription())
                                 .period(holiday.getPeriod())
                                 .createdAt(holiday.getCreatedAt())
@@ -76,8 +77,15 @@ public class HolidayService {
                         .description(holiday.getDescription())
                         .createdAt(holiday.getCreatedAt())
                         .period(holiday.getPeriod())
+                        .status(holiday.getStatus())
                         .build()
                 )
                 .orElseThrow();
+    }
+
+    @Transactional
+    public void approveHoliday(Integer holidayId) {
+        holidaySpringRepository.findById(holidayId)
+                .ifPresent(holiday -> holiday.approve(new DefaultHolidayRepository(holidaySpringRepository)));
     }
 }

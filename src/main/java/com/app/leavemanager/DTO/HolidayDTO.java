@@ -1,5 +1,6 @@
 package com.app.leavemanager.DTO;
 
+import com.app.leavemanager.domain.HolidayStatus;
 import com.app.leavemanager.domain.HolidayType;
 import com.app.leavemanager.domain.Period;
 import lombok.AllArgsConstructor;
@@ -22,4 +23,5 @@ public class HolidayDTO {
     private String description;
     private LocalDateTime createdAt;
     private Period period;
+    private HolidayStatus status;
 }
