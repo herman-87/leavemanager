@@ -60,4 +60,10 @@ public class HolidayController {
         holidayService.approveHoliday(holidayId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PutMapping("/publish/{holidayId}")
+    public ResponseEntity<Void> publishHoliday(@PathVariable("holidayId") Integer holidayId) {
+        holidayService.publish(holidayId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

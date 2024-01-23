@@ -88,4 +88,10 @@ public class HolidayService {
         holidaySpringRepository.findById(holidayId)
                 .ifPresent(holiday -> holiday.approve(new DefaultHolidayRepository(holidaySpringRepository)));
     }
+
+    @Transactional
+    public void publish(Integer holidayId) {
+        holidaySpringRepository.findById(holidayId)
+                .ifPresent(holiday -> holiday.publish(new DefaultHolidayRepository(holidaySpringRepository)));
+    }
 }

@@ -88,4 +88,14 @@ public class Holiday {
             log.error("this improvement is not possible");
         }
     }
+
+    public void publish(HolidayRepository holidayRepository) {
+
+        if (HolidayStatus.DRAFT.equals(this.status)) {
+            this.status = HolidayStatus.PUBLISH;
+            holidayRepository.save(this);
+        } else {
+            log.error("The publish is not possible");
+        }
+    }
 }
