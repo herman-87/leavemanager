@@ -35,6 +35,7 @@ public class EmployeeService {
                 .stream()
                 .map(employee ->
                         EmployeeDTO.builder()
+                                .id(employee.getId())
                                 .firstname(employee.getFirstname())
                                 .lastname(employee.getLastname())
                                 .dateOfBirth(employee.getDateOfBirth())
@@ -58,5 +59,17 @@ public class EmployeeService {
     @Transactional
     public void deleteEmployee(Integer employeeId) {
         employeeSpringRepository.deleteById(employeeId);
+    }
+
+    @Transactional
+    public EmployeeDTO getEmployeeById(Integer employeeId) {
+        return employeeSpringRepository.findById(employeeId)
+                .map(employee -> EmployeeDTO.builder()
+                        .id(employee.getId())
+                        .firstname(employee.getFirstname())
+                        .lastname(employee.getLastname())
+                        .dateOfBirth(employee.getDateOfBirth())
+                        .build())
+                .orElseThrow();
     }
 }

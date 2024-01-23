@@ -36,6 +36,7 @@ public class HolidayService {
                 .stream()
                 .map(holiday ->
                         HolidayDTO.builder()
+                                .id(holiday.getId())
                                 .title(holiday.getTitle())
                                 .type(holiday.getType())
                                 .description(holiday.getDescription())
@@ -69,6 +70,7 @@ public class HolidayService {
         return holidaySpringRepository.findById(holidayId)
                 .map(holiday -> HolidayDTO
                         .builder()
+                        .id(holiday.getId())
                         .type(holiday.getType())
                         .title(holiday.getTitle())
                         .description(holiday.getDescription())

@@ -34,6 +34,11 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.getAllEmployee());
     }
 
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("employeeId") Integer employeeId) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.getEmployeeById(employeeId));
+    }
+
     @PutMapping("/{employeeId}")
     public ResponseEntity<Void> updateEmployee(@PathVariable("employeeId") Integer employeeId,
                                                @RequestBody(required = true) EmployeeDTO employeeDTO) {

@@ -59,6 +59,7 @@ public class Holiday {
                         .description(description)
                         .period(period)
                         .status(HolidayStatus.DRAFT)
+                        .createdAt(LocalDateTime.now())
                         .build()
         );
     }
