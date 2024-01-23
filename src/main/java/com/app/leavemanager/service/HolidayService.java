@@ -63,4 +63,19 @@ public class HolidayService {
     public void deleteHoliday(Integer employeeId) {
         holidaySpringRepository.deleteById(employeeId);
     }
+
+    @Transactional
+    public HolidayDTO getHolidayById(Integer holidayId) {
+        return holidaySpringRepository.findById(holidayId)
+                .map(holiday -> HolidayDTO
+                        .builder()
+                        .type(holiday.getType())
+                        .title(holiday.getTitle())
+                        .description(holiday.getDescription())
+                        .createdAt(holiday.getCreatedAt())
+                        .period(holiday.getPeriod())
+                        .build()
+                )
+                .orElseThrow();
+    }
 }

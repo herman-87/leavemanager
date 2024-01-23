@@ -34,6 +34,11 @@ public class HolidayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHoliday());
     }
 
+    @GetMapping("/{holidayId}")
+    public ResponseEntity<HolidayDTO> getHolidayById(@PathVariable("holidayId") Integer holidayId) {
+        return ResponseEntity.status(HttpStatus.OK).body(holidayService.getHolidayById(holidayId));
+    }
+
     @PutMapping("/{holidayId}")
     public ResponseEntity<Void> updateHoliday(@PathVariable("holidayId") Integer holidayId,
                                               @RequestBody(required = true) HolidayDTO holidayDTO) {
