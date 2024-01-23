@@ -1,5 +1,6 @@
 package com.app.leavemanager.domain;
 
+import com.app.leavemanager.DAO.EmployeeDAO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,12 +35,27 @@ public class Employee {
     @Column(name = "c_date_of_birth")
     private LocalDate dateOfBirth;
 
+    public static Employee create(String firstname,
+                                  String lastname,
+                                  LocalDate dateOfBirth,
+                                  EmployeeDAO employeeDAO) {
+        return employeeDAO.save(
+                Employee.builder()
+                        .firstname(firstname)
+                        .lastname(lastname)
+                        .dateOfBirth(dateOfBirth)
+                        .build()
+        );
+    }
+
     public void update(String firstname,
                        String lastname,
-                       LocalDate dateOfBirth) {
+                       LocalDate dateOfBirth,
+                       EmployeeDAO employeeDAO) {
 
         this.firstname = firstname;
         this.lastname = lastname;
         this.dateOfBirth = dateOfBirth;
+        employeeDAO.save(this);
     }
 }

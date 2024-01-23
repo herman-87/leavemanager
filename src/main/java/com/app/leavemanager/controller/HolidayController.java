@@ -1,6 +1,6 @@
 package com.app.leavemanager.controller;
 
-import com.app.leavemanager.dto.HolidayDTO;
+import com.app.leavemanager.DTO.HolidayDTO;
 import com.app.leavemanager.service.HolidayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,10 +34,11 @@ public class HolidayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHoliday());
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
+    @PutMapping("/{holidayId}")
+    public ResponseEntity<Void> updateHoliday(@PathVariable("holidayId") Integer holidayId,
+                                              @RequestBody(required = true) HolidayDTO holidayDTO) {
 
-        holidayService.updateHoliday(holidayDTO);
+        holidayService.updateHoliday(holidayId, holidayDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

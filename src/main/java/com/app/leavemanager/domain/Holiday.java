@@ -1,5 +1,7 @@
 package com.app.leavemanager.domain;
 
+import com.app.leavemanager.DAO.DefaultHolidayRepository;
+import com.app.leavemanager.DAO.HolidayRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -41,15 +43,36 @@ public class Holiday {
     private LocalDateTime createdAt;
     @Embedded
     private Period period;
+    @Enumerated(value = EnumType.STRING)
+    private HolidayStatus status;
+
+    public static Holiday create(String title,
+                                 HolidayType type,
+                                 String description,
+                                 Period period,
+                                 DefaultHolidayRepository defaultHolidayRepository) {
+
+        return defaultHolidayRepository.save(
+                Holiday.builder()
+                        .title(title)
+                        .type(type)
+                        .description(description)
+                        .period(period)
+                        .status(HolidayStatus.DRAFT)
+                        .build()
+        );
+    }
 
     public void update(HolidayType type,
                        String description,
                        String title,
-                       Period period) {
+                       Period period,
+                       HolidayRepository holidayRepository) {
 
         this.period = period;
         this.type = type;
         this.title = title;
         this.description = description;
+        holidayRepository.save(this);
     }
 }

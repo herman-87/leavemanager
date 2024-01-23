@@ -1,4 +1,4 @@
-package com.app.leavemanager.dto;
+package com.app.leavemanager.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

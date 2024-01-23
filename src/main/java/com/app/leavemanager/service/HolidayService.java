@@ -1,16 +1,14 @@
 package com.app.leavemanager.service;
 
-import com.app.leavemanager.domain.Employee;
+import com.app.leavemanager.DAO.DefaultHolidayRepository;
+import com.app.leavemanager.DTO.HolidayDTO;
 import com.app.leavemanager.domain.Holiday;
-import com.app.leavemanager.dto.EmployeeDTO;
-import com.app.leavemanager.dto.HolidayDTO;
-import com.app.leavemanager.repository.HolidayRepository;
+import com.app.leavemanager.repository.HolidaySpringRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -18,53 +16,51 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HolidayService {
 
-    private final HolidayRepository holidayRepository;
+    private final HolidaySpringRepository holidaySpringRepository;
 
     @Transactional
     public Integer createHoliday(HolidayDTO holidayDTO) {
 
-        Holiday holiday = Holiday.builder()
-                .title(holidayDTO.getTitle())
-                .type(holidayDTO.getType())
-                .description(holidayDTO.getDescription())
-                .period(holidayDTO.getPeriod())
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        return holidayRepository.saveAndFlush(holiday).getId();
+        return Holiday.create(
+                holidayDTO.getTitle(),
+                holidayDTO.getType(),
+                holidayDTO.getDescription(),
+                holidayDTO.getPeriod(),
+                new DefaultHolidayRepository(holidaySpringRepository)
+        ).getId();
     }
 
     @Transactional
     public List<HolidayDTO> getAllHoliday() {
-        return holidayRepository.findAll()
+        return holidaySpringRepository.findAll()
                 .stream()
                 .map(holiday ->
                         HolidayDTO.builder()
-                        .title(holiday.getTitle())
-                        .type(holiday.getType())
-                        .description(holiday.getDescription())
-                        .period(holiday.getPeriod())
-                        .createdAt(holiday.getCreatedAt())
-                        .build()
+                                .title(holiday.getTitle())
+                                .type(holiday.getType())
+                                .description(holiday.getDescription())
+                                .period(holiday.getPeriod())
+                                .createdAt(holiday.getCreatedAt())
+                                .build()
                 )
                 .toList();
     }
 
     @Transactional
-    public void updateHoliday(HolidayDTO holidayDTO) {
-        Holiday holiday = holidayRepository.findById(holidayDTO.getId())
-                .orElseThrow();
+    public void updateHoliday(Integer holidayId, HolidayDTO holidayDTO) {
+
+        Holiday holiday = holidaySpringRepository.findById(holidayId).orElseThrow();
         holiday.update(
                 holidayDTO.getType(),
                 holidayDTO.getDescription(),
                 holidayDTO.getTitle(),
-                holidayDTO.getPeriod()
+                holidayDTO.getPeriod(),
+                new DefaultHolidayRepository(holidaySpringRepository)
         );
-        holidayRepository.save(holiday);
     }
 
     @Transactional
     public void deleteHoliday(Integer employeeId) {
-        holidayRepository.deleteById(employeeId);
+        holidaySpringRepository.deleteById(employeeId);
     }
 }
