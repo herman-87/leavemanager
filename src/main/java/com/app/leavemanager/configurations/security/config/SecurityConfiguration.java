@@ -1,7 +1,8 @@
 package com.app.leavemanager.configurations.security.config;
 
-import com.app.leavemanager.configurations.security.service.LogoutService;
 import com.app.leavemanager.configurations.security.config.filter.JwtAuthenticationFilter;
+import com.app.leavemanager.configurations.security.service.LogoutService;
+import com.app.leavemanager.domain.employee.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +31,10 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/api/auth/**")
-                        .permitAll()
-                        .requestMatchers("/api/auth/**")
-                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/super-admin/admin/create"
+                        ).hasRole(Role.SUPER_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,7 +57,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/actuator/swagger-ui")
                 .requestMatchers(
                         HttpMethod.POST,
-                        "/super-admin/registration"
+                        "/super-admin/registration",
+                        "/api/auth/**"
                 );
     }
 }
