@@ -1,6 +1,6 @@
 package com.app.leavemanager.repository.dao;
 
-import com.app.leavemanager.domain.Holiday;
+import com.app.leavemanager.domain.holiday.Holiday;
 
 public interface HolidayRepository {
 

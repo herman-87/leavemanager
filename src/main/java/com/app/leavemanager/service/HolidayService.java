@@ -2,7 +2,7 @@ package com.app.leavemanager.service;
 
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.dto.HolidayDTO;
-import com.app.leavemanager.domain.Holiday;
+import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

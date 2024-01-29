@@ -1,6 +1,7 @@
 package com.app.leavemanager.api;
 
 import com.app.leavemanager.dto.EmployeeDTO;
+import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
