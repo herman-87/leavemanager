@@ -1,11 +1,11 @@
-package com.app.leavemanager.DAO;
+package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.Employee;
-import com.app.leavemanager.repository.EmployeeSpringRepository;
+import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DefaultEmployeeDAO implements EmployeeDAO {
+public class DefaultEmployeeRepository implements EmployeeRepository {
 
     private final EmployeeSpringRepository employeeSpringRepository;
 

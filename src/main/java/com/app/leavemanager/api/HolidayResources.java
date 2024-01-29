@@ -1,6 +1,6 @@
-package com.app.leavemanager.controller;
+package com.app.leavemanager.api;
 
-import com.app.leavemanager.DTO.HolidayDTO;
+import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.service.HolidayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/holiday")
-public class HolidayController {
+public class HolidayResources {
 
     private final HolidayService holidayService;
 

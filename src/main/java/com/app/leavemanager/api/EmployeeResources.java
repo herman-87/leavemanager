@@ -1,6 +1,6 @@
-package com.app.leavemanager.controller;
+package com.app.leavemanager.api;
 
-import com.app.leavemanager.DTO.EmployeeDTO;
+import com.app.leavemanager.dto.EmployeeDTO;
 import com.app.leavemanager.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/employee")
-public class EmployeeController {
+public class EmployeeResources {
 
     private final EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Integer> createEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeDTO));
+    public ResponseEntity<Long> createEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createEmployee(employeeDTO));
     }
 
     @GetMapping
@@ -35,12 +36,12 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("employeeId") Integer employeeId) {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getEmployeeById(employeeId));
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable("employeeId") Integer employeeId,
+    public ResponseEntity<Void> updateEmployee(@PathVariable("employeeId") Long employeeId,
                                                @RequestBody(required = true) EmployeeDTO employeeDTO) {
 
         employeeService.updateEmployee(employeeId, employeeDTO);
@@ -48,7 +49,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") Integer employeeId) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
 
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

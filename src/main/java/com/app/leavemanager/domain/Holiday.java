@@ -1,7 +1,7 @@
 package com.app.leavemanager.domain;
 
-import com.app.leavemanager.DAO.DefaultHolidayRepository;
-import com.app.leavemanager.DAO.HolidayRepository;
+import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
+import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -17,7 +17,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 

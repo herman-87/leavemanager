@@ -1,4 +1,4 @@
-package com.app.leavemanager.repository;
+package com.app.leavemanager.repository.spring;
 
 import com.app.leavemanager.domain.Holiday;
 import org.springframework.data.jpa.repository.JpaRepository;

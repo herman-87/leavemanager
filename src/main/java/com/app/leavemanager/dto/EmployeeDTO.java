@@ -1,4 +1,4 @@
-package com.app.leavemanager.DTO;
+package com.app.leavemanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,9 @@ import java.time.LocalDate;
 @Builder
 public class EmployeeDTO {
 
-    private Integer id;
+    private Long id;
+    private String email;
+    private String password;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;

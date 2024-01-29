@@ -1,7 +1,7 @@
-package com.app.leavemanager.DAO;
+package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.Employee;
 
-public interface EmployeeDAO {
+public interface EmployeeRepository {
     Employee save(Employee employee);
 }

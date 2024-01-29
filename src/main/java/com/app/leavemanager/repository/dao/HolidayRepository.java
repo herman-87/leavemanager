@@ -1,4 +1,4 @@
-package com.app.leavemanager.DAO;
+package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.Holiday;
 

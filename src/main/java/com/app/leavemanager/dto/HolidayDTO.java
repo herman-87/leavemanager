@@ -1,4 +1,4 @@
-package com.app.leavemanager.DTO;
+package com.app.leavemanager.dto;
 
 import com.app.leavemanager.domain.HolidayStatus;
 import com.app.leavemanager.domain.HolidayType;

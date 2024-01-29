@@ -1,7 +1,7 @@
-package com.app.leavemanager.DAO;
+package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.Holiday;
-import com.app.leavemanager.repository.HolidaySpringRepository;
+import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
