@@ -17,7 +17,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 
@@ -46,6 +45,9 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "c_created_by", referencedColumnName = "c_id")
     private Employee createdBy;
+    @Builder.Default
+    @Column(name = "c_activated")
+    private boolean isActivated = false;
 
     private static int numberOfEmailAddressGenerated = 1;
 
@@ -76,6 +78,7 @@ public class Employee {
                         .lastname(lastname)
                         .dateOfBirth(dateOfBirth)
                         .user(user)
+                        .isActivated(true)
                         .build()
         );
     }

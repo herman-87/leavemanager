@@ -75,9 +75,9 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+    public void updateEmployee(EmployeeDTO employeeDTO) {
 
-        Employee employee = employeeSpringRepository.findById(employeeId).orElseThrow();
+        Employee employee = employeeSpringRepository.findByUserEmail(getCurrentUsername()).orElseThrow();
         employee.update(
                 employeeDTO.getFirstname(),
                 employeeDTO.getLastname(),
@@ -171,7 +171,6 @@ public class EmployeeService {
                 )
                 .password(passwordEncoder.encode(defaultAdminPassword))
                 .role(role)
-                .isEnabled(false)
                 .build();
     }
 

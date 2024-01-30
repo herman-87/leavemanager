@@ -1,7 +1,6 @@
 package com.app.leavemanager.api;
 
 import com.app.leavemanager.dto.EmployeeDTO;
-import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,11 +40,9 @@ public class EmployeeResources {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getEmployeeById(employeeId));
     }
 
-    @PutMapping("/{employeeId}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable("employeeId") Long employeeId,
-                                               @RequestBody(required = true) EmployeeDTO employeeDTO) {
-
-        employeeService.updateEmployee(employeeId, employeeDTO);
+    @PutMapping
+    public ResponseEntity<Void> updateEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
+        employeeService.updateEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

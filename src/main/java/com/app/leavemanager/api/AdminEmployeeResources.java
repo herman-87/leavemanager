@@ -26,7 +26,7 @@ public class AdminEmployeeResources {
                 .body(employeeService.createSuperAdmin(employeeDTO));
     }
 
-    @PostMapping("/registration/admin")
+    @PostMapping("/registration")
     public ResponseEntity<Long> createAdmin(@RequestBody EmployeeDTO employeeDTO) {
 
         return ResponseEntity
