@@ -1,8 +1,7 @@
 package com.app.leavemanager.domain.employee;
 
-import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.domain.employee.user.Role;
 import com.app.leavemanager.domain.employee.user.User;
+import com.app.leavemanager.repository.dao.EmployeeRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 
@@ -42,16 +43,24 @@ public class Employee {
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "c_user", referencedColumnName = "c_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "c_created_by", referencedColumnName = "c_id")
+    private Employee createdBy;
+
+    private static int numberOfEmailAddressGenerated = 1;
+
 
     public static Employee create(String firstname,
                                   String lastname,
                                   LocalDate dateOfBirth,
-                                  EmployeeRepository employeeDAO) {
-        return employeeDAO.save(
+                                  User user,
+                                  EmployeeRepository employeeRepository) {
+        return employeeRepository.save(
                 Employee.builder()
                         .firstname(firstname)
                         .lastname(lastname)
                         .dateOfBirth(dateOfBirth)
+                        .user(user)
                         .build()
         );
     }
@@ -71,6 +80,18 @@ public class Employee {
         );
     }
 
+    public static String generatedEmail(String firstname, String lastname, String emailSuffix) {
+        String generatedEmail =
+                firstname
+                        .concat(".")
+                        .concat(lastname)
+                        .concat(String.valueOf(numberOfEmailAddressGenerated))
+                        .concat(emailSuffix)
+                        .replaceAll("\\s", "");
+        numberOfEmailAddressGenerated++;
+        return generatedEmail;
+    }
+
     public void update(String firstname,
                        String lastname,
                        LocalDate dateOfBirth,
@@ -85,5 +106,21 @@ public class Employee {
     public void setUser(User user, EmployeeRepository employeeRepository) {
         this.user = user;
         employeeRepository.save(this);
+    }
+
+    public Employee createEmployee(String firstname,
+                                   String lastname,
+                                   LocalDate dateOfBirth,
+                                   User user,
+                                   EmployeeRepository employeeRepository) {
+        return employeeRepository.save(
+                Employee.builder()
+                        .firstname(firstname)
+                        .lastname(lastname)
+                        .dateOfBirth(dateOfBirth)
+                        .user(user)
+                        .createdBy(this)
+                        .build()
+        );
     }
 }

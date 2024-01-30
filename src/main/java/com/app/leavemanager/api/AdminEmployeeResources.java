@@ -13,16 +13,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/super-admin")
+@RequestMapping("/admin")
 public class AdminEmployeeResources {
 
     private final EmployeeService employeeService;
 
-    @PostMapping("/registration")
+    @PostMapping("/registration/super-admin")
     public ResponseEntity<RegistrationEmployeeResponseDTO> createSuperAdmin(@RequestBody EmployeeDTO employeeDTO) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(employeeService.createSuperAdmin(employeeDTO));
+    }
+
+    @PostMapping("/registration/admin")
+    public ResponseEntity<Long> createAdmin(@RequestBody EmployeeDTO employeeDTO) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createAdmin(employeeDTO));
+    }
+
+    @PostMapping("/registration/employee")
+    public ResponseEntity<Long> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createEmployee(employeeDTO));
     }
 }

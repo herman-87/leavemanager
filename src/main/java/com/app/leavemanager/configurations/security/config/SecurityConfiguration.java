@@ -33,8 +33,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/super-admin/admin/create"
-                        ).hasRole(Role.SUPER_ADMIN.name())
+                                "/super-admin/admin"
+                        ).hasAuthority(Role.SUPER_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

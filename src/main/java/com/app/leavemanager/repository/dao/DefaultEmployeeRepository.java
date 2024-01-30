@@ -1,10 +1,12 @@
 package com.app.leavemanager.repository.dao;
 
-import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
-import com.app.leavemanager.domain.employee.user.Role;
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
+import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DefaultEmployeeRepository implements EmployeeRepository {
@@ -18,7 +20,12 @@ public class DefaultEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public boolean isUserExistsByRole(Role role) {
-        return userSpringRepository.existsByRole(Role.SUPER_ADMIN);
+    public boolean existsByRole(Role role) {
+        return employeeSpringRepository.existsByUserRole(role);
+    }
+
+    @Override
+    public Optional<Employee> findByUsername(String username) {
+        return employeeSpringRepository.findByUserEmail(username);
     }
 }

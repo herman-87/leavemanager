@@ -1,7 +1,7 @@
 package com.app.leavemanager.domain.employee.user;
 
 public enum Role {
-    USER,
+    EMPLOYEE,
     ADMIN,
     SUPER_ADMIN
 }

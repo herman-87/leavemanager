@@ -41,6 +41,9 @@ public class User implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+    @Builder.Default
+    @Column(name = "c_enabled")
+    private boolean isEnabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -74,6 +77,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }

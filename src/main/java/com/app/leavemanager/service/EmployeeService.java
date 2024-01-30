@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +33,17 @@ public class EmployeeService {
     private final TokenSpringRepository tokenSpringRepository;
     private final EmployeeRepository employeeRepository;
     private final UserSpringRepository userSpringRepository;
-    @Value("${api.admin.email}")
+    @Value("${api.super.admin.email}")
     private String adminEmail;
-    @Value("${api.admin.password}")
+    @Value("${api.super.admin.password}")
     private String adminPassword;
+    @Value("${api.default.admin.password}")
+    private String defaultAdminPassword;
+    @Value("${api.default.admin.email.suffix}")
+    private String emailSuffix;
 
-    @Transactional
-    public Long createEmployee(EmployeeDTO employeeDTO) {
-
-        return Employee.create(
-                employeeDTO.getFirstname(),
-                employeeDTO.getLastname(),
-                employeeDTO.getDateOfBirth(),
-                employeeRepository
-        ).getId();
+    private static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private void revokeAllUserTokens(User user) {
@@ -105,34 +103,6 @@ public class EmployeeService {
                 .orElseThrow();
     }
 
-    @Transactional
-    public RegistrationEmployeeResponseDTO createSuperAdmin(EmployeeDTO employeeDTO) {
-
-        if (employeeRepository.isUserExistsByRole(Role.SUPER_ADMIN)) {
-            throw new Error("Super admin is already created");
-        }
-        User user = User.builder()
-                .email(adminEmail)
-                .password(passwordEncoder.encode(adminPassword))
-                .role(Role.SUPER_ADMIN)
-                .build();
-        User savedUser = userSpringRepository.save(user);
-
-        String jwtToken = createUserToken(savedUser);
-        Employee employee = Employee.createSuperAdmin(
-                employeeDTO.getFirstname(),
-                employeeDTO.getLastname(),
-                employeeDTO.getDateOfBirth(),
-                user,
-                employeeRepository
-        );
-
-        return RegistrationEmployeeResponseDTO.builder()
-                .employeeId(employee.getId())
-                .token(jwtToken)
-                .build();
-    }
-
     private String createUserToken(User user) {
         String jwtToken = jwtService.generateToken(user);
         Token token = Token.builder()
@@ -145,5 +115,82 @@ public class EmployeeService {
         revokeAllUserTokens(user);
         tokenSpringRepository.save(token);
         return jwtToken;
+    }
+
+    @Transactional
+    public RegistrationEmployeeResponseDTO createSuperAdmin(EmployeeDTO employeeDTO) {
+
+        if (!employeeRepository.existsByRole(Role.SUPER_ADMIN)) {
+            User user = User.builder()
+                    .email(adminEmail)
+                    .password(passwordEncoder.encode(adminPassword))
+                    .role(Role.SUPER_ADMIN)
+                    .build();
+            User savedUser = userSpringRepository.save(user);
+
+            String jwtToken = createUserToken(savedUser);
+            Employee employee = Employee.createSuperAdmin(
+                    employeeDTO.getFirstname(),
+                    employeeDTO.getLastname(),
+                    employeeDTO.getDateOfBirth(),
+                    user,
+                    employeeRepository
+            );
+
+            return RegistrationEmployeeResponseDTO.builder()
+                    .employeeId(employee.getId())
+                    .token(jwtToken)
+                    .build();
+        } else {
+            throw new Error("Super admin is already created");
+        }
+    }
+
+    @Transactional
+    public Long createAdmin(EmployeeDTO employeeDTO) {
+
+        Employee admin = getEmployeeByUsername();
+        User user = createUser(employeeDTO, Role.ADMIN);
+        return admin.createEmployee(
+                employeeDTO.getFirstname(),
+                employeeDTO.getLastname(),
+                employeeDTO.getDateOfBirth(),
+                user,
+                employeeRepository
+        ).getId();
+    }
+
+    private User createUser(EmployeeDTO employeeDTO, Role role) {
+        return User.builder()
+                .email(
+                        Employee.generatedEmail(
+                                employeeDTO.getFirstname(),
+                                employeeDTO.getLastname(),
+                                emailSuffix
+                        )
+                )
+                .password(passwordEncoder.encode(defaultAdminPassword))
+                .role(role)
+                .isEnabled(false)
+                .build();
+    }
+
+    private Employee getEmployeeByUsername() {
+        return employeeRepository.findByUsername(getCurrentUsername())
+                .orElseThrow(() -> new Error("the current user is not present in database"));
+    }
+
+    @Transactional
+    public Long createEmployee(EmployeeDTO employeeDTO) {
+
+        Employee admin = getEmployeeByUsername();
+        User user = createUser(employeeDTO, Role.EMPLOYEE);
+        return admin.createEmployee(
+                employeeDTO.getFirstname(),
+                employeeDTO.getLastname(),
+                employeeDTO.getDateOfBirth(),
+                user,
+                employeeRepository
+        ).getId();
     }
 }
