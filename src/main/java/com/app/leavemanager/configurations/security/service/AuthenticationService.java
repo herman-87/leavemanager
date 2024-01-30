@@ -1,13 +1,12 @@
 package com.app.leavemanager.configurations.security.service;
 
+import com.app.leavemanager.configurations.security.model.AuthenticationRequest;
 import com.app.leavemanager.configurations.security.model.token.Token;
 import com.app.leavemanager.configurations.security.model.token.TokenType;
-import com.app.leavemanager.configurations.security.model.AuthenticationRequest;
-import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
-import com.app.leavemanager.domain.employee.user.Role;
-import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.configurations.security.repository.TokenSpringRepository;
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
+import com.app.leavemanager.domain.employee.user.User;
+import com.app.leavemanager.dto.TokenDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,7 +52,7 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public RegistrationEmployeeResponseDTO authenticate(AuthenticationRequest authenticationRequest) {
+    public TokenDTO authenticate(AuthenticationRequest authenticationRequest) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -66,9 +65,7 @@ public class AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
 
-        return RegistrationEmployeeResponseDTO.builder()
-                .token(jwtToken)
-                .build();
+        return new TokenDTO(jwtToken);
     }
 
     public Object getUsername() {

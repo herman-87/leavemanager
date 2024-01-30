@@ -1,8 +1,9 @@
 package com.app.leavemanager.configurations.security.api;
 
 import com.app.leavemanager.configurations.security.model.AuthenticationRequest;
+import com.app.leavemanager.configurations.security.model.token.Token;
 import com.app.leavemanager.configurations.security.service.AuthenticationService;
-import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
+import com.app.leavemanager.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<RegistrationEmployeeResponseDTO> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<TokenDTO> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 

@@ -32,13 +32,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
                         .requestMatchers(
-                                HttpMethod.POST,
-                                "/super-admin/admin"
-                        ).hasAuthority(Role.SUPER_ADMIN.name())
+                                HttpMethod.PUT,
+                                "/admin/registration"
+                        ).hasAnyRole(Role.SUPER_ADMIN.name())
                         .requestMatchers(
                                 HttpMethod.PUT,
-                                "/employee"
-                        ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name(), Role.EMPLOYEE.name())
+                                "/admin/registration/employee"
+                        ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -59,10 +59,10 @@ public class SecurityConfiguration {
                 .requestMatchers("/h2-console/**")
                 .requestMatchers("/actuator/health/**")
                 .requestMatchers("/actuator/swagger-ui")
+                .requestMatchers("/api/auth/authenticate")
                 .requestMatchers(
                         HttpMethod.POST,
-                        "/super-admin/registration",
-                        "/api/auth/**"
+                        "/admin/registration/super-admin"
                 );
     }
 }
