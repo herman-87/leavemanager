@@ -39,6 +39,10 @@ public class SecurityConfiguration {
                                 HttpMethod.PUT,
                                 "/admin/registration/employee"
                         ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/employee/validate"
+                        ).hasAnyRole(Role.ADMIN.name(), Role.EMPLOYEE.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

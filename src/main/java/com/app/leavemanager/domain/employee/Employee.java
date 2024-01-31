@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +48,7 @@ public class Employee {
     private Employee createdBy;
     @Builder.Default
     @Column(name = "c_activated")
-    private boolean isActivated = true;
+    private boolean isActivated = false;
 
     private static int numberOfEmailAddressGenerated = 1;
 
@@ -78,6 +79,7 @@ public class Employee {
                         .lastname(lastname)
                         .dateOfBirth(dateOfBirth)
                         .user(user)
+                        .isActivated(true)
                         .build()
         );
     }
@@ -130,5 +132,11 @@ public class Employee {
                         .createdBy(this)
                         .build()
         );
+    }
+
+    @Transactional
+    public void validate(EmployeeRepository employeeRepository) {
+        this.isActivated = true;
+        employeeRepository.save(this);
     }
 }

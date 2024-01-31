@@ -42,10 +42,6 @@ public class EmployeeService {
     @Value("${api.default.admin.email.suffix}")
     private String emailSuffix;
 
-    private static String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
     private void revokeAllUserTokens(User user) {
 
         List<Token> allValidTokensByUser = tokenSpringRepository.findAllValidTokensByUser(user.getId());
@@ -75,9 +71,9 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void updateEmployee(EmployeeDTO employeeDTO) {
+    public void updateEmployee(EmployeeDTO employeeDTO, String currentUsername) {
 
-        Employee employee = employeeSpringRepository.findByUserEmail(getCurrentUsername()).orElseThrow();
+        Employee employee = employeeSpringRepository.findByUserEmail(currentUsername).orElseThrow();
         employee.update(
                 employeeDTO.getEmail(),
                 passwordEncoder.encode(employeeDTO.getPassword()),
@@ -149,9 +145,9 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Long createAdmin(EmployeeDTO employeeDTO) {
+    public Long createAdmin(EmployeeDTO employeeDTO, String currentUsername) {
 
-        Employee admin = getEmployeeByUsername();
+        Employee admin = getEmployeeByUsername(currentUsername);
         User user = createUser(employeeDTO, Role.ADMIN);
         return admin.createEmployee(
                 employeeDTO.getFirstname(),
@@ -176,15 +172,15 @@ public class EmployeeService {
                 .build();
     }
 
-    private Employee getEmployeeByUsername() {
-        return employeeRepository.findByUsername(getCurrentUsername())
+    private Employee getEmployeeByUsername(String currentUsername) {
+        return employeeRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new Error("the current user is not present in database"));
     }
 
     @Transactional
-    public Long createEmployee(EmployeeDTO employeeDTO) {
+    public Long createEmployee(EmployeeDTO employeeDTO, String currentUsername) {
 
-        Employee admin = getEmployeeByUsername();
+        Employee admin = getEmployeeByUsername(currentUsername);
         User user = createUser(employeeDTO, Role.EMPLOYEE);
         return admin.createEmployee(
                 employeeDTO.getFirstname(),
@@ -193,5 +189,12 @@ public class EmployeeService {
                 user,
                 employeeRepository
         ).getId();
+    }
+
+    @Transactional
+    public void validate(String currentUsername) {
+
+        Employee employee = getEmployeeByUsername(currentUsername);
+        employee.validate(employeeRepository);
     }
 }

@@ -5,6 +5,7 @@ import com.app.leavemanager.service.HolidayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,9 @@ public class HolidayResources {
 
     @PostMapping
     public ResponseEntity<Integer> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.createHoliday(holidayDTO));
+        return ResponseEntity
+                .status(HttpStatus.CREATED).
+                body(holidayService.createHoliday(holidayDTO, getCurrentUsername()));
     }
 
     @GetMapping
@@ -76,5 +78,9 @@ public class HolidayResources {
     public ResponseEntity<Void> unpublishedHoliday(@PathVariable("holidayId") Integer holidayId) {
         holidayService.unpublishedHoliday(holidayId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    private static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

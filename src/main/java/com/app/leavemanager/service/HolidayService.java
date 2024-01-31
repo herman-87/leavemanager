@@ -1,8 +1,10 @@
 package com.app.leavemanager.service;
 
+import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +19,20 @@ import java.util.List;
 public class HolidayService {
 
     private final HolidaySpringRepository holidaySpringRepository;
+    private EmployeeRepository employeeRepository;
 
     @Transactional
-    public Integer createHoliday(HolidayDTO holidayDTO) {
+    public Integer createHoliday(HolidayDTO holidayDTO, String currentUsername) {
 
-        return Holiday.create(
+        Employee employee = employeeRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("User in token Not Found"));
+        employee.createHoliday(
                 holidayDTO.getTitle(),
                 holidayDTO.getType(),
                 holidayDTO.getDescription(),
                 holidayDTO.getPeriod(),
                 new DefaultHolidayRepository(holidaySpringRepository)
-        ).getId();
+        );
     }
 
     @Transactional

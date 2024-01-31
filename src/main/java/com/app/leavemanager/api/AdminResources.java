@@ -6,6 +6,7 @@ import com.app.leavemanager.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class AdminResources {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(employeeService.createAdmin(employeeDTO));
+                .body(employeeService.createAdmin(employeeDTO, getCurrentUsername()));
     }
 
     @PostMapping("/registration/employee")
@@ -39,6 +40,10 @@ public class AdminResources {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(employeeService.createEmployee(employeeDTO));
+                .body(employeeService.createEmployee(employeeDTO, getCurrentUsername()));
+    }
+
+    private static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

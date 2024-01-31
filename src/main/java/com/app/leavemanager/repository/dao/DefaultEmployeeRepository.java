@@ -11,17 +11,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultEmployeeRepository implements EmployeeRepository {
 
-    private final EmployeeSpringRepository employeeSpringRepository;
+    private final EmployeeRepository employeeRepository;
     private final UserSpringRepository userSpringRepository;
 
     @Override
     public Employee save(Employee employee) {
-        return employeeSpringRepository.saveAndFlush(employee);
+        return employeeRepository.save(employee);
     }
 
     @Override
     public boolean existsByRole(Role role) {
-        return employeeSpringRepository.existsByUserRole(role);
+        return employeeRepository.existsByRole(role);
     }
 
     @Override
