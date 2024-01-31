@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-public class AdminEmployeeResources {
+public class AdminResources {
 
     private final EmployeeService employeeService;
 

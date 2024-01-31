@@ -47,7 +47,7 @@ public class Employee {
     private Employee createdBy;
     @Builder.Default
     @Column(name = "c_activated")
-    private boolean isActivated = false;
+    private boolean isActivated = true;
 
     private static int numberOfEmailAddressGenerated = 1;
 
@@ -78,7 +78,6 @@ public class Employee {
                         .lastname(lastname)
                         .dateOfBirth(dateOfBirth)
                         .user(user)
-                        .isActivated(true)
                         .build()
         );
     }

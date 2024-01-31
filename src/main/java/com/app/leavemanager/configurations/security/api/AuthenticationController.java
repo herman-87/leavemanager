@@ -1,7 +1,6 @@
 package com.app.leavemanager.configurations.security.api;
 
 import com.app.leavemanager.configurations.security.model.AuthenticationRequest;
-import com.app.leavemanager.configurations.security.model.token.Token;
 import com.app.leavemanager.configurations.security.service.AuthenticationService;
 import com.app.leavemanager.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;

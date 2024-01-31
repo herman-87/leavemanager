@@ -9,6 +9,7 @@ import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.dto.TokenDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final UserSpringRepository userSpringRepository;
@@ -60,6 +62,7 @@ public class AuthenticationService {
                         authenticationRequest.getPassword()
                 )
         );
+
         User user = userSpringRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
