@@ -1,16 +1,9 @@
 package com.app.leavemanager.domain.holiday;
 
+import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +26,7 @@ public class Holiday {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "c_id")
-    private Integer id;
+    private Long id;
     @Column(name = "c_title")
     private String title;
     @Enumerated(EnumType.STRING)
@@ -45,8 +38,12 @@ public class Holiday {
     private LocalDateTime createdAt;
     @Embedded
     private Period period;
+    @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private HolidayStatus status;
+    private HolidayStatus status = HolidayStatus.DRAFT;
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "c_id")
+    private Employee createdBy;
 
     public static Holiday create(String title,
                                  HolidayType type,

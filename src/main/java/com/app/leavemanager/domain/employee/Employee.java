@@ -1,17 +1,13 @@
 package com.app.leavemanager.domain.employee;
 
 import com.app.leavemanager.domain.employee.user.User;
+import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.HolidayType;
+import com.app.leavemanager.domain.holiday.Period;
+import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.app.leavemanager.repository.dao.HolidayRepository;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -49,6 +48,9 @@ public class Employee {
     @Builder.Default
     @Column(name = "c_activated")
     private boolean isActivated = false;
+    @OneToMany(mappedBy = "createdBy")
+    @Builder.Default
+    private List<Holiday> holidays = new ArrayList<>();
 
     private static int numberOfEmailAddressGenerated = 1;
 
@@ -138,5 +140,21 @@ public class Employee {
     public void validate(EmployeeRepository employeeRepository) {
         this.isActivated = true;
         employeeRepository.save(this);
+    }
+
+    public Holiday createHoliday(String title,
+                              HolidayType type,
+                              String description,
+                              Period period,
+                              HolidayRepository holidayRepository) {
+        return holidayRepository.save(
+                Holiday.builder()
+                        .title(title)
+                        .type(type)
+                        .period(period)
+                        .createdAt(LocalDateTime.now())
+                        .createdBy(this)
+                        .build()
+        );
     }
 }

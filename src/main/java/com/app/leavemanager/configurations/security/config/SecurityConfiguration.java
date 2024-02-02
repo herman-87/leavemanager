@@ -43,6 +43,14 @@ public class SecurityConfiguration {
                                 HttpMethod.PUT,
                                 "/employee/validate"
                         ).hasAnyRole(Role.ADMIN.name(), Role.EMPLOYEE.name())
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/holiday"
+                        ).hasRole(Role.EMPLOYEE.name())
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/holiday"
+                        ).hasRole(Role.EMPLOYEE.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -22,17 +22,17 @@ public class HolidayService {
     private EmployeeRepository employeeRepository;
 
     @Transactional
-    public Integer createHoliday(HolidayDTO holidayDTO, String currentUsername) {
+    public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
 
         Employee employee = employeeRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new RuntimeException("User in token Not Found"));
-        employee.createHoliday(
+        return employee.createHoliday(
                 holidayDTO.getTitle(),
                 holidayDTO.getType(),
                 holidayDTO.getDescription(),
                 holidayDTO.getPeriod(),
                 new DefaultHolidayRepository(holidaySpringRepository)
-        );
+        ).getId();
     }
 
     @Transactional

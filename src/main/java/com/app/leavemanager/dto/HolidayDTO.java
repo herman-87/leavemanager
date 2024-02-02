@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class HolidayDTO {
 
-    private Integer id;
+    private Long id;
     private String title;
     private HolidayType type;
     private String description;

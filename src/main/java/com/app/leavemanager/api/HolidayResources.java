@@ -25,7 +25,7 @@ public class HolidayResources {
     private final HolidayService holidayService;
 
     @PostMapping
-    public ResponseEntity<Integer> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
+    public ResponseEntity<Long> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED).
                 body(holidayService.createHoliday(holidayDTO, getCurrentUsername()));

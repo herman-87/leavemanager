@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HolidaySpringRepository extends JpaRepository<Holiday, Integer> {
+public interface HolidaySpringRepository extends JpaRepository<Holiday, Long> {
 }
