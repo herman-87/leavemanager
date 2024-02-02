@@ -152,6 +152,7 @@ public class Employee {
                 Holiday.builder()
                         .title(title)
                         .type(type)
+                        .description(description)
                         .period(period)
                         .createdAt(LocalDateTime.now())
                         .createdBy(this)

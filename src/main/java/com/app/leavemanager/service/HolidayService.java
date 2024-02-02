@@ -6,7 +6,7 @@ import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.repository.spring.HolidaySpringRepository;
+import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HolidayService {
 
-    private final HolidaySpringRepository holidaySpringRepository;
+    private final HolidayRepository holidayRepository;
     private EmployeeRepository employeeRepository;
 
     @Transactional
@@ -31,13 +31,13 @@ public class HolidayService {
                 holidayDTO.getType(),
                 holidayDTO.getDescription(),
                 holidayDTO.getPeriod(),
-                new DefaultHolidayRepository(holidaySpringRepository)
+                holidayRepository
         ).getId();
     }
 
     @Transactional
     public List<HolidayDTO> getAllHoliday() {
-        return holidaySpringRepository.findAll()
+        return holidayRepository.findAll()
                 .stream()
                 .map(holiday ->
                         HolidayDTO.builder()
@@ -65,7 +65,7 @@ public class HolidayService {
                     holidayDTO.getDescription(),
                     holidayDTO.getTitle(),
                     holidayDTO.getPeriod(),
-                    new DefaultHolidayRepository(holidaySpringRepository)
+                    new DefaultHolidayRepository(holidayRepository)
             );
         }
         throw new RuntimeException("Forbidden for the current user");
@@ -78,7 +78,7 @@ public class HolidayService {
         Employee employee = getEmployeeByUsername(currentUsername);
 
         if (Role.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
-            holidaySpringRepository.deleteById(holidayId);
+            holidayRepository.deleteById(holidayId);
         }
         throw new RuntimeException("Forbidden for the current user");
     }
@@ -109,8 +109,9 @@ public class HolidayService {
         throw new RuntimeException("Forbidden for the current user");
     }
 
+    @Transactional
     private Holiday getHolidayById(Long holidayId) {
-        return holidaySpringRepository.findById(holidayId)
+        return holidayRepository.findById(holidayId)
                 .orElseThrow(() -> new RuntimeException("Holiday Not Found"));
     }
 
@@ -121,25 +122,45 @@ public class HolidayService {
         Employee employee = getEmployeeByUsername(currentUsername);
 
         if (employee.hasAuthorityOver(holiday)) {
-            holiday.approve(new DefaultHolidayRepository(holidaySpringRepository));
+            holiday.approve(new DefaultHolidayRepository(holidayRepository));
         }
         throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional
-    public void publishHoliday(Integer holidayId) {
-        holidaySpringRepository.findById(holidayId)
-                .ifPresent(holiday -> holiday.publish(new DefaultHolidayRepository(holidaySpringRepository)));
+    public void publishHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+
+        if (employee.hasAuthorityOver(holiday)) {
+            holiday.publish(new DefaultHolidayRepository(holidayRepository));
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
-    public void unapprovedHoliday(Integer holidayId) {
-        holidaySpringRepository.findById(holidayId)
-                .ifPresent(holiday -> holiday.unapprovedHoliday(new DefaultHolidayRepository(holidaySpringRepository)));
+    @Transactional
+    public void unapprovedHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+
+        if (employee.hasAuthorityOver(holiday)) {
+            holiday.unapprovedHoliday(holidayRepository);
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
-    public void unpublishedHoliday(Integer holidayId) {
-        holidaySpringRepository.findById(holidayId)
-                .ifPresent(holiday -> holiday.unpublished(new DefaultHolidayRepository(holidaySpringRepository)));
+    @Transactional
+    public void unpublishedHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+
+        if (employee.hasAuthorityOver(holiday)) {
+            holiday.unpublished(holidayRepository);
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
     private Employee getEmployeeByUsername(String currentUsername) {

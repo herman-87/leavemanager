@@ -63,20 +63,20 @@ public class HolidayResources {
     }
 
     @PutMapping("/publish/{holidayId}")
-    public ResponseEntity<Void> publishHoliday(@PathVariable("holidayId") Long holidayId) {
-        holidayService.publishHoliday(holidayId);
+    public ResponseEntity<Void> publishHolidayById(@PathVariable("holidayId") Long holidayId) {
+        holidayService.publishHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/unapproved/{holidayId}")
-    public ResponseEntity<Void> unapprovedHoliday(@PathVariable("holidayId") Long holidayId) {
-        holidayService.unapprovedHoliday(holidayId);
+    public ResponseEntity<Void> unapprovedHolidayById(@PathVariable("holidayId") Long holidayId) {
+        holidayService.unapprovedHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/unpublished/{holidayId}")
-    public ResponseEntity<Void> unpublishedHoliday(@PathVariable("holidayId") Long holidayId) {
-        holidayService.unpublishedHoliday(holidayId);
+    public ResponseEntity<Void> unpublishedHolidayById(@PathVariable("holidayId") Long holidayId) {
+        holidayService.unpublishedHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
