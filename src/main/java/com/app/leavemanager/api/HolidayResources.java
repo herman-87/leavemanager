@@ -57,8 +57,8 @@ public class HolidayResources {
     }
 
     @PutMapping("/approve/{holidayId}")
-    public ResponseEntity<Void> approveHoliday(@PathVariable("holidayId") Long holidayId) {
-        holidayService.approveHoliday(holidayId);
+    public ResponseEntity<Void> approveHolidayById(@PathVariable("holidayId") Long holidayId) {
+        holidayService.approveHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

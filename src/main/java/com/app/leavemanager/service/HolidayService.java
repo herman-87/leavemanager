@@ -115,9 +115,15 @@ public class HolidayService {
     }
 
     @Transactional
-    public void approveHoliday(Integer holidayId) {
-        holidaySpringRepository.findById(holidayId)
-                .ifPresent(holiday -> holiday.approve(new DefaultHolidayRepository(holidaySpringRepository)));
+    public void approveHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+
+        if (employee.hasAuthorityOver(holiday)) {
+            holiday.approve(new DefaultHolidayRepository(holidaySpringRepository));
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional

@@ -162,4 +162,8 @@ public class Employee {
     public Role getUserRole() {
         return this.user.getRole();
     }
+
+    public boolean hasAuthorityOver(Holiday holiday) {
+        return Role.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
+    }
 }
