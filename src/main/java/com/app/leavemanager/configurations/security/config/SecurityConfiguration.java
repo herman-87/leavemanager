@@ -49,8 +49,9 @@ public class SecurityConfiguration {
                         ).hasRole(Role.EMPLOYEE.name())
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/holiday"
-                        ).hasRole(Role.EMPLOYEE.name())
+                                "/holiday",
+                                "/holiday/{holidayId}"
+                        ).hasAnyRole(Role.EMPLOYEE.name(), Role.ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

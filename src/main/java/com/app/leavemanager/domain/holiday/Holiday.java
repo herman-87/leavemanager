@@ -115,4 +115,8 @@ public class Holiday {
             log.error("This operation is not possible");
         }
     }
+
+    public boolean isCreatedBy(Employee employee) {
+        return this.createdBy.equals(employee);
+    }
 }

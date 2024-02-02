@@ -1,6 +1,7 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.employee.user.Role;
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.domain.holiday.Holiday;
@@ -24,8 +25,7 @@ public class HolidayService {
     @Transactional
     public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
 
-        Employee employee = employeeRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new RuntimeException("User in token Not Found"));
+        Employee employee = getEmployeeByUsername(currentUsername);
         return employee.createHoliday(
                 holidayDTO.getTitle(),
                 holidayDTO.getType(),
@@ -54,16 +54,22 @@ public class HolidayService {
     }
 
     @Transactional
-    public void updateHoliday(Integer holidayId, HolidayDTO holidayDTO) {
+    public void updateHoliday(Long holidayId, HolidayDTO holidayDTO, String currentUsername) {
 
-        Holiday holiday = holidaySpringRepository.findById(holidayId).orElseThrow();
-        holiday.update(
-                holidayDTO.getType(),
-                holidayDTO.getDescription(),
-                holidayDTO.getTitle(),
-                holidayDTO.getPeriod(),
-                new DefaultHolidayRepository(holidaySpringRepository)
-        );
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+        Role employeeUserRole = employee.getUserRole();
+
+        if (Role.EMPLOYEE.equals(employeeUserRole) && holiday.isCreatedBy(employee)) {
+            holiday.update(
+                    holidayDTO.getType(),
+                    holidayDTO.getDescription(),
+                    holidayDTO.getTitle(),
+                    holidayDTO.getPeriod(),
+                    new DefaultHolidayRepository(holidaySpringRepository)
+            );
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional
@@ -72,20 +78,34 @@ public class HolidayService {
     }
 
     @Transactional
-    public HolidayDTO getHolidayById(Integer holidayId) {
+    public HolidayDTO getHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+        Role employeeRole = employee.getUser().getRole();
+
+        if (
+                Role.SUPER_ADMIN.equals(employeeRole)
+                || Role.ADMIN.equals(employeeRole)
+                || (Role.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
+        ) {
+            return HolidayDTO
+                    .builder()
+                    .id(holiday.getId())
+                    .type(holiday.getType())
+                    .title(holiday.getTitle())
+                    .description(holiday.getDescription())
+                    .createdAt(holiday.getCreatedAt())
+                    .period(holiday.getPeriod())
+                    .status(holiday.getStatus())
+                    .build();
+        }
+        throw new RuntimeException("Forbidden for the current user");
+    }
+
+    private Holiday getHolidayById(Long holidayId) {
         return holidaySpringRepository.findById(holidayId)
-                .map(holiday -> HolidayDTO
-                        .builder()
-                        .id(holiday.getId())
-                        .type(holiday.getType())
-                        .title(holiday.getTitle())
-                        .description(holiday.getDescription())
-                        .createdAt(holiday.getCreatedAt())
-                        .period(holiday.getPeriod())
-                        .status(holiday.getStatus())
-                        .build()
-                )
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Holiday Not Found"));
     }
 
     @Transactional
@@ -108,5 +128,10 @@ public class HolidayService {
     public void unpublishedHoliday(Integer holidayId) {
         holidaySpringRepository.findById(holidayId)
                 .ifPresent(holiday -> holiday.unpublished(new DefaultHolidayRepository(holidaySpringRepository)));
+    }
+
+    private Employee getEmployeeByUsername(String currentUsername) {
+        return employeeRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new Error("the current user is not present in database"));
     }
 }

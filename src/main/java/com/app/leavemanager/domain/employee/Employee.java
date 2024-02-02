@@ -1,5 +1,6 @@
 package com.app.leavemanager.domain.employee;
 
+import com.app.leavemanager.domain.employee.user.Role;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayType;
@@ -156,5 +157,9 @@ public class Employee {
                         .createdBy(this)
                         .build()
         );
+    }
+
+    public Role getUserRole() {
+        return this.user.getRole();
     }
 }
