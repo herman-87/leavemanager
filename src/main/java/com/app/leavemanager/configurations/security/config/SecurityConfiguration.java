@@ -45,13 +45,12 @@ public class SecurityConfiguration {
                         ).hasAnyRole(Role.ADMIN.name(), Role.EMPLOYEE.name())
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/holiday"
+                                "/employee/holiday"
                         ).hasRole(Role.EMPLOYEE.name())
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/holiday",
-                                "/holiday/{holidayId}"
-                        ).hasAnyRole(Role.EMPLOYEE.name(), Role.ADMIN.name())
+                                "/employee/holiday"
+                        ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

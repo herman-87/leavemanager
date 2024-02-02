@@ -35,7 +35,7 @@ public class HolidayService {
     }
 
     @Transactional
-    public List<HolidayDTO> getAllHoliday() {
+    public List<HolidayDTO> getAllHolidays() {
         return holidayRepository.findAll()
                 .stream()
                 .map(holiday ->

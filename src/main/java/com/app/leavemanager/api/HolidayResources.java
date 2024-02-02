@@ -19,38 +19,38 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/holiday")
+@RequestMapping("/employee")
 public class HolidayResources {
 
     private final HolidayService holidayService;
 
-    @PostMapping
+    @PostMapping("/holiday")
     public ResponseEntity<Long> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED).
                 body(holidayService.createHoliday(holidayDTO, getCurrentUsername()));
     }
 
-    @GetMapping
-    public ResponseEntity<List<HolidayDTO>> getAllHoliday() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHoliday());
+    @GetMapping("/holiday")
+    public ResponseEntity<List<HolidayDTO>> getAllHolidays() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHolidays());
     }
 
-    @GetMapping("/{holidayId}")
+    @GetMapping("/holiday/{holidayId}")
     public ResponseEntity<HolidayDTO> getHolidayById(@PathVariable("holidayId") Long holidayId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(holidayService.getHolidayById(holidayId, getCurrentUsername()));
     }
 
-    @PutMapping("/{holidayId}")
+    @PutMapping("/holiday/{holidayId}")
     public ResponseEntity<Void> updateHoliday(@PathVariable("holidayId") Long holidayId,
                                               @RequestBody(required = true) HolidayDTO holidayDTO) {
         holidayService.updateHoliday(holidayId, holidayDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/{holidayId}")
+    @DeleteMapping("/holiday/{holidayId}")
     public ResponseEntity<Void> deleteHoliday(@PathVariable("holidayId") Long holidayId) {
         holidayService.deleteHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
