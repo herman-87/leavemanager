@@ -2,9 +2,8 @@ package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.user.Role;
-import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
-import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.transaction.Transactional;
@@ -65,7 +64,7 @@ public class HolidayService {
                     holidayDTO.getDescription(),
                     holidayDTO.getTitle(),
                     holidayDTO.getPeriod(),
-                    new DefaultHolidayRepository(holidayRepository)
+                    holidayRepository
             );
         }
         throw new RuntimeException("Forbidden for the current user");
@@ -92,8 +91,8 @@ public class HolidayService {
 
         if (
                 Role.SUPER_ADMIN.equals(employeeRole)
-                || Role.ADMIN.equals(employeeRole)
-                || (Role.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
+                        || Role.ADMIN.equals(employeeRole)
+                        || (Role.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
         ) {
             return HolidayDTO
                     .builder()
@@ -122,7 +121,7 @@ public class HolidayService {
         Employee employee = getEmployeeByUsername(currentUsername);
 
         if (employee.hasAuthorityOver(holiday)) {
-            holiday.approve(new DefaultHolidayRepository(holidayRepository));
+            holiday.approve(holidayRepository);
         }
         throw new RuntimeException("Forbidden for the current user");
     }
@@ -134,7 +133,7 @@ public class HolidayService {
         Employee employee = getEmployeeByUsername(currentUsername);
 
         if (employee.hasAuthorityOver(holiday)) {
-            holiday.publish(new DefaultHolidayRepository(holidayRepository));
+            holiday.publish(holidayRepository);
         }
         throw new RuntimeException("Forbidden for the current user");
     }

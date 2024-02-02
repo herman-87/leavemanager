@@ -5,6 +5,7 @@ import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DefaultHolidayRepository implements HolidayRepository {
@@ -24,5 +25,10 @@ public class DefaultHolidayRepository implements HolidayRepository {
     @Override
     public void deleteById(Long holidayId) {
         holidaySpringRepository.deleteById(holidayId);
+    }
+
+    @Override
+    public Optional<Holiday> findById(Long holidayId) {
+        return holidaySpringRepository.findById(holidayId);
     }
 }

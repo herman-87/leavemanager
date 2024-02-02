@@ -3,7 +3,6 @@ package com.app.leavemanager.repository.dao;
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.user.Role;
-import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -26,6 +25,6 @@ public class DefaultEmployeeRepository implements EmployeeRepository {
 
     @Override
     public Optional<Employee> findByUsername(String username) {
-        return employeeSpringRepository.findByUserEmail(username);
+        return employeeRepository.findByUsername(username);
     }
 }
