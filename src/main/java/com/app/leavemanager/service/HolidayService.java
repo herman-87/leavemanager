@@ -58,9 +58,8 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        Role employeeUserRole = employee.getUserRole();
 
-        if (Role.EMPLOYEE.equals(employeeUserRole) && holiday.isCreatedBy(employee)) {
+        if (Role.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
             holiday.update(
                     holidayDTO.getType(),
                     holidayDTO.getDescription(),
@@ -73,8 +72,15 @@ public class HolidayService {
     }
 
     @Transactional
-    public void deleteHoliday(Integer employeeId) {
-        holidaySpringRepository.deleteById(employeeId);
+    public void deleteHolidayById(Long holidayId, String currentUsername) {
+
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+
+        if (Role.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+            holidaySpringRepository.deleteById(holidayId);
+        }
+        throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional

@@ -52,7 +52,7 @@ public class HolidayResources {
 
     @DeleteMapping("/{holidayId}")
     public ResponseEntity<Void> deleteHoliday(@PathVariable("holidayId") Long holidayId) {
-        holidayService.deleteHoliday(holidayId);
+        holidayService.deleteHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
