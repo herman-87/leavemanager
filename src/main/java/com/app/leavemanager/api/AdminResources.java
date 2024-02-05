@@ -19,7 +19,7 @@ public class AdminResources {
 
     private final EmployeeService employeeService;
 
-    @PostMapping("/registration/super-admin")
+    @PostMapping("/registration")
     public ResponseEntity<RegistrationEmployeeResponseDTO> createSuperAdmin(@RequestBody EmployeeDTO employeeDTO) {
 
         return ResponseEntity
@@ -27,7 +27,7 @@ public class AdminResources {
                 .body(employeeService.createSuperAdmin(employeeDTO));
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/add")
     public ResponseEntity<Long> createAdmin(@RequestBody EmployeeDTO employeeDTO) {
 
         return ResponseEntity
@@ -35,7 +35,7 @@ public class AdminResources {
                 .body(employeeService.createAdmin(employeeDTO, getCurrentUsername()));
     }
 
-    @PostMapping("/registration/employee")
+    @PostMapping("/employee/add")
     public ResponseEntity<Long> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
 
         return ResponseEntity

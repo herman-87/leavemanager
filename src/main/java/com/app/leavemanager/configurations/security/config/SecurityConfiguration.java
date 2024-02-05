@@ -30,29 +30,30 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/admin/registration"
-                        ).hasAnyRole(Role.SUPER_ADMIN.name())
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/admin/registration/employee"
-                        ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/employee/validate"
-                        ).hasAnyRole(Role.ADMIN.name(), Role.EMPLOYEE.name())
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/employee/holiday"
-                        ).hasRole(Role.EMPLOYEE.name())
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/employee/holiday"
-                        ).hasAnyRole(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
-                        .anyRequest()
-                        .authenticated())
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                        authorizationManagerRequestMatcherRegistry
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/admin/registration"
+                                ).hasRole(Role.SUPER_ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/admin/registration/employee"
+                                ).hasAnyAuthority(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/employee/validate"
+                                ).hasAnyAuthority(Role.ADMIN.name(), Role.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/employee/holiday"
+                                ).hasAuthority(Role.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/employee/holiday"
+                                ).hasAnyAuthority(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
+                                .anyRequest().denyAll()
+                )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -74,7 +75,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/auth/authenticate")
                 .requestMatchers(
                         HttpMethod.POST,
-                        "/admin/registration/super-admin"
+                        "/admin/registration"
                 );
     }
 }
