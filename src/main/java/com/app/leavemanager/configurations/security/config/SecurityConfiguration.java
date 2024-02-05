@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
-                                        "/admin/employee/all"
+                                        "/admin/employee/all",
+                                        "/holiday/all"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .anyRequest().denyAll()
                 )

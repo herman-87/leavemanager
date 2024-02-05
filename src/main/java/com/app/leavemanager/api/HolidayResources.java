@@ -6,23 +6,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/employee")
 public class HolidayResources {
 
     private final HolidayService holidayService;
+
+    private static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     @PostMapping("/holiday")
     public ResponseEntity<Long> createHoliday(@RequestBody(required = true) HolidayDTO holidayDTO) {
@@ -31,9 +27,11 @@ public class HolidayResources {
                 body(holidayService.createHoliday(holidayDTO, getCurrentUsername()));
     }
 
-    @GetMapping("/holiday")
+    @GetMapping("/holiday/all")
     public ResponseEntity<List<HolidayDTO>> getAllHolidays() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(holidayService.getAllHolidays());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(holidayService.getAllHolidays(getCurrentUsername()));
     }
 
     @GetMapping("/holiday/{holidayId}")
@@ -78,9 +76,5 @@ public class HolidayResources {
     public ResponseEntity<Void> unpublishedHolidayById(@PathVariable("holidayId") Long holidayId) {
         holidayService.unpublishedHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private static String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

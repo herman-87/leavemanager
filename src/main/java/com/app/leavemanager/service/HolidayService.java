@@ -4,6 +4,7 @@ import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.dto.HolidayDTO;
+import com.app.leavemanager.mapper.HolidayMapper;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.transaction.Transactional;
@@ -19,7 +20,8 @@ import java.util.List;
 public class HolidayService {
 
     private final HolidayRepository holidayRepository;
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final HolidayMapper holidayMapper;
 
     @Transactional
     public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
@@ -35,20 +37,10 @@ public class HolidayService {
     }
 
     @Transactional
-    public List<HolidayDTO> getAllHolidays() {
+    public List<HolidayDTO> getAllHolidays(String currentUsername) {
         return holidayRepository.findAll()
                 .stream()
-                .map(holiday ->
-                        HolidayDTO.builder()
-                                .id(holiday.getId())
-                                .title(holiday.getTitle())
-                                .type(holiday.getType())
-                                .status(holiday.getStatus())
-                                .description(holiday.getDescription())
-                                .period(holiday.getPeriod())
-                                .createdAt(holiday.getCreatedAt())
-                                .build()
-                )
+                .map(holidayMapper::toDTO)
                 .toList();
     }
 
