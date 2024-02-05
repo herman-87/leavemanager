@@ -2,7 +2,7 @@ package com.app.leavemanager.configurations.security.config;
 
 import com.app.leavemanager.configurations.security.config.filter.JwtAuthenticationFilter;
 import com.app.leavemanager.configurations.security.service.LogoutService;
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,28 +30,25 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
-                                        HttpMethod.PUT,
-                                        "/admin/registration"
-                                ).hasRole(Role.SUPER_ADMIN.name())
-                                .requestMatchers(
-                                        HttpMethod.PUT,
-                                        "/admin/registration/employee"
-                                ).hasAnyAuthority(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
+                                        HttpMethod.POST,
+                                        "/admin/add"
+                                ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.PUT,
                                         "/employee/validate"
-                                ).hasAnyAuthority(Role.ADMIN.name(), Role.EMPLOYEE.name())
+                                ).hasAnyAuthority(Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/employee/holiday"
-                                ).hasAuthority(Role.EMPLOYEE.name())
+                                ).hasAuthority(Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/employee/holiday"
-                                ).hasAnyAuthority(Role.SUPER_ADMIN.name(), Role.ADMIN.name())
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

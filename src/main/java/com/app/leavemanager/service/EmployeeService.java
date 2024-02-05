@@ -6,7 +6,7 @@ import com.app.leavemanager.configurations.security.repository.TokenSpringReposi
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.configurations.security.service.JwtService;
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.dto.EmployeeDTO;
 import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -118,11 +117,11 @@ public class EmployeeService {
     @Transactional
     public RegistrationEmployeeResponseDTO createSuperAdmin(EmployeeDTO employeeDTO) {
 
-        if (!employeeRepository.existsByRole(Role.SUPER_ADMIN)) {
+        if (!employeeRepository.existsByRole(Scope.SUPER_ADMIN)) {
             User user = User.builder()
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))
-                    .role(Role.SUPER_ADMIN)
+                    .role(Scope.SUPER_ADMIN)
                     .build();
             User savedUser = userSpringRepository.save(user);
 
@@ -148,7 +147,7 @@ public class EmployeeService {
     public Long createAdmin(EmployeeDTO employeeDTO, String currentUsername) {
 
         Employee admin = getEmployeeByUsername(currentUsername);
-        User user = createUser(employeeDTO, Role.ADMIN);
+        User user = createUser(employeeDTO, Scope.ADMIN);
         return admin.createEmployee(
                 employeeDTO.getFirstname(),
                 employeeDTO.getLastname(),
@@ -158,7 +157,7 @@ public class EmployeeService {
         ).getId();
     }
 
-    private User createUser(EmployeeDTO employeeDTO, Role role) {
+    private User createUser(EmployeeDTO employeeDTO, Scope role) {
         return User.builder()
                 .email(
                         Employee.generatedEmail(
@@ -181,7 +180,7 @@ public class EmployeeService {
     public Long createEmployee(EmployeeDTO employeeDTO, String currentUsername) {
 
         Employee admin = getEmployeeByUsername(currentUsername);
-        User user = createUser(employeeDTO, Role.EMPLOYEE);
+        User user = createUser(employeeDTO, Scope.EMPLOYEE);
         return admin.createEmployee(
                 employeeDTO.getFirstname(),
                 employeeDTO.getLastname(),

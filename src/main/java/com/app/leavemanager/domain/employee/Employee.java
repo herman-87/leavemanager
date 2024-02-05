@@ -1,11 +1,10 @@
 package com.app.leavemanager.domain.employee;
 
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayType;
 import com.app.leavemanager.domain.holiday.Period;
-import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.persistence.*;
@@ -160,11 +159,11 @@ public class Employee {
         );
     }
 
-    public Role getUserRole() {
+    public Scope getUserRole() {
         return this.user.getRole();
     }
 
     public boolean hasAuthorityOver(Holiday holiday) {
-        return Role.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
+        return Scope.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
     }
 }

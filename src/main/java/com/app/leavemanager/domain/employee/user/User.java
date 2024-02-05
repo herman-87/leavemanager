@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "c_role")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Scope role;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
     @Builder.Default

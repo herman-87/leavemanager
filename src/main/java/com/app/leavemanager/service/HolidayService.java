@@ -1,7 +1,7 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
@@ -58,7 +58,7 @@ public class HolidayService {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
 
-        if (Role.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
             holiday.update(
                     holidayDTO.getType(),
                     holidayDTO.getDescription(),
@@ -76,7 +76,7 @@ public class HolidayService {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
 
-        if (Role.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
             holidayRepository.deleteById(holidayId);
         }
         throw new RuntimeException("Forbidden for the current user");
@@ -87,12 +87,12 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        Role employeeRole = employee.getUser().getRole();
+        Scope employeeRole = employee.getUser().getRole();
 
         if (
-                Role.SUPER_ADMIN.equals(employeeRole)
-                        || Role.ADMIN.equals(employeeRole)
-                        || (Role.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
+                Scope.SUPER_ADMIN.equals(employeeRole)
+                        || Scope.ADMIN.equals(employeeRole)
+                        || (Scope.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
         ) {
             return HolidayDTO
                     .builder()

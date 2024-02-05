@@ -2,7 +2,7 @@ package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ public class DefaultEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
-    public boolean existsByRole(Role role) {
+    public boolean existsByRole(Scope role) {
         return userSpringRepository.existsByRole(role);
     }
 
