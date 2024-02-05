@@ -74,7 +74,7 @@ public class HolidayService {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
 
-        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+        if (isAuthorOf(employee, holiday)) {
             holidayRepository.deleteById(holidayId);
         }
         throw new RuntimeException("Forbidden for the current user");

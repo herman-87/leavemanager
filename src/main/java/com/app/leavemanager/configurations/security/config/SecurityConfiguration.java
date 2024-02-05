@@ -50,6 +50,18 @@ public class SecurityConfiguration {
                                         HttpMethod.POST,
                                         "/holiday"
                                 ).hasAuthority(Scope.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.DELETE,
+                                        "/holiday/{holidayId}"
+                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/holiday/{holidayId}"
+                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/holiday/{holidayId}"
+                                ).hasAuthority(Scope.EMPLOYEE.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
