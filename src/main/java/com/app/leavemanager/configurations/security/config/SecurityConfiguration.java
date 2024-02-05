@@ -41,6 +41,10 @@ public class SecurityConfiguration {
                                         HttpMethod.POST,
                                         "/admin/employee/add"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/admin/employee/all"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

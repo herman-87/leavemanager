@@ -9,13 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,18 +20,6 @@ import java.util.List;
 public class EmployeeResources {
 
     private final EmployeeService employeeService;
-
-    @PostMapping
-    public ResponseEntity<Long> createEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(employeeService.createEmployee(employeeDTO, getCurrentUsername()));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployee() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.getAllEmployee());
-    }
 
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
