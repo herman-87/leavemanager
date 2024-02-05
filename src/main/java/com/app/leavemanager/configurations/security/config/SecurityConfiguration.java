@@ -38,16 +38,8 @@ public class SecurityConfiguration {
                                         "/admin/add"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
-                                        HttpMethod.PUT,
-                                        "/employee/validate"
-                                ).hasAnyAuthority(Scope.ADMIN.name(), Scope.EMPLOYEE.name())
-                                .requestMatchers(
                                         HttpMethod.POST,
-                                        "/employee/holiday"
-                                ).hasAuthority(Scope.EMPLOYEE.name())
-                                .requestMatchers(
-                                        HttpMethod.GET,
-                                        "/employee/holiday"
+                                        "/admin/employee/add"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .anyRequest().denyAll()
                 )
