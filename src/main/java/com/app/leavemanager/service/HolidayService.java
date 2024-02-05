@@ -1,7 +1,6 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
@@ -73,10 +72,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (isAuthorOf(employee, holiday)) {
-            holidayRepository.deleteById(holidayId);
-        }
+        employee.deleteHoliday(holiday, holidayRepository);
         throw new RuntimeException("Forbidden for the current user");
     }
 
@@ -107,11 +103,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.approve(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.approveHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -119,11 +111,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.publish(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.publishHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -131,11 +119,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.unapprovedHoliday(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.unapprovedHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -143,11 +127,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.unpublished(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.unpublishedHoliday(holiday, holidayRepository);
     }
 
     private Employee getEmployeeByUsername(String currentUsername) {

@@ -163,10 +163,6 @@ public class Employee {
         return this.user.getRole();
     }
 
-    public boolean hasAuthorityOver(Holiday holiday) {
-        return Scope.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
-    }
-
     public boolean hasRoleEmployee() {
         return user.hasRole(Scope.EMPLOYEE);
     }
@@ -177,5 +173,45 @@ public class Employee {
 
     public boolean hasRoleAdmin() {
         return user.hasRole(Scope.ADMIN);
+    }
+
+    public void approveHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (this.hasRoleEmployee()) {
+            holiday.approve(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void publishHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.publish(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void unapprovedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee()) {
+            holiday.unapprovedHoliday(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void unpublishedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.unpublished(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void deleteHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.delete(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
     }
 }
