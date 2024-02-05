@@ -1,14 +1,14 @@
 package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Role;
+import com.app.leavemanager.domain.employee.user.Scope;
 
 import java.util.Optional;
 
 public interface EmployeeRepository {
     Employee save(Employee employee);
 
-    boolean existsByRole(Role role);
+    boolean existsByRole(Scope role);
 
     Optional<Employee> findByUsername(String name);
 }

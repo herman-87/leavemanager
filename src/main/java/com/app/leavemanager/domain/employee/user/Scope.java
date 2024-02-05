@@ -1,6 +1,6 @@
 package com.app.leavemanager.domain.employee.user;
 
-public enum Role {
+public enum Scope {
     EMPLOYEE,
     ADMIN,
     SUPER_ADMIN
