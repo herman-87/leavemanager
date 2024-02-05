@@ -46,6 +46,10 @@ public class SecurityConfiguration {
                                         "/admin/employee/all",
                                         "/holiday/all"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/holiday"
+                                ).hasAuthority(Scope.EMPLOYEE.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
