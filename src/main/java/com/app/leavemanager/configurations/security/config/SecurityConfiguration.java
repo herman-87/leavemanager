@@ -56,7 +56,10 @@ public class SecurityConfiguration {
                                 ).hasAuthority(Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.PUT,
-                                        "/holiday/{holidayId}"
+                                        "/holiday/{holidayId}",
+                                        "/publish/{holidayId}",
+                                        "/unapproved/{holidayId}",
+                                        "/unpublished/{holidayId}"
                                 ).hasAuthority(Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
