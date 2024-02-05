@@ -79,23 +79,14 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        Scope employeeRole = employee.getUser().getRole();
 
         if (
-                Scope.SUPER_ADMIN.equals(employeeRole)
-                        || Scope.ADMIN.equals(employeeRole)
-                        || (Scope.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
-        ) {
-            return HolidayDTO
-                    .builder()
-                    .id(holiday.getId())
-                    .type(holiday.getType())
-                    .title(holiday.getTitle())
-                    .description(holiday.getDescription())
-                    .createdAt(holiday.getCreatedAt())
-                    .period(holiday.getPeriod())
-                    .status(holiday.getStatus())
-                    .build();
+                employee.isSuperAdmin()
+                        || employee.isAdmin()
+                        || employee.isEmployee()
+                        && holiday.isCreatedBy(employee)) {
+
+            return holidayMapper.toDTO(holiday);
         }
         throw new RuntimeException("Forbidden for the current user");
     }

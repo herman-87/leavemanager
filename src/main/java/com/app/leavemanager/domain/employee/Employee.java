@@ -167,4 +167,16 @@ public class Employee {
     public boolean hasAuthorityOver(Holiday holiday) {
         return Scope.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
     }
+
+    public boolean isEmployee() {
+        return user.hasRole(Scope.EMPLOYEE);
+    }
+
+    public boolean isSuperAdmin() {
+        return user.hasRole(Scope.SUPER_ADMIN);
+    }
+
+    public boolean isAdmin() {
+        return user.hasRole(Scope.ADMIN);
+    }
 }
