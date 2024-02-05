@@ -11,7 +11,6 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -168,15 +167,15 @@ public class Employee {
         return Scope.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
     }
 
-    public boolean isEmployee() {
+    public boolean hasRoleEmployee() {
         return user.hasRole(Scope.EMPLOYEE);
     }
 
-    public boolean isSuperAdmin() {
+    public boolean hasRoleSuperAdmin() {
         return user.hasRole(Scope.SUPER_ADMIN);
     }
 
-    public boolean isAdmin() {
+    public boolean hasRoleAdmin() {
         return user.hasRole(Scope.ADMIN);
     }
 }

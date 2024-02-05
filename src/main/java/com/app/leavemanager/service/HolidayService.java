@@ -45,12 +45,14 @@ public class HolidayService {
     }
 
     @Transactional
-    public void updateHoliday(Long holidayId, HolidayDTO holidayDTO, String currentUsername) {
+    public void updateHoliday(Long holidayId,
+                              HolidayDTO holidayDTO,
+                              String currentUsername) {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
 
-        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+        if (isAuthorOf(employee, holiday)) {
             holiday.update(
                     holidayDTO.getType(),
                     holidayDTO.getDescription(),
@@ -60,6 +62,10 @@ public class HolidayService {
             );
         }
         throw new RuntimeException("Forbidden for the current user");
+    }
+
+    private static boolean isAuthorOf(Employee employee, Holiday holiday) {
+        return employee.hasRoleEmployee() && holiday.isCreatedBy(employee);
     }
 
     @Transactional
@@ -81,10 +87,9 @@ public class HolidayService {
         Employee employee = getEmployeeByUsername(currentUsername);
 
         if (
-                employee.isSuperAdmin()
-                        || employee.isAdmin()
-                        || employee.isEmployee()
-                        && holiday.isCreatedBy(employee)) {
+                employee.hasRoleSuperAdmin()
+                        || employee.hasRoleAdmin()
+                        || isAuthorOf(employee, holiday)) {
 
             return holidayMapper.toDTO(holiday);
         }
