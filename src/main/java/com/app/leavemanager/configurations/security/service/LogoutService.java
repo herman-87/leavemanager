@@ -1,6 +1,5 @@
 package com.app.leavemanager.configurations.security.service;
 
-import com.app.leavemanager.configurations.security.model.token.Token;
 import com.app.leavemanager.configurations.security.repository.TokenSpringRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,18 +24,10 @@ public class LogoutService implements LogoutHandler {
                        Authentication authentication) {
 
         final String autHeader = request.getHeader("Authorization");
-        final String jwt;
 
-        if (Objects.isNull(autHeader) || !autHeader.startsWith("Bearer ")) {
-            return;
-        }
-        jwt = autHeader.substring(7);
-        Token storedToken = tokenSpringRepository.findByToken(jwt).orElse(null);
-
-        if (storedToken != null) {
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            tokenSpringRepository.save(storedToken);
+        if (Objects.nonNull(autHeader) && autHeader.startsWith("Bearer ")) {
+            final String jwt = autHeader.substring(7);
+            tokenSpringRepository.findByToken(jwt).ifPresent(tokenSpringRepository::delete);
         }
     }
 }

@@ -24,7 +24,6 @@ import java.util.List;
 public class AuthenticationService {
 
     private final UserSpringRepository userSpringRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenSpringRepository tokenSpringRepository;
@@ -32,14 +31,9 @@ public class AuthenticationService {
     private void revokeAllUserTokens(User user) {
 
         List<Token> allValidTokensByUser = tokenSpringRepository.findAllValidTokensByUser(user.getId());
-        if (allValidTokensByUser.isEmpty()) {
-            return;
+        if (!allValidTokensByUser.isEmpty()) {
+            tokenSpringRepository.deleteAll(allValidTokensByUser);
         }
-        allValidTokensByUser.forEach(token -> {
-            token.setRevoked(true);
-            token.setExpired(true);
-        });
-        tokenSpringRepository.saveAll(allValidTokensByUser);
     }
 
     private void saveUserToken(User savedUser, String jwtToken) {

@@ -44,8 +44,9 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/admin/employee/all",
-                                        "/holiday/all"
-                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
+                                        "/holiday/all",
+                                        "/holiday/{holidayId}"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/holiday"
@@ -57,6 +58,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.PUT,
                                         "/holiday/{holidayId}",
+                                        "/approve/{holidayId}",
                                         "/publish/{holidayId}",
                                         "/unapproved/{holidayId}",
                                         "/unpublished/{holidayId}"

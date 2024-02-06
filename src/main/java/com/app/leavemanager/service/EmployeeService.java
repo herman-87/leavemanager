@@ -39,8 +39,8 @@ public class EmployeeService {
     private String adminEmail;
     @Value("${api.super.admin.password}")
     private String adminPassword;
-    @Value("${api.default.admin.password}")
-    private String defaultAdminPassword;
+    @Value("${api.default.employee.password}")
+    private String defaultEmployeePassword;
     @Value("${api.default.admin.email.suffix}")
     private String emailSuffix;
 
@@ -158,7 +158,7 @@ public class EmployeeService {
                                 emailSuffix
                         )
                 )
-                .password(passwordEncoder.encode(defaultAdminPassword))
+                .password(passwordEncoder.encode(defaultEmployeePassword))
                 .role(role)
                 .build();
     }
