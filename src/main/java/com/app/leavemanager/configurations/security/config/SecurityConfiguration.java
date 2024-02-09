@@ -52,6 +52,15 @@ public class SecurityConfiguration {
                                         "/holiday"
                                 ).hasAuthority(Scope.EMPLOYEE.name())
                                 .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/holiday/type"
+                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/holiday/type",
+                                        "/holiday/type/{holidayTypeId}"
+                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.ADMIN.name(), Scope.SUPER_ADMIN.name())
+                                .requestMatchers(
                                         HttpMethod.DELETE,
                                         "/holiday/{holidayId}"
                                 ).hasAuthority(Scope.EMPLOYEE.name())

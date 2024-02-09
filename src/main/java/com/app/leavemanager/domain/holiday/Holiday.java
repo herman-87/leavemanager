@@ -1,9 +1,25 @@
 package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.repository.dao.HolidayRepository;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -24,8 +40,8 @@ public class Holiday {
     private Long id;
     @Column(name = "c_title")
     private String title;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "c_type")
+    @ManyToOne
+    @JoinColumn(name = "c_type", referencedColumnName = "c_id")
     private HolidayType type;
     @Column(name = "c_description")
     private String description;

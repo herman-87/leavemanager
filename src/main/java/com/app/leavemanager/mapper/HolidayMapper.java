@@ -1,7 +1,9 @@
 package com.app.leavemanager.mapper;
 
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.dto.HolidayDTO;
+import com.app.leavemanager.dto.HolidayTypeDTO;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -24,4 +26,10 @@ public interface HolidayMapper {
     @Mapping(target = "period")
     @Mapping(target = "status")
     HolidayDTO toDTO(Holiday holiday);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id")
+    @Mapping(target = "name")
+    @Mapping(target = "description")
+    HolidayTypeDTO toDTO(HolidayType holidayType);
 }

@@ -2,7 +2,9 @@ package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.dto.HolidayDTO;
+import com.app.leavemanager.dto.HolidayTypeDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
@@ -21,6 +23,10 @@ public class HolidayService {
     private final HolidayRepository holidayRepository;
     private final EmployeeRepository employeeRepository;
     private final HolidayMapper holidayMapper;
+
+    private static boolean isAuthorOf(Employee employee, Holiday holiday) {
+        return employee.hasRoleEmployee() && holiday.isCreatedBy(employee);
+    }
 
     @Transactional
     public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
@@ -61,10 +67,6 @@ public class HolidayService {
             );
         }
         throw new RuntimeException("Forbidden for the current user");
-    }
-
-    private static boolean isAuthorOf(Employee employee, Holiday holiday) {
-        return employee.hasRoleEmployee() && holiday.isCreatedBy(employee);
     }
 
     @Transactional
@@ -133,5 +135,46 @@ public class HolidayService {
     private Employee getEmployeeByUsername(String currentUsername) {
         return employeeRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new Error("the current user is not present in database"));
+    }
+
+    @Transactional
+    public Long createHolidayType(HolidayTypeDTO holidayTypeDTO, String currentUsername) {
+
+        Employee employee = getEmployeeByUsername(currentUsername);
+        return employee.createHolidayType(
+                holidayTypeDTO.getName(),
+                holidayTypeDTO.getDescription(),
+                holidayRepository
+        ).getId();
+    }
+
+    @Transactional
+    public List<HolidayTypeDTO> getAllHolidayTypes() {
+        return holidayRepository.findAllHolidayTypes()
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
+    }
+
+    @Transactional
+    public HolidayTypeDTO getHolidayTypeById(Long holidayId) {
+        return holidayRepository.findHolidayStatusById(holidayId)
+                .map(holidayMapper::toDTO)
+                .orElseThrow();
+    }
+
+    public Void updateHolidayTypeById(Long holidayId, HolidayTypeDTO holidayTypeDTO) {
+
+        HolidayType holidayType = fetchHolidayTypeById(holidayId);
+        holidayType.update(
+                holidayTypeDTO.getName(),
+                holidayTypeDTO.getDescription(),
+                holidayRepository
+        );
+    }
+
+    private HolidayType fetchHolidayTypeById(Long holidayId) {
+        return holidayRepository.findHolidayStatusById(holidayId)
+                .orElseThrow(() -> new RuntimeException("Holiday type Not Found"));
     }
 }

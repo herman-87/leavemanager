@@ -1,12 +1,13 @@
 package com.app.leavemanager.configurations.bean;
 
+import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.repository.dao.DefaultEmployeeRepository;
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.repository.dao.EmployeeRepository;
 import com.app.leavemanager.repository.dao.HolidayRepository;
-import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
+import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ public class LeaveManagerBean {
     private final UserSpringRepository userSpringRepository;
     private final EmployeeSpringRepository employeeSpringRepository;
     private final HolidaySpringRepository holidaySpringRepository;
+    private final HolidayTypeSpringRepository holidayTypeSpringRepository;
 
     @Bean
     public EmployeeRepository employeeRepository() {
@@ -29,7 +31,10 @@ public class LeaveManagerBean {
 
     @Bean
     public HolidayRepository holidayRepository() {
-        return new DefaultHolidayRepository(holidaySpringRepository);
+        return new DefaultHolidayRepository(
+                holidaySpringRepository,
+                holidayTypeSpringRepository
+        );
     }
 
 }
