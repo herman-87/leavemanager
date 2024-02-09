@@ -2,7 +2,6 @@ package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.repository.dao.HolidayRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "c_holiday")
+@Table(name = "t_holiday")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

@@ -6,8 +6,8 @@ import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.dto.HolidayTypeDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.repository.dao.HolidayRepository;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,12 +158,13 @@ public class HolidayService {
 
     @Transactional
     public HolidayTypeDTO getHolidayTypeById(Long holidayId) {
-        return holidayRepository.findHolidayStatusById(holidayId)
+        return holidayRepository.findHolidayTypeById(holidayId)
                 .map(holidayMapper::toDTO)
                 .orElseThrow();
     }
 
-    public Void updateHolidayTypeById(Long holidayId, HolidayTypeDTO holidayTypeDTO) {
+    @Transactional
+    public void updateHolidayTypeById(Long holidayId, HolidayTypeDTO holidayTypeDTO) {
 
         HolidayType holidayType = fetchHolidayTypeById(holidayId);
         holidayType.update(
@@ -174,7 +175,14 @@ public class HolidayService {
     }
 
     private HolidayType fetchHolidayTypeById(Long holidayId) {
-        return holidayRepository.findHolidayStatusById(holidayId)
+        return holidayRepository.findHolidayTypeById(holidayId)
                 .orElseThrow(() -> new RuntimeException("Holiday type Not Found"));
+    }
+
+    @Transactional
+    public void deleteHolidayTypeById(Long holidayTypeId) {
+
+        HolidayType holidayType = fetchHolidayTypeById(holidayTypeId);
+        holidayType.delete(holidayRepository);
     }
 }

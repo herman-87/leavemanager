@@ -1,6 +1,5 @@
-package com.app.leavemanager.repository.dao;
+package com.app.leavemanager.domain.holiday;
 
-import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 
 import java.util.List;
@@ -15,7 +14,10 @@ public interface HolidayRepository {
     List<HolidayType> findAllHolidayTypes();
 
     void deleteById(Long holidayId);
+    void deleteHolidayTypeById(Long holidayId);
 
     Optional<Holiday> findById(Long holidayId);
-    Optional<HolidayType> findHolidayStatusById(Long holidayId);
+    Optional<HolidayType> findHolidayTypeById(Long holidayId);
+
+    boolean existHolidayByTypeId(Long holidayTypeId);
 }

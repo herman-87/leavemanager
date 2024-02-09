@@ -4,9 +4,10 @@ import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.Period;
+import com.app.leavemanager.domain.holiday.config.HolidayConfig;
+import com.app.leavemanager.domain.holiday.config.HolidayConfigRepository;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.repository.dao.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -231,6 +232,23 @@ public class Employee {
                         .name(name)
                         .description(description)
                         .createdBy(this)
+                        .build()
+        );
+    }
+
+    public HolidayConfig createHolidayConfig(String description,
+                                             int numberOfTime,
+                                             int minimumOfDays,
+                                             int maximumOfDays,
+                                             HolidayType holidayType,
+                                             HolidayConfigRepository holidayConfigRepository) {
+        return holidayConfigRepository.save(
+                HolidayConfig.builder()
+                        .description(description)
+                        .numberOfTime(numberOfTime)
+                        .minimumOfDays(minimumOfDays)
+                        .maximumOfDays(maximumOfDays)
+                        .type(holidayType)
                         .build()
         );
     }

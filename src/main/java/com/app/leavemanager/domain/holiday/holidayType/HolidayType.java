@@ -3,9 +3,8 @@ package com.app.leavemanager.domain.holiday.holidayType;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.holiday.Holiday;
-import com.app.leavemanager.repository.dao.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -46,5 +45,13 @@ public class HolidayType {
         this.name = name;
         this.description = description;
         holidayRepository.save(this);
+    }
+
+    public void delete(HolidayRepository holidayRepository) {
+
+        if (holidayRepository.existHolidayByTypeId(this.id)) {
+            throw new RuntimeException("this holiday is used by holiday");
+        }
+        holidayRepository.deleteHolidayTypeById(this.id);
     }
 }

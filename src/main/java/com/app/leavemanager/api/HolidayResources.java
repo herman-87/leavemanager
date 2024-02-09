@@ -115,4 +115,11 @@ public class HolidayResources {
         holidayService.updateHolidayTypeById(holidayId, holidayTypeDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @DeleteMapping("/holiday/type/{holidayTypeId}")
+    public ResponseEntity<Void> deleteHolidayType(@PathVariable("holidayTypeId") Long holidayTypeId) {
+
+        holidayService.deleteHolidayTypeById(holidayTypeId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

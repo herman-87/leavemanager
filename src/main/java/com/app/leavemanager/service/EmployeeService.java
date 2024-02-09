@@ -11,7 +11,7 @@ import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.dto.EmployeeDTO;
 import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.mapper.EmployeeMapper;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

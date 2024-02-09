@@ -1,6 +1,7 @@
 package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
@@ -41,12 +42,22 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
+    public void deleteHolidayTypeById(Long holidayTypeId) {
+        holidayTypeSpringRepository.deleteById(holidayTypeId);
+    }
+
+    @Override
     public Optional<Holiday> findById(Long holidayId) {
         return holidaySpringRepository.findById(holidayId);
     }
 
     @Override
-    public Optional<HolidayType> findHolidayStatusById(Long holidayId) {
+    public Optional<HolidayType> findHolidayTypeById(Long holidayId) {
         return holidayTypeSpringRepository.findById(holidayId);
+    }
+
+    @Override
+    public boolean existHolidayByTypeId(Long holidayTypeId) {
+        return holidaySpringRepository.existsByTypeId(holidayTypeId);
     }
 }
