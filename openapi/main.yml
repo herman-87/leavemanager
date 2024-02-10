@@ -15,11 +15,11 @@ paths:
     post:
       tags:
         - Admin
-      summary: Create the super admin of app
+      summary: Create the super admin in the app
       description: Create the super admin of app. He is an employee by default
       operationId: createSuperAdmin
       requestBody:
-        description: Employee object that need to be create
+        description: registration data that need to be use for create employee
         required: true
         content:
           application/json:
@@ -33,6 +33,75 @@ paths:
               schema:
                 type: integer
                 format: int64
+  /admin/add:
+    post:
+      tags:
+        - Admin
+      summary: Create an admin in the app
+      description: create an admin as super admin
+      operationId: createAdmin
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      requestBody:
+        description: registration data that need to be use for create employee
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /admin/employee/add:
+    post:
+      tags:
+        - Admin
+      summary: Create an employee in the app
+      description: create an employee as super admin or admin
+      operationId: createEmployee
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      requestBody:
+        description: registration data that need to be use for create employee
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /admin/employee/all:
+    get:
+      tags:
+        - Admin
+      summary: get all employees
+      description: get all employees present in the app
+      operationId: getAllEmployees
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDTO'
 
 
 
@@ -701,6 +770,33 @@ components:
         dateOfBirth:
           type: string
           format: date
+    EmployeeDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: identifier of employee
+        password:
+          type: string
+          description: employee password
+        firstname:
+          type: string
+          description: employee firstname
+        lastname:
+          type: string
+          description: employee lastname
+        email:
+          type: string
+          description: employee email
+        dateOfBirth:
+          type: string
+          format: date
+          description: employee date of birth
+        isActivated:
+          type: boolean
+          description: the value is 'true' if the employee insert an existing email
+
 
     VariantDTO:
       type: object

@@ -164,7 +164,6 @@
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<useTags>true</useTags>
 								<useSpringBoot3>true</useSpringBoot3>
-								<dateLibrary>java8-localdatetime</dateLibrary>
 								<library>spring-boot</library>
 								<useSpringBoot3>true</useSpringBoot3>
 							</configOptions>
