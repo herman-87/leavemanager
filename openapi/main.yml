@@ -102,6 +102,79 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EmployeeDTO'
+  /employee/{employeeId}:
+    get:
+      tags:
+        - Employee
+      summary: Get Employee by id
+      description: Get Employee by id. only the super admin or admin and the user account
+      operationId: getEmployeeById
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: employeeId
+          in: path
+          description: employee ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDTO'
+    put:
+      tags:
+        - Employee
+      summary: update a Employee
+      description: update a Employee
+      operationId: updateEmployee
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: employeeId
+          in: path
+          description: employee ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Employee object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+    delete:
+      tags:
+        - Employee
+      summary: Delete employee by id
+      description: Delete employee by id
+      operationId: deleteEmployeeById
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      parameters:
+        - name: employeeId
+          in: path
+          description: The id of the employee to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+
 
 
 
