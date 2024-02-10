@@ -1,9 +1,9 @@
 package com.app.leavemanager.api;
 
 import com.app.leavemanager.dto.EmployeeDTO;
-import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.service.EmployeeService;
+import com.leavemanager.openapi.api.EmployeeApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,10 @@ import java.util.List;
 public class AdminResources {
 
     private final EmployeeService employeeService;
+
+    private static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     @PostMapping("/registration")
     public ResponseEntity<RegistrationEmployeeResponseDTO> createSuperAdmin(@RequestBody EmployeeDTO employeeDTO) {
@@ -52,9 +56,5 @@ public class AdminResources {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(employeeService.getAllEmployees());
-    }
-
-    private static String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

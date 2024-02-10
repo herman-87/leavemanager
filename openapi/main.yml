@@ -1,0 +1,816 @@
+openapi: 3.0.3
+info:
+  title: leavemanager Rest API
+  description: All Item Rest API End Points
+  version: 2024-W2
+servers:
+  - url: http:/localhost:8080/api/leavemanager/v1
+tags:
+  - name: Employee
+    description: Everything about the Employees
+  - name: Holiday
+    description: Everything about the Holidays
+paths:
+  /admin/registration:
+    post:
+      tags:
+        - Admin
+      summary: Create the super admin of app
+      description: Create the super admin of app. He is an employee by default
+      operationId: createSuperAdmin
+      requestBody:
+        description: Employee object that need to be create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+
+
+
+  /item/{id}:
+    get:
+      tags:
+        - Item
+      summary: Finds item by id
+      description: Finds item by id
+      operationId: getItemById
+      security:
+        - oAuth:
+            - item:read
+      parameters:
+        - name: id
+          in: path
+          description: Item id to be fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+        404:
+          description: leavemanager-4001
+    put:
+      tags:
+        - Item
+      summary: update a item
+      description: update a item
+      operationId: updateItem
+      security:
+        - oAuth:
+            - item:edit
+      parameters:
+        - name: id
+          in: path
+          description: item id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Item object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDTO'
+      responses:
+        201:
+          description: successful operation
+        400:
+          description: Invalid input
+        404:
+          description: Item not found
+    delete:
+      tags:
+        - Item
+      summary: Delete item by id
+      description: Delete item by id
+      operationId: deleteItemById
+      security:
+        - oAuth:
+            - item:delete
+      parameters:
+        - name: id
+          in: path
+          description: The id of the item to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: successful operation
+        404:
+          description: leavemanager-4001
+  /category/{id}/item:
+    get:
+      tags:
+        - Item
+      summary: Fetch all items of category identified by id
+      description: Fetch all items of category identified by id
+      operationId: getByCategory
+      security:
+        - oAuth:
+            - item:read
+      parameters:
+        - name: id
+          in: path
+          description: category id to be fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemDTO'
+        404:
+          description: leavemanager-4000
+    post:
+      tags:
+        - Category
+      summary: put items into category
+      description: put items into category
+      operationId: AddItemsIntoCategory
+      security:
+        - oAuth:
+            - category:edit
+      requestBody:
+        description: items that need to be add to category
+        required: false
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemDTO'
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAPI'
+        400:
+          description: Invalid input
+        404:
+          description: leavemanager-4000 / leavemanager-4001
+    put:
+      tags:
+        - Category
+      summary: remove items into category
+      description: remove items into some category
+      operationId: deleteItemsFromCategory
+      security:
+        - oAuth:
+            - category:delete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemDTO'
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successfull operation
+        400:
+          description: invalid input
+  /item/{id}/category:
+    post:
+      tags:
+        - Item
+      summary: Add item into categories
+      description: add item into categories
+      operationId: addItemToCategories
+      security:
+        - oAuth:
+            - item:edit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CategoryDTO'
+      parameters:
+        - name: id
+          in: path
+          description: item id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successfull operation
+        400:
+          description: invalid input
+    delete:
+      tags:
+        - Item
+      summary: remove item from categories
+      description: remove item into all categories
+      operationId: deleteItemFromCategory
+      security:
+        - oAuth:
+            - item:delete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CategoryDTO'
+      parameters:
+        - name: id
+          in: path
+          description: item id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successfull operation
+        400:
+          description: invalid input
+  /item/{itemId}/attribute:
+    post:
+      tags:
+        - Item
+      summary: Create attributes to item
+      description: Create attributes to some item
+      operationId: createAttributes
+      security:
+        - oAuth:
+            - item:edit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeDTO'
+      parameters:
+        - name: itemId
+          in: path
+          description: item id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successfull operation
+        400:
+          description: invalid input
+        404:
+          description: leavemanager-4001
+  /item/{id}/variant:
+    get:
+      tags:
+        - Item
+      summary: get item for variant
+      description: get item with the variant
+      operationId: getItemVariant
+      security:
+        - oAuth:
+            - item:read
+      parameters:
+        - name: id
+          in: path
+          description: item id to be fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+        404:
+          description: leavemanager-4001
+    post:
+      tags:
+        - Item
+      summary: Create a new variant of an Item
+      description: Create a new varient from an Item
+      operationId: createVariant
+      security:
+        - oAuth:
+            - item:edit
+      requestBody:
+        description: variant that need to be add to item
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VariantDTO'
+      parameters:
+        - name: id
+          in: path
+          description: item id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAPI'
+        400:
+          description: Invalid input
+        404:
+          description: leavemanager-4001
+  /category/root:
+    get:
+      tags:
+        - Category
+      summary: get all root category
+      description: get all root category
+      operationId: getAllRootCategory
+      security:
+        - oAuth:
+            - category:read
+      parameters:
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+        404:
+          description: leavemanager-4000
+  /category:
+    post:
+      tags:
+        - Category
+      summary: Create a new root category
+      description: Create a root category
+      operationId: createRootCategory
+      security:
+        - oAuth:
+            - category:create
+      requestBody:
+        description: Category object that need to be create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        400:
+          description: Invalid input
+    get:
+      tags:
+        - Category
+      summary: Fetch all category
+      description: Fetch all category
+      operationId: getAllCategory
+      security:
+        - oAuth:
+            - category:read
+      parameters:
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+  /category/{id}/category:
+    get:
+      tags:
+        - Category
+      summary: get all subcategory of some category
+      description: get all subcategory of some category
+      operationId: getAllSubCategoryOf
+      security:
+        - oAuth:
+            - category:read
+      parameters:
+        - name: id
+          in: path
+          description: category id to be fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+        404:
+          description: leavemanager-4000
+    post:
+      tags:
+        - Category
+      summary: Create a new child category
+      description: Create a child category
+      operationId: createSubCategory
+      security:
+        - oAuth:
+            - category:create
+      parameters:
+        - name: id
+          in: path
+          description: Parent ID of the category to create
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Category object that need to be create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        400:
+          description: Invalid input
+
+  /category/{id}:
+    put:
+      tags:
+        - Category
+      summary: update a category
+      description: update a category
+      operationId: updateCategory
+      security:
+        - oAuth:
+            - category:edit
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Category object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAPI'
+        400:
+          description: Invalid input
+        404:
+          description: leavemanager-4000
+    get:
+      tags:
+        - Category
+      summary: Finds category by id
+      description: Finds category by id
+      operationId: getCategoryById
+      security:
+        - oAuth:
+            - category:read
+      parameters:
+        - name: id
+          in: path
+          description: Category id to be fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fieldsToExtractCode
+          in: query
+          required: true
+          schema:
+            type: string
+          description: specify the fields that will be present the response
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+        404:
+          description: leavemanager-4000
+  /category/{id}/parent/{parentId}:
+    put:
+      tags:
+        - Category
+      summary: set parent of a category
+      description: set parent of a category
+      operationId: setParentOfCategory
+      security:
+        - oAuth:
+            - category:edit
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: parentId
+          in: path
+          description: parent category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAPI'
+        400:
+          description: Invalid input
+        404:
+          description: leavemanager-4000
+  /category/{id}/parent:
+    delete:
+      tags:
+        - Category
+      summary: make a category root
+      description: make a category root
+      operationId: makeCategoryRoot
+      security:
+        - oAuth:
+            - category:edit
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAPI'
+        400:
+          description: Invalid input
+        404:
+          description: leavemanager-4000
+
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the Authorization Code grant flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.oauth.lao-sarl.cm
+          tokenUrl: https://token.oauth.lao-sarl.cm
+          scopes:
+            item:read: Read the Item
+            item:create: Add new Item
+            item:edit: Modify an existing Item
+            item:delete: Delete an existing Item
+            category:read: Read Category
+            category:create: Create Category
+            category:edit: Edit Category
+            category:delete: Delete Category
+  schemas:
+    RegistrationDTO:
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: employee firstname
+        lastname:
+          type: string
+          description: employee lastname
+        dateOfBirth:
+          type: string
+          format: date
+
+    VariantDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identifier
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+        sku:
+          type: string
+          description: sku of variant
+    ItemAttributeDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identifier
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+        name:
+          type: string
+          description: name of attribute
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeValueDTO'
+    ItemAttributeValueDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identifier
+        itemAttribute:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeDTO'
+        variant:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantDTO'
+        value:
+          type: string
+          description: value of item attribute value
+    ItemDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identifier
+        name:
+          type: string
+          description: item's name
+        description:
+          type: string
+          description: item's description
+        type:
+          type: string
+          description: item's type
+          enum:
+            - INVENTORY
+            - SERVICE
+        barcode:
+          type: string
+          description: item barcode
+        sku:
+          type: string
+          description: Stocking keeping unit
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDTO'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeDTO'
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariantDTO'
+    CategoryDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identifier
+        name:
+          type: string
+          description: category name
+        description:
+          type: string
+          description: category description
+        parent:
+          $ref: '#/components/schemas/CategoryDTO'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemDTO'
+    ResponseAPI:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: array
+          items:
+            type: object
+
