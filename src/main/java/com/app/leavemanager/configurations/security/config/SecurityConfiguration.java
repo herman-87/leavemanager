@@ -104,6 +104,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/h2-console/**")
                 .requestMatchers("/actuator/health/**")
                 .requestMatchers("/actuator/swagger-ui")
+                .requestMatchers("/swagger-ui/**")
                 .requestMatchers("/api/auth/authenticate")
                 .requestMatchers(
                         HttpMethod.POST,

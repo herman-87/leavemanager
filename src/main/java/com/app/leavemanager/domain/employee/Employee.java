@@ -5,7 +5,6 @@ import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
-import com.app.leavemanager.domain.holiday.config.HolidayConfigRepository;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
 import jakarta.persistence.CascadeType;
@@ -241,8 +240,8 @@ public class Employee {
                                              int minimumOfDays,
                                              int maximumOfDays,
                                              HolidayType holidayType,
-                                             HolidayConfigRepository holidayConfigRepository) {
-        return holidayConfigRepository.save(
+                                             HolidayRepository holidayRepository) {
+        return holidayRepository.save(
                 HolidayConfig.builder()
                         .description(description)
                         .numberOfTime(numberOfTime)

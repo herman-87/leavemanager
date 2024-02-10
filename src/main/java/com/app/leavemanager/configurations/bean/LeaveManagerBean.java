@@ -1,9 +1,7 @@
 package com.app.leavemanager.configurations.bean;
 
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
-import com.app.leavemanager.domain.holiday.config.HolidayConfigRepository;
 import com.app.leavemanager.repository.dao.DefaultEmployeeRepository;
-import com.app.leavemanager.repository.dao.DefaultHolidayConfigRepository;
 import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
@@ -37,13 +35,9 @@ public class LeaveManagerBean {
     public HolidayRepository holidayRepository() {
         return new DefaultHolidayRepository(
                 holidaySpringRepository,
-                holidayTypeSpringRepository
+                holidayTypeSpringRepository,
+                holidayConfigSpringRepository
         );
-    }
-
-    @Bean
-    public HolidayConfigRepository holidayConfigRepository() {
-        return new DefaultHolidayConfigRepository(holidayConfigSpringRepository);
     }
 
 }

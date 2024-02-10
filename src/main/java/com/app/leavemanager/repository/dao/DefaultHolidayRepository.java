@@ -2,7 +2,9 @@ package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.repository.spring.HolidayConfigSpringRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ public class DefaultHolidayRepository implements HolidayRepository {
 
     private final HolidaySpringRepository holidaySpringRepository;
     private final HolidayTypeSpringRepository holidayTypeSpringRepository;
+    private final HolidayConfigSpringRepository holidayConfigSpringRepository;
 
     @Override
     public Holiday save(Holiday holiday) {
@@ -59,5 +62,20 @@ public class DefaultHolidayRepository implements HolidayRepository {
     @Override
     public boolean existHolidayByTypeId(Long holidayTypeId) {
         return holidaySpringRepository.existsByTypeId(holidayTypeId);
+    }
+
+    @Override
+    public Optional<HolidayConfig> findHolidayConfigByI(Long holidayConfigId) {
+        return holidayConfigSpringRepository.findById(holidayConfigId);
+    }
+
+    @Override
+    public HolidayConfig save(HolidayConfig holidayConfig) {
+        return holidayConfigSpringRepository.save(holidayConfig);
+    }
+
+    @Override
+    public List<HolidayConfig> findAllHolidayConfig() {
+        return holidayConfigSpringRepository.findAll();
     }
 }
