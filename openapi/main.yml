@@ -174,8 +174,31 @@ paths:
       responses:
         204:
           description: successful operation
-
-
+  /holiday:
+    post:
+      tags:
+        - Admin
+      summary: Create a Holiday in the app
+      description: create a Holiday
+      operationId: createHoliday
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN,EMPLOYEE
+      requestBody:
+        description: object that need to be use for create Holiday
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationHolidayDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
 
 
   /item/{id}:
@@ -843,6 +866,19 @@ components:
         dateOfBirth:
           type: string
           format: date
+    CreationHolidayDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          description: holiday title
+        type:
+          $ref: '#/components/schemas/HolidayTypeDTO'
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
     EmployeeDTO:
       type: object
       properties:
