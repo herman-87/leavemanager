@@ -3,6 +3,8 @@ package com.app.leavemanager.api;
 import com.app.leavemanager.dto.HolidayDTO;
 import com.app.leavemanager.dto.HolidayTypeDTO;
 import com.app.leavemanager.service.HolidayService;
+import com.leavemanager.openapi.api.HolidayApi;
+import com.leavemanager.openapi.model.CreationHolidayDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class HolidayResources {
+public class HolidayResources implements HolidayApi {
 
     private final HolidayService holidayService;
 
@@ -121,5 +123,10 @@ public class HolidayResources {
 
         holidayService.deleteHolidayTypeById(holidayTypeId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public ResponseEntity<Long> _createHoliday(CreationHolidayDTO creationHolidayDTO) {
+        return null;
     }
 }

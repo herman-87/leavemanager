@@ -177,7 +177,7 @@ paths:
   /holiday:
     post:
       tags:
-        - Admin
+        - Holiday
       summary: Create a Holiday in the app
       description: create a Holiday
       operationId: createHoliday
@@ -199,6 +199,25 @@ paths:
               schema:
                 type: integer
                 format: int64
+  /holiday/all:
+    get:
+      tags:
+        - Admin
+      summary: get all employees
+      description: get all employees present in the app
+      operationId: getAllEmployees
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDTO'
 
 
   /item/{id}:
@@ -905,8 +924,19 @@ components:
         isActivated:
           type: boolean
           description: the value is 'true' if the employee insert an existing email
+    HolidayTypeDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
 
 
+#######################################
     VariantDTO:
       type: object
       properties:
