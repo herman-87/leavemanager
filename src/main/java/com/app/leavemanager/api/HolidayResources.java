@@ -126,7 +126,72 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
+    public ResponseEntity<Void> _approveHoliday(Long holidayId) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<Long> _createHoliday(CreationHolidayDTO creationHolidayDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Long> _createHolidayType(com.leavemanager.openapi.model.HolidayTypeDTO holidayTypeDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _deleteHolidayById(Long holidayId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _deleteHolidayTypeById(Long holidayTypeId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<com.leavemanager.openapi.model.HolidayTypeDTO>> _getAllHolidayTypes() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<com.leavemanager.openapi.model.HolidayDTO>> _getAllHolidays() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<com.leavemanager.openapi.model.HolidayDTO> _getHolidayById(Long holidayId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<com.leavemanager.openapi.model.HolidayDTO> _getHolidayTypeById(Long holidayTypeId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _publishHoliday(Long holidayId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _unapprovedHoliday(Long holidayId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _unpublishedHoliday(Long holidayId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _updateHoliday(Long holidayId, com.leavemanager.openapi.model.HolidayDTO holidayDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> _updateHolidayType(Long holidayTypeId, com.leavemanager.openapi.model.HolidayTypeDTO holidayTypeDTO) {
         return null;
     }
 }
