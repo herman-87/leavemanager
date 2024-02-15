@@ -1,9 +1,18 @@
 package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.repository.dao.DefaultHolidayRepository;
-import com.app.leavemanager.repository.dao.HolidayRepository;
-import jakarta.persistence.*;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "c_holiday")
+@Table(name = "t_holiday")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,8 +38,8 @@ public class Holiday {
     private Long id;
     @Column(name = "c_title")
     private String title;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "c_type")
+    @ManyToOne
+    @JoinColumn(name = "c_type", referencedColumnName = "c_id")
     private HolidayType type;
     @Column(name = "c_description")
     private String description;
@@ -44,24 +53,6 @@ public class Holiday {
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "c_id")
     private Employee createdBy;
-
-    public static Holiday create(String title,
-                                 HolidayType type,
-                                 String description,
-                                 Period period,
-                                 DefaultHolidayRepository defaultHolidayRepository) {
-
-        return defaultHolidayRepository.save(
-                Holiday.builder()
-                        .title(title)
-                        .type(type)
-                        .description(description)
-                        .period(period)
-                        .status(HolidayStatus.DRAFT)
-                        .createdAt(LocalDateTime.now())
-                        .build()
-        );
-    }
 
     public void update(HolidayType type,
                        String description,
@@ -78,12 +69,16 @@ public class Holiday {
 
     public void approve(HolidayRepository holidayRepository) {
 
-        if (HolidayStatus.PUBLISH.equals(this.status)) {
+        if (isPublished()) {
             this.status = HolidayStatus.APPROVED;
             holidayRepository.save(this);
         } else {
             log.error("this improvement is not possible");
         }
+    }
+
+    private boolean isPublished() {
+        return HolidayStatus.PUBLISH.equals(this.status);
     }
 
     public void publish(HolidayRepository holidayRepository) {
@@ -98,7 +93,7 @@ public class Holiday {
 
     public void unpublished(HolidayRepository holidayRepository) {
 
-        if(HolidayStatus.PUBLISH.equals(this.status)) {
+        if (isPublished()) {
             this.status = HolidayStatus.DRAFT;
             holidayRepository.save(this);
         } else {
@@ -108,7 +103,7 @@ public class Holiday {
 
     public void unapprovedHoliday(HolidayRepository holidayRepository) {
 
-        if (HolidayStatus.APPROVED.equals(this.status)) {
+        if (isApproved()) {
             this.status = HolidayStatus.PUBLISH;
             holidayRepository.save(this);
         } else {
@@ -116,7 +111,15 @@ public class Holiday {
         }
     }
 
+    private boolean isApproved() {
+        return HolidayStatus.APPROVED.equals(this.status);
+    }
+
     public boolean isCreatedBy(Employee employee) {
         return this.createdBy.equals(employee);
+    }
+
+    public void delete(HolidayRepository holidayRepository) {
+        holidayRepository.deleteById(this.id);
     }
 }

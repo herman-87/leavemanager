@@ -1,11 +1,14 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.dto.HolidayDTO;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.repository.dao.HolidayRepository;
+import com.app.leavemanager.dto.HolidayTypeDTO;
+import com.app.leavemanager.mapper.HolidayMapper;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.leavemanager.openapi.model.CreationHolidayDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,46 +22,47 @@ import java.util.List;
 public class HolidayService {
 
     private final HolidayRepository holidayRepository;
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final HolidayMapper holidayMapper;
+
+    private static boolean isAuthorOf(Employee employee, Holiday holiday) {
+        return employee.hasRoleEmployee() && holiday.isCreatedBy(employee);
+    }
 
     @Transactional
-    public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
+    public Long createHoliday(CreationHolidayDTO creationHolidayDTO, String currentUsername) {
 
+        HolidayType holidayType = holidayRepository
+                .findHolidayTypeById(creationHolidayDTO.getType())
+                .orElseThrow();
         Employee employee = getEmployeeByUsername(currentUsername);
+
         return employee.createHoliday(
-                holidayDTO.getTitle(),
-                holidayDTO.getType(),
-                holidayDTO.getDescription(),
-                holidayDTO.getPeriod(),
+                creationHolidayDTO.getTitle(),
+                creationHolidayDTO.getDescription(),
+                holidayMapper.toDTO(creationHolidayDTO.getPeriod()),
+                holidayType,
                 holidayRepository
         ).getId();
     }
 
     @Transactional
-    public List<HolidayDTO> getAllHolidays() {
+    public List<HolidayDTO> getAllHolidays(String currentUsername) {
         return holidayRepository.findAll()
                 .stream()
-                .map(holiday ->
-                        HolidayDTO.builder()
-                                .id(holiday.getId())
-                                .title(holiday.getTitle())
-                                .type(holiday.getType())
-                                .status(holiday.getStatus())
-                                .description(holiday.getDescription())
-                                .period(holiday.getPeriod())
-                                .createdAt(holiday.getCreatedAt())
-                                .build()
-                )
+                .map(holidayMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public void updateHoliday(Long holidayId, HolidayDTO holidayDTO, String currentUsername) {
+    public void updateHoliday(Long holidayId,
+                              HolidayDTO holidayDTO,
+                              String currentUsername) {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
 
-        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
+        if (isAuthorOf(employee, holiday)) {
             holiday.update(
                     holidayDTO.getType(),
                     holidayDTO.getDescription(),
@@ -75,10 +79,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (Scope.EMPLOYEE.equals(employee.getUserRole()) && holiday.isCreatedBy(employee)) {
-            holidayRepository.deleteById(holidayId);
-        }
+        employee.deleteHoliday(holiday, holidayRepository);
         throw new RuntimeException("Forbidden for the current user");
     }
 
@@ -87,23 +88,13 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        Scope employeeRole = employee.getUser().getRole();
 
         if (
-                Scope.SUPER_ADMIN.equals(employeeRole)
-                        || Scope.ADMIN.equals(employeeRole)
-                        || (Scope.EMPLOYEE.equals(employeeRole) && holiday.isCreatedBy(employee))
-        ) {
-            return HolidayDTO
-                    .builder()
-                    .id(holiday.getId())
-                    .type(holiday.getType())
-                    .title(holiday.getTitle())
-                    .description(holiday.getDescription())
-                    .createdAt(holiday.getCreatedAt())
-                    .period(holiday.getPeriod())
-                    .status(holiday.getStatus())
-                    .build();
+                employee.hasRoleSuperAdmin()
+                        || employee.hasRoleAdmin()
+                        || isAuthorOf(employee, holiday)) {
+
+            return holidayMapper.toDTO(holiday);
         }
         throw new RuntimeException("Forbidden for the current user");
     }
@@ -119,11 +110,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.approve(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.approveHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -131,11 +118,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.publish(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.publishHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -143,11 +126,7 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.unapprovedHoliday(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.unapprovedHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -155,15 +134,60 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-
-        if (employee.hasAuthorityOver(holiday)) {
-            holiday.unpublished(holidayRepository);
-        }
-        throw new RuntimeException("Forbidden for the current user");
+        employee.unpublishedHoliday(holiday, holidayRepository);
     }
 
     private Employee getEmployeeByUsername(String currentUsername) {
         return employeeRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new Error("the current user is not present in database"));
+    }
+
+    @Transactional
+    public Long createHolidayType(HolidayTypeDTO holidayTypeDTO, String currentUsername) {
+
+        Employee employee = getEmployeeByUsername(currentUsername);
+        return employee.createHolidayType(
+                holidayTypeDTO.getName(),
+                holidayTypeDTO.getDescription(),
+                holidayRepository
+        ).getId();
+    }
+
+    @Transactional
+    public List<HolidayTypeDTO> getAllHolidayTypes() {
+        return holidayRepository.findAllHolidayTypes()
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
+    }
+
+    @Transactional
+    public HolidayTypeDTO getHolidayTypeById(Long holidayId) {
+        return holidayRepository.findHolidayTypeById(holidayId)
+                .map(holidayMapper::toDTO)
+                .orElseThrow();
+    }
+
+    @Transactional
+    public void updateHolidayTypeById(Long holidayId, HolidayTypeDTO holidayTypeDTO) {
+
+        HolidayType holidayType = fetchHolidayTypeById(holidayId);
+        holidayType.update(
+                holidayTypeDTO.getName(),
+                holidayTypeDTO.getDescription(),
+                holidayRepository
+        );
+    }
+
+    private HolidayType fetchHolidayTypeById(Long holidayId) {
+        return holidayRepository.findHolidayTypeById(holidayId)
+                .orElseThrow(() -> new RuntimeException("Holiday type Not Found"));
+    }
+
+    @Transactional
+    public void deleteHolidayTypeById(Long holidayTypeId) {
+
+        HolidayType holidayType = fetchHolidayTypeById(holidayTypeId);
+        holidayType.delete(holidayRepository);
     }
 }

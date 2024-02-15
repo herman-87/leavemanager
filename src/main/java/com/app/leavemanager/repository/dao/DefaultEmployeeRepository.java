@@ -2,6 +2,7 @@ package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import lombok.RequiredArgsConstructor;

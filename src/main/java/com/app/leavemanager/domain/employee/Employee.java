@@ -3,11 +3,21 @@ package com.app.leavemanager.domain.employee;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
-import com.app.leavemanager.domain.holiday.HolidayType;
 import com.app.leavemanager.domain.holiday.Period;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
-import com.app.leavemanager.repository.dao.HolidayRepository;
-import jakarta.persistence.*;
+import com.app.leavemanager.domain.holiday.config.HolidayConfig;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +39,7 @@ import java.util.List;
 @Table(name = "t_employee")
 public class Employee {
 
+    private static int numberOfEmailAddressGenerated = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "c_id")
@@ -51,9 +62,6 @@ public class Employee {
     @OneToMany(mappedBy = "createdBy")
     @Builder.Default
     private List<Holiday> holidays = new ArrayList<>();
-
-    private static int numberOfEmailAddressGenerated = 1;
-
 
     public static Employee create(String firstname,
                                   String lastname,
@@ -136,21 +144,20 @@ public class Employee {
         );
     }
 
-    @Transactional
     public void validate(EmployeeRepository employeeRepository) {
         this.isActivated = true;
         employeeRepository.save(this);
     }
 
     public Holiday createHoliday(String title,
-                              HolidayType type,
-                              String description,
-                              Period period,
-                              HolidayRepository holidayRepository) {
+                                 String description,
+                                 Period period,
+                                 HolidayType holidayType,
+                                 HolidayRepository holidayRepository) {
         return holidayRepository.save(
                 Holiday.builder()
                         .title(title)
-                        .type(type)
+                        .type(holidayType)
                         .description(description)
                         .period(period)
                         .createdAt(LocalDateTime.now())
@@ -163,7 +170,84 @@ public class Employee {
         return this.user.getRole();
     }
 
-    public boolean hasAuthorityOver(Holiday holiday) {
-        return Scope.EMPLOYEE.equals(this.getUserRole()) && holiday.isCreatedBy(this);
+    public boolean hasRoleEmployee() {
+        return user.hasRole(Scope.EMPLOYEE);
+    }
+
+    public boolean hasRoleSuperAdmin() {
+        return user.hasRole(Scope.SUPER_ADMIN);
+    }
+
+    public boolean hasRoleAdmin() {
+        return user.hasRole(Scope.ADMIN);
+    }
+
+    public void approveHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (this.hasRoleEmployee()) {
+            holiday.approve(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void publishHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.publish(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void unapprovedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee()) {
+            holiday.unapprovedHoliday(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void unpublishedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.unpublished(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public void deleteHoliday(Holiday holiday, HolidayRepository holidayRepository) {
+        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+            holiday.delete(holidayRepository);
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
+        }
+    }
+
+    public HolidayType createHolidayType(String name,
+                                         String description,
+                                         HolidayRepository holidayRepository) {
+        return holidayRepository.save(
+                HolidayType.builder()
+                        .name(name)
+                        .description(description)
+                        .createdBy(this)
+                        .build()
+        );
+    }
+
+    public HolidayConfig createHolidayConfig(String description,
+                                             int numberOfTime,
+                                             int minimumOfDays,
+                                             int maximumOfDays,
+                                             HolidayType holidayType,
+                                             HolidayRepository holidayRepository) {
+        return holidayRepository.save(
+                HolidayConfig.builder()
+                        .description(description)
+                        .numberOfTime(numberOfTime)
+                        .minimumOfDays(minimumOfDays)
+                        .maximumOfDays(maximumOfDays)
+                        .type(holidayType)
+                        .build()
+        );
     }
 }

@@ -10,7 +10,8 @@ import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.dto.EmployeeDTO;
 import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
-import com.app.leavemanager.repository.dao.EmployeeRepository;
+import com.app.leavemanager.mapper.EmployeeMapper;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,14 @@ public class EmployeeService {
     private final TokenSpringRepository tokenSpringRepository;
     private final EmployeeRepository employeeRepository;
     private final UserSpringRepository userSpringRepository;
+    private final EmployeeMapper employeeMapper;
+
     @Value("${api.super.admin.email}")
     private String adminEmail;
     @Value("${api.super.admin.password}")
     private String adminPassword;
-    @Value("${api.default.admin.password}")
-    private String defaultAdminPassword;
+    @Value("${api.default.employee.password}")
+    private String defaultEmployeePassword;
     @Value("${api.default.admin.email.suffix}")
     private String emailSuffix;
 
@@ -55,17 +58,11 @@ public class EmployeeService {
     }
 
     @Transactional
-    public List<EmployeeDTO> getAllEmployee() {
-        return employeeSpringRepository.findAll()
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeSpringRepository
+                .findAll()
                 .stream()
-                .map(employee ->
-                        EmployeeDTO.builder()
-                                .id(employee.getId())
-                                .firstname(employee.getFirstname())
-                                .lastname(employee.getLastname())
-                                .dateOfBirth(employee.getDateOfBirth())
-                                .build()
-                )
+                .map(employeeMapper::toDTO)
                 .toList();
     }
 
@@ -91,12 +88,7 @@ public class EmployeeService {
     @Transactional
     public EmployeeDTO getEmployeeById(Long employeeId) {
         return employeeSpringRepository.findById(employeeId)
-                .map(employee -> EmployeeDTO.builder()
-                        .id(employee.getId())
-                        .firstname(employee.getFirstname())
-                        .lastname(employee.getLastname())
-                        .dateOfBirth(employee.getDateOfBirth())
-                        .build())
+                .map(employeeMapper::toDTO)
                 .orElseThrow();
     }
 
@@ -166,7 +158,7 @@ public class EmployeeService {
                                 emailSuffix
                         )
                 )
-                .password(passwordEncoder.encode(defaultAdminPassword))
+                .password(passwordEncoder.encode(defaultEmployeePassword))
                 .role(role)
                 .build();
     }

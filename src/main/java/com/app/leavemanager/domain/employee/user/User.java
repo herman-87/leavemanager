@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -78,5 +79,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public boolean hasRole(Scope scope) {
+        return Objects.equals(role, scope);
     }
 }

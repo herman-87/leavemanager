@@ -1,4 +1,4 @@
-package com.app.leavemanager.repository.dao;
+package com.app.leavemanager.domain.employee;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.user.Scope;

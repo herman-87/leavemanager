@@ -3,14 +3,16 @@ package com.app.leavemanager.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EmployeeDTO {
 
     private Long id;
@@ -19,4 +21,5 @@ public class EmployeeDTO {
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;
+    private boolean isActivated = false;
 }

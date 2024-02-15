@@ -1,8 +1,8 @@
 package com.app.leavemanager.dto;
 
 import com.app.leavemanager.domain.holiday.HolidayStatus;
-import com.app.leavemanager.domain.holiday.HolidayType;
 import com.app.leavemanager.domain.holiday.Period;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

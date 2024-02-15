@@ -1,0 +1,605 @@
+openapi: 3.0.3
+info:
+  title: leavemanager Rest API
+  description: All Item Rest API End Points
+  version: 2024-W2
+servers:
+  - url: http:/localhost:8080/api/leavemanager/v1
+tags:
+  - name: Employee
+    description: Everything about the Employees
+  - name: Holiday
+    description: Everything about the Holidays
+paths:
+  /admin/registration:
+    post:
+      tags:
+        - Admin
+      summary: Create the super admin in the app
+      description: Create the super admin of app. He is an employee by default
+      operationId: createSuperAdmin
+      requestBody:
+        description: registration data that need to be use for create employee
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /admin/add:
+    post:
+      tags:
+        - Admin
+      summary: Create an admin in the app
+      description: create an admin as super admin
+      operationId: createAdmin
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      requestBody:
+        description: registration data that need to be use for create employee
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /admin/employee/add:
+    post:
+      tags:
+        - Admin
+      summary: Create an employee in the app
+      description: create an employee as super admin or admin
+      operationId: createEmployee
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      requestBody:
+        description: registration data that need to be use for create employee
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /admin/employee/all:
+    get:
+      tags:
+        - Admin
+      summary: get all employees
+      description: get all employees present in the app
+      operationId: getAllEmployees
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDTO'
+  /employee/{employeeId}:
+    get:
+      tags:
+        - Employee
+      summary: Get Employee by id
+      description: Get Employee by id. only the super admin or admin and the user account
+      operationId: getEmployeeById
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: employeeId
+          in: path
+          description: employee ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDTO'
+    put:
+      tags:
+        - Employee
+      summary: update a Employee
+      description: update a Employee
+      operationId: updateEmployee
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: employeeId
+          in: path
+          description: employee ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Employee object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationDTO'
+      responses:
+        201:
+          description: successful operation
+    delete:
+      tags:
+        - Employee
+      summary: Delete employee by id
+      description: Delete employee by id
+      operationId: deleteEmployeeById
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      parameters:
+        - name: employeeId
+          in: path
+          description: The id of the employee to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+  /holiday:
+    post:
+      tags:
+        - Holiday
+      summary: Create a Holiday in the app
+      description: create a Holiday
+      operationId: createHoliday
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN,EMPLOYEE
+      requestBody:
+        description: object that need to be use for create Holiday
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationHolidayDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /holiday/all:
+    get:
+      tags:
+        - Holiday
+      summary: get all Holidays
+      description: get all Holidays present in the app
+      operationId: getAllHolidays
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HolidayDTO'
+  /holiday/{holidayId}:
+    get:
+      tags:
+        - Holiday
+      summary: Get Holiday by id
+      description: Get Holiday by id. only the super admin or admin and the user account
+      operationId: getHolidayById
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayDTO'
+    put:
+      tags:
+        - Holiday
+      summary: update a Holiday
+      description: update a Holiday
+      operationId: updateHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayId
+          in: path
+          description: employee ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Holiday object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayDTO'
+      responses:
+        201:
+          description: successful operation
+    delete:
+      tags:
+        - Holiday
+      summary: Delete holiday by id
+      description: Delete holiday by id
+      operationId: deleteHolidayById
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayId
+          in: path
+          description: The id of the holiday to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+  /approve/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: approve a Holiday
+      description: approve a Holiday
+      operationId: approveHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        201:
+          description: successful operation
+  /unapproved/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: unapproved a Holiday
+      description: unapproved a Holiday
+      operationId: unapprovedHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        201:
+          description: successful operation
+  /publish/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: publish a Holiday
+      description: publish a Holiday
+      operationId: publishHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        201:
+          description: successful operation
+  /unpublished/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: unpublished a Holiday
+      description: unpublished a Holiday
+      operationId: unpublishedHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        201:
+          description: successful operation
+  /holiday/type:
+    post:
+      tags:
+        - Holiday
+      summary: Create a HolidayType in the app
+      description: create a HolidayType
+      operationId: createHolidayType
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN,EMPLOYEE
+      requestBody:
+        description: object that need to be use for create Holiday
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayTypeDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+    get:
+      tags:
+        - Holiday
+      summary: get all HolidayType
+      description: get all HolidayType present in the app
+      operationId: getAllHolidayTypes
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HolidayTypeDTO'
+  /holiday/type/{holidayTypeId}:
+    get:
+      tags:
+        - Holiday
+      summary: Get HolidayType by id
+      description: Get HolidayType by id. only the super admin or admin and the user account
+      operationId: getHolidayTypeById
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayTypeId
+          in: path
+          description: holiday ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayDTO'
+    put:
+      tags:
+        - Holiday
+      summary: update a HolidayType
+      description: update a HolidayType
+      operationId: updateHolidayType
+      security:
+        - oAuth:
+            - EMPLOYEE
+      parameters:
+        - name: holidayTypeId
+          in: path
+          description: holidayType ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: holidayType object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayTypeDTO'
+      responses:
+        201:
+          description: successful operation
+    delete:
+      tags:
+        - Holiday
+      summary: Delete holidayType by id
+      description: Delete holidayType by id
+      operationId: deleteHolidayTypeById
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayTypeId
+          in: path
+          description: The id of the holidayType to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the Authorization Code grant flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.oauth.leavemanager.cm
+          tokenUrl: https://token.oauth.leavemanager.cm
+          scopes:
+            employee: all about employee
+            admin: all about admin
+            super-admin: all about super admin
+
+  schemas:
+    RegistrationDTO:
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: employee firstname
+        lastname:
+          type: string
+          description: employee lastname
+        dateOfBirth:
+          type: string
+          format: date
+    CreationHolidayDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          description: holiday title
+        type:
+          type: integer
+          format: int64
+          description: id of holiday type
+        description:
+          type: string
+        period:
+          $ref: '#/components/schemas/PeriodDTO'
+    EmployeeDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: identifier of employee
+        password:
+          type: string
+          description: employee password
+        firstname:
+          type: string
+          description: employee firstname
+        lastname:
+          type: string
+          description: employee lastname
+        email:
+          type: string
+          description: employee email
+        dateOfBirth:
+          type: string
+          format: date
+          description: employee date of birth
+        isActivated:
+          type: boolean
+          description: the value is 'true' if the employee insert an existing email
+    HolidayDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        type:
+          $ref: '#/components/schemas/HolidayTypeDTO'
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        periodDTO:
+          $ref: '#/components/schemas/PeriodDTO'
+        status:
+          $ref: '#/components/schemas/HolidayStatusDTO'
+    PeriodDTO:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+    HolidayStatusDTO:
+      type: string
+      enum:
+        - DRAFT
+        - PUBLISH
+        - APPROVED
+        - VALIDATED
+        - REFUSED
+    HolidayTypeDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
