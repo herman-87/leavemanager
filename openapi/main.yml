@@ -524,12 +524,13 @@ components:
           type: string
           description: holiday title
         type:
-          $ref: '#/components/schemas/HolidayTypeDTO'
+          type: integer
+          format: int64
+          description: id of holiday type
         description:
           type: string
-        createdAt:
-          type: string
-          format: date-time
+        period:
+          $ref: '#/components/schemas/PeriodDTO'
     EmployeeDTO:
       type: object
       properties:

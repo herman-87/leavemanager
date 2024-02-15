@@ -144,21 +144,20 @@ public class Employee {
         );
     }
 
-    @Transactional
     public void validate(EmployeeRepository employeeRepository) {
         this.isActivated = true;
         employeeRepository.save(this);
     }
 
     public Holiday createHoliday(String title,
-                                 HolidayType type,
                                  String description,
                                  Period period,
+                                 HolidayType holidayType,
                                  HolidayRepository holidayRepository) {
         return holidayRepository.save(
                 Holiday.builder()
                         .title(title)
-                        .type(type)
+                        .type(holidayType)
                         .description(description)
                         .period(period)
                         .createdAt(LocalDateTime.now())

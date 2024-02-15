@@ -8,6 +8,7 @@ import com.app.leavemanager.dto.HolidayTypeDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.leavemanager.openapi.model.CreationHolidayDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +30,18 @@ public class HolidayService {
     }
 
     @Transactional
-    public Long createHoliday(HolidayDTO holidayDTO, String currentUsername) {
+    public Long createHoliday(CreationHolidayDTO creationHolidayDTO, String currentUsername) {
 
+        HolidayType holidayType = holidayRepository
+                .findHolidayTypeById(creationHolidayDTO.getType())
+                .orElseThrow();
         Employee employee = getEmployeeByUsername(currentUsername);
+
         return employee.createHoliday(
-                holidayDTO.getTitle(),
-                holidayDTO.getType(),
-                holidayDTO.getDescription(),
-                holidayDTO.getPeriod(),
+                creationHolidayDTO.getTitle(),
+                creationHolidayDTO.getDescription(),
+                holidayMapper.toDTO(creationHolidayDTO.getPeriod()),
+                holidayType,
                 holidayRepository
         ).getId();
     }
