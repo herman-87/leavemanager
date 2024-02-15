@@ -40,9 +40,11 @@ public class HolidayConfig {
     @ManyToOne
     @JoinColumn(name = "c_holiday_type", referencedColumnName = "c_id")
     private HolidayType type;
+    @Column(name = "c_is_active")
+    @Builder.Default
+    private boolean isActivate = false;
 
     public boolean isRespectedBy(Holiday holidayToCreate) {
-
         return holidayToCreate.isBetween(minimumOfDays, maximumOfDays);
     }
 }
