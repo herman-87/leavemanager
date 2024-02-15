@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
 public class AdminResources implements AdminApi {
 
     private final EmployeeService employeeService;
@@ -24,22 +23,6 @@ public class AdminResources implements AdminApi {
     private static String getCurrentUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-
-
-//    @PostMapping("/employee/add")
-//    public ResponseEntity<Long> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-//
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(employeeService.createEmployee(employeeDTO, getCurrentUsername()));
-//    }
-
-//    @GetMapping("/employee/all")
-//    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(employeeService.getAllEmployees());
-//    }
 
     @Override
     public ResponseEntity<Long> _createAdmin(RegistrationDTO registrationDTO) {
@@ -50,7 +33,9 @@ public class AdminResources implements AdminApi {
 
     @Override
     public ResponseEntity<Long> _createEmployee(RegistrationDTO registrationDTO) {
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createEmployee(registrationDTO, getCurrentUsername()));
     }
 
     @Override
@@ -62,6 +47,8 @@ public class AdminResources implements AdminApi {
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> _getAllEmployees() {
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.getAllEmployees());
     }
 }

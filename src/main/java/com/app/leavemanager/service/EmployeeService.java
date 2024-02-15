@@ -9,7 +9,6 @@ import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
-import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.mapper.EmployeeMapper;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import com.leavemanager.openapi.model.EmployeeDTO;
@@ -181,12 +180,5 @@ public class EmployeeService {
                 user,
                 employeeRepository
         ).getId();
-    }
-
-    @Transactional
-    public void validate(String currentUsername) {
-
-        Employee employee = getEmployeeByUsername(currentUsername);
-        employee.validate(employeeRepository);
     }
 }

@@ -4,7 +4,7 @@ import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.dto.HolidayConfigDTO;
+import com.leavemanager.openapi.model.HolidayConfigDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
 import com.leavemanager.openapi.model.PeriodDTO;
@@ -46,7 +46,7 @@ public interface HolidayMapper {
     @Mapping(target = "numberOfTime")
     @Mapping(target = "minimumOfDays")
     @Mapping(target = "maximumOfDays")
-    @Mapping(target = "typeDTO", source = "type")
+    @Mapping(target = "holidayId", source = "type.id")
     HolidayConfigDTO toDTO(HolidayConfig holidayConfig);
 
     @BeanMapping(ignoreByDefault = true)

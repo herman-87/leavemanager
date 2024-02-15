@@ -488,6 +488,74 @@ paths:
       responses:
         204:
           description: successful operation
+  /config/holiday:
+    post:
+      tags:
+        - HolidayConfig
+      summary: Create a HolidayConfig in the app
+      description: create a HolidayConfig
+      operationId: createHolidayConfig
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      requestBody:
+        description: object that need to be use for create HolidayConfig
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayConfigDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+    get:
+      tags:
+        - HolidayConfig
+      summary: get all HolidayConfigS
+      description: get all HolidayConfig present in the app
+      operationId: getAllHolidayConfigs
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HolidayConfigDTO'
+  /config/holiday/{holidayConfigId}:
+    get:
+      tags:
+        - HolidayConfig
+      summary: Get HolidayConfig by id
+      description: Get HolidayConfig by id. only the super admin or admin and the user account
+      operationId: getHolidayConfigById
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayConfigId
+          in: path
+          description: HolidayConfig ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayConfigDTO'
 
 components:
   securitySchemes:
@@ -614,3 +682,32 @@ components:
           type: string
         description:
           type: string
+    HolidayConfigDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        numberOfTime:
+          type: integer
+          description: number of times leave can be requested over a year
+        minimumOfDays:
+          type: integer
+          description: minimum duration of leave in days
+        maximumOfDays:
+          type: integer
+          description: maximal duration of leave in days
+        status:
+          $ref: '#/components/schemas/HolidayConfigStatusDTO'
+        holidayId:
+          type: integer
+          format: int64
+          description: the identifier of holiday concerning by this configuration
+    HolidayConfigStatusDTO:
+      type: string
+      enum:
+        - DRAFT
+        - APPLY
+        - CLOSED

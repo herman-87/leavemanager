@@ -3,10 +3,10 @@ package com.app.leavemanager.domain.employee;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.domain.holiday.HolidayRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -143,11 +143,6 @@ public class Employee {
         );
     }
 
-    public void validate(EmployeeRepository employeeRepository) {
-        this.isActivated = true;
-        employeeRepository.save(this);
-    }
-
     public Holiday createHoliday(String title,
                                  String description,
                                  Period period,
@@ -164,7 +159,6 @@ public class Employee {
                         .build()
         );
     }
-
 
     public boolean hasRoleEmployee() {
         return user.hasRole(Scope.EMPLOYEE);
