@@ -20,11 +20,6 @@ public class EmployeeResources implements EmployeeApi {
 
     private final EmployeeService employeeService;
 
-//    @PutMapping
-//    public ResponseEntity<Void> updateEmployee(@RequestBody(required = true) EmployeeDTO employeeDTO) {
-//        employeeService.updateEmployee(employeeDTO, getCurrentUsername());
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//    }
 
 //    @DeleteMapping("/{employeeId}")
 //    public ResponseEntity<Void> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
@@ -54,7 +49,8 @@ public class EmployeeResources implements EmployeeApi {
     }
 
     @Override
-    public ResponseEntity<Void> _updateEmployee(Long employeeId, RegistrationDTO registrationDTO) {
-        return null;
+    public ResponseEntity<Void> _updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+        employeeService.updateEmployee(employeeDTO, getCurrentUsername());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

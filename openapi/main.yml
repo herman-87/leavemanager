@@ -31,8 +31,7 @@ paths:
           content:
             application/json:
               schema:
-                type: integer
-                format: int64
+                $ref: '#/components/schemas/RegistrationResponseDTO'
   /admin/add:
     post:
       tags:
@@ -150,7 +149,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegistrationDTO'
+              $ref: '#/components/schemas/EmployeeDTO'
       responses:
         201:
           description: successful operation
@@ -441,7 +440,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HolidayDTO'
+                $ref: '#/components/schemas/HolidayTypeDTO'
     put:
       tags:
         - Holiday
@@ -531,6 +530,18 @@ components:
           type: string
         period:
           $ref: '#/components/schemas/PeriodDTO'
+        dateOfBirth:
+          type: string
+          format: date
+    RegistrationResponseDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+          description: created employee ID
+        accessToken:
+          type: string
     EmployeeDTO:
       type: object
       properties:
@@ -572,7 +583,7 @@ components:
         createdAt:
           type: string
           format: date-time
-        periodDTO:
+        period:
           $ref: '#/components/schemas/PeriodDTO'
         status:
           $ref: '#/components/schemas/HolidayStatusDTO'

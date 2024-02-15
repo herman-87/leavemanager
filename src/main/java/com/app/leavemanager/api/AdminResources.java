@@ -4,7 +4,9 @@ import com.app.leavemanager.service.EmployeeService;
 import com.leavemanager.openapi.api.AdminApi;
 import com.leavemanager.openapi.model.EmployeeDTO;
 import com.leavemanager.openapi.model.RegistrationDTO;
+import com.leavemanager.openapi.model.RegistrationResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,21 +25,6 @@ public class AdminResources implements AdminApi {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-//    @PostMapping("/registration")
-//    public ResponseEntity<RegistrationEmployeeResponseDTO> createSuperAdmin(@RequestBody EmployeeDTO employeeDTO) {
-//
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(employeeService.createSuperAdmin(employeeDTO));
-//    }
-
-//    @PostMapping("/add")
-//    public ResponseEntity<Long> createAdmin(@RequestBody EmployeeDTO employeeDTO) {
-//
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(employeeService.createAdmin(employeeDTO, getCurrentUsername()));
-//    }
 
 //    @PostMapping("/employee/add")
 //    public ResponseEntity<Long> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -56,7 +43,9 @@ public class AdminResources implements AdminApi {
 
     @Override
     public ResponseEntity<Long> _createAdmin(RegistrationDTO registrationDTO) {
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createAdmin(registrationDTO, getCurrentUsername()));
     }
 
     @Override
@@ -65,8 +54,10 @@ public class AdminResources implements AdminApi {
     }
 
     @Override
-    public ResponseEntity<Long> _createSuperAdmin(RegistrationDTO registrationDTO) {
-        return null;
+    public ResponseEntity<RegistrationResponseDTO> _createSuperAdmin(RegistrationDTO registrationDTO) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(employeeService.createSuperAdmin(registrationDTO));
     }
 
     @Override

@@ -159,13 +159,12 @@
 							<modelPackage>com.leavemanager.openapi.model</modelPackage>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
-								<dateLibrary>java11</dateLibrary>
+								<dateLibrary>java8</dateLibrary>
 								<delegatePattern>true</delegatePattern>
 								<skipDefaultInterface>true</skipDefaultInterface>
 								<useTags>true</useTags>
 								<useSpringBoot3>true</useSpringBoot3>
 								<library>spring-boot</library>
-								<useSpringBoot3>true</useSpringBoot3>
 							</configOptions>
 						</configuration>
 					</execution>

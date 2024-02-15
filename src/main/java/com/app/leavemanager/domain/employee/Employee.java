@@ -18,7 +18,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -166,9 +165,6 @@ public class Employee {
         );
     }
 
-    public Scope getUserRole() {
-        return this.user.getRole();
-    }
 
     public boolean hasRoleEmployee() {
         return user.hasRole(Scope.EMPLOYEE);
