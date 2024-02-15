@@ -4,8 +4,8 @@ import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.dto.HolidayConfigDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
+import com.leavemanager.openapi.model.HolidayConfigDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class HolidayConfigService {
     public Long create(HolidayConfigDTO holidayConfigDTO, String currentUsername) {
 
         Employee employee = getEmployeeByUsername(currentUsername);
-        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getTypeDTO().getId());
+        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getHolidayId());
 
         return employee.createHolidayConfig(
                 holidayConfigDTO.getDescription(),

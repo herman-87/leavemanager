@@ -6,13 +6,14 @@ import com.app.leavemanager.configurations.security.repository.TokenSpringReposi
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.configurations.security.service.JwtService;
 import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
-import com.app.leavemanager.dto.EmployeeDTO;
-import com.app.leavemanager.dto.RegistrationEmployeeResponseDTO;
 import com.app.leavemanager.mapper.EmployeeMapper;
-import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
+import com.leavemanager.openapi.model.EmployeeDTO;
+import com.leavemanager.openapi.model.RegistrationDTO;
+import com.leavemanager.openapi.model.RegistrationResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,7 +108,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public RegistrationEmployeeResponseDTO createSuperAdmin(EmployeeDTO employeeDTO) {
+    public RegistrationResponseDTO createSuperAdmin(RegistrationDTO registrationDTO) {
 
         if (!employeeRepository.existsByRole(Scope.SUPER_ADMIN)) {
             User user = User.builder()
@@ -119,42 +120,41 @@ public class EmployeeService {
 
             String jwtToken = createUserToken(savedUser);
             Employee employee = Employee.createSuperAdmin(
-                    employeeDTO.getFirstname(),
-                    employeeDTO.getLastname(),
-                    employeeDTO.getDateOfBirth(),
+                    registrationDTO.getFirstname(),
+                    registrationDTO.getLastname(),
+                    registrationDTO.getDateOfBirth(),
                     user,
                     employeeRepository
             );
 
-            return RegistrationEmployeeResponseDTO.builder()
+            return new RegistrationResponseDTO()
                     .employeeId(employee.getId())
-                    .token(jwtToken)
-                    .build();
+                    .accessToken(jwtToken);
         } else {
             throw new Error("Super admin is already created");
         }
     }
 
     @Transactional
-    public Long createAdmin(EmployeeDTO employeeDTO, String currentUsername) {
+    public Long createAdmin(RegistrationDTO registrationDTO, String currentUsername) {
 
         Employee admin = getEmployeeByUsername(currentUsername);
-        User user = createUser(employeeDTO, Scope.ADMIN);
+        User user = createUser(registrationDTO, Scope.ADMIN);
         return admin.createEmployee(
-                employeeDTO.getFirstname(),
-                employeeDTO.getLastname(),
-                employeeDTO.getDateOfBirth(),
+                registrationDTO.getFirstname(),
+                registrationDTO.getLastname(),
+                registrationDTO.getDateOfBirth(),
                 user,
                 employeeRepository
         ).getId();
     }
 
-    private User createUser(EmployeeDTO employeeDTO, Scope role) {
+    private User createUser(RegistrationDTO registrationDTO, Scope role) {
         return User.builder()
                 .email(
                         Employee.generatedEmail(
-                                employeeDTO.getFirstname(),
-                                employeeDTO.getLastname(),
+                                registrationDTO.getFirstname(),
+                                registrationDTO.getLastname(),
                                 emailSuffix
                         )
                 )
@@ -169,23 +169,16 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Long createEmployee(EmployeeDTO employeeDTO, String currentUsername) {
+    public Long createEmployee(RegistrationDTO registrationDTO, String currentUsername) {
 
         Employee admin = getEmployeeByUsername(currentUsername);
-        User user = createUser(employeeDTO, Scope.EMPLOYEE);
+        User user = createUser(registrationDTO, Scope.EMPLOYEE);
         return admin.createEmployee(
-                employeeDTO.getFirstname(),
-                employeeDTO.getLastname(),
-                employeeDTO.getDateOfBirth(),
+                registrationDTO.getFirstname(),
+                registrationDTO.getLastname(),
+                registrationDTO.getDateOfBirth(),
                 user,
                 employeeRepository
         ).getId();
-    }
-
-    @Transactional
-    public void validate(String currentUsername) {
-
-        Employee employee = getEmployeeByUsername(currentUsername);
-        employee.validate(employeeRepository);
     }
 }

@@ -106,6 +106,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/actuator/swagger-ui")
                 .requestMatchers("/v2/**")
                 .requestMatchers("/api/auth/authenticate")
+                .requestMatchers("/hello")
                 .requestMatchers(
                         HttpMethod.POST,
                         "/admin/registration"

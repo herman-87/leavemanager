@@ -3,12 +3,12 @@ package com.app.leavemanager.service;
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.dto.HolidayDTO;
-import com.app.leavemanager.dto.HolidayTypeDTO;
 import com.app.leavemanager.mapper.HolidayMapper;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
+import com.leavemanager.openapi.model.HolidayDTO;
+import com.leavemanager.openapi.model.HolidayTypeDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +32,7 @@ public class HolidayService {
     @Transactional
     public Long createHoliday(CreationHolidayDTO creationHolidayDTO, String currentUsername) {
 
-        HolidayType holidayType = holidayRepository
-                .findHolidayTypeById(creationHolidayDTO.getType())
-                .orElseThrow();
+        HolidayType holidayType = fetchHolidayTypeById(creationHolidayDTO.getType());
         Employee employee = getEmployeeByUsername(currentUsername);
 
         return employee.createHoliday(
@@ -47,7 +45,7 @@ public class HolidayService {
     }
 
     @Transactional
-    public List<HolidayDTO> getAllHolidays(String currentUsername) {
+    public List<HolidayDTO> getAllHolidays() {
         return holidayRepository.findAll()
                 .stream()
                 .map(holidayMapper::toDTO)
@@ -61,13 +59,14 @@ public class HolidayService {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
+        HolidayType holidayType = fetchHolidayTypeById(holidayDTO.getType().getId());
 
         if (isAuthorOf(employee, holiday)) {
             holiday.update(
-                    holidayDTO.getType(),
+                    holidayType,
                     holidayDTO.getDescription(),
                     holidayDTO.getTitle(),
-                    holidayDTO.getPeriod(),
+                    holidayMapper.toDTO(holidayDTO.getPeriod()),
                     holidayRepository
             );
         }
@@ -100,7 +99,7 @@ public class HolidayService {
     }
 
     @Transactional
-    private Holiday getHolidayById(Long holidayId) {
+    public Holiday getHolidayById(Long holidayId) {
         return holidayRepository.findById(holidayId)
                 .orElseThrow(() -> new RuntimeException("Holiday Not Found"));
     }
