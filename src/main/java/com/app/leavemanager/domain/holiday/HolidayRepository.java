@@ -2,7 +2,6 @@ package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.dto.HolidayConfigDTO;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -29,4 +28,6 @@ public interface HolidayRepository {
     HolidayConfig save(HolidayConfig build);
 
     List<HolidayConfig> findAllHolidayConfig();
+
+    Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 }

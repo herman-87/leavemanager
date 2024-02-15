@@ -122,4 +122,14 @@ public class Holiday {
     public void delete(HolidayRepository holidayRepository) {
         holidayRepository.deleteById(this.id);
     }
+
+    public boolean isBetween(long minimumOfDays, long maximumOfDays) {
+
+        long numberOfDays = this.period.getNumberOfDays();
+        if (minimumOfDays <= numberOfDays && numberOfDays <= maximumOfDays) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

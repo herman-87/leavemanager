@@ -148,16 +148,26 @@ public class Employee {
                                  Period period,
                                  HolidayType holidayType,
                                  HolidayRepository holidayRepository) {
-        return holidayRepository.save(
-                Holiday.builder()
-                        .title(title)
-                        .type(holidayType)
-                        .description(description)
-                        .period(period)
-                        .createdAt(LocalDateTime.now())
-                        .createdBy(this)
-                        .build()
-        );
+
+        HolidayConfig holidayConfig = holidayRepository
+                .findHolidayConfigByTypeId(holidayType.getId())
+                .orElseThrow();
+
+        Holiday holidayToCreate = Holiday.builder()
+                .title(title)
+                .type(holidayType)
+                .description(description)
+                .period(period)
+                .createdAt(LocalDateTime.now())
+                .createdBy(this)
+                .build();
+
+        if (holidayConfig.isRespectedBy(holidayToCreate)) {
+            return holidayRepository.save(holidayToCreate);
+        } else {
+            throw new RuntimeException("holiday config is not respected");
+        }
+
     }
 
     public boolean hasRoleEmployee() {

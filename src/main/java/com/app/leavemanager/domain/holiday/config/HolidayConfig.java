@@ -1,5 +1,6 @@
 package com.app.leavemanager.domain.holiday.config;
 
+import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,14 +30,19 @@ public class HolidayConfig {
     @Column(name = "c_id")
     private Long id;
     @Column(name = "c_number_of_time")
-    private int numberOfTime;
+    private long numberOfTime;
     @Column(name = "c_minimum_of_day")
-    private int minimumOfDays;
+    private long minimumOfDays;
     @Column(name = "c_maximum_of_day")
-    private int maximumOfDays;
+    private long maximumOfDays;
     @Column(name = "c_description")
     private String description;
     @ManyToOne
     @JoinColumn(name = "c_holiday_type", referencedColumnName = "c_id")
     private HolidayType type;
+
+    public boolean isRespectedBy(Holiday holidayToCreate) {
+
+        return holidayToCreate.isBetween(minimumOfDays, maximumOfDays);
+    }
 }

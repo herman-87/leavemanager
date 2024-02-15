@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 @Embeddable
@@ -17,4 +18,8 @@ public class Period {
     private LocalDate startDate;
     @Column(name = "c_end_date")
     private LocalDate endDate;
+
+    public long getNumberOfDays() {
+        return Duration.between(startDate, endDate).toDays();
+    }
 }
