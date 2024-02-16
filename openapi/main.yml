@@ -4,7 +4,7 @@ info:
   description: All Item Rest API End Points
   version: 2024-W2
 servers:
-  - url: http:/localhost:8080/api/leavemanager/v1
+  - url: http://localhost:8080/api/leavemanager/v1
 tags:
   - name: Employee
     description: Everything about the Employees
