@@ -10,6 +10,8 @@ tags:
     description: Everything about the Employees
   - name: Holiday
     description: Everything about the Holidays
+  - name: Admin
+    description: Everything about the Admin
 paths:
   /admin/registration:
     post:
