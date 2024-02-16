@@ -22,10 +22,22 @@ public class HolidayConfigResources implements HolidayConfigApi {
     }
 
     @Override
+    public ResponseEntity<Void> _activateHolidayConfig(Long holidayConfigId) {
+        holidayConfigService.activateHolidayById(holidayConfigId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
     public ResponseEntity<Long> _createHolidayConfig(HolidayConfigDTO holidayConfigDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(holidayConfigService.create(holidayConfigDTO, getCurrentUsername()));
+    }
+
+    @Override
+    public ResponseEntity<Void> _deactivateHolidayConfig(Long holidayConfigId) {
+        holidayConfigService.deactivateHolidayById(holidayConfigId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.app.leavemanager.domain.holiday.config;
 
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,7 +45,22 @@ public class HolidayConfig {
     @Builder.Default
     private boolean isActivate = false;
 
-    public boolean isRespectedBy(Holiday holidayToCreate) {
-        return holidayToCreate.isBetween(minimumOfDays, maximumOfDays);
+    public boolean isRespectedBy(Holiday holidayToCreate, long numberOfHolidayPassed) {
+        return holidayToCreate.isBetween(minimumOfDays, maximumOfDays)
+                && numberOfHolidayPassed < numberOfTime;
+    }
+
+    public void activate(HolidayRepository holidayRepository) {
+        if (!this.isActivate) {
+            this.isActivate = true;
+            holidayRepository.save(this);
+        }
+    }
+
+    public void deactivate(HolidayRepository holidayRepository) {
+        if (this.isActivate) {
+            this.isActivate = false;
+            holidayRepository.save(this);
+        }
     }
 }

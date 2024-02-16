@@ -2,7 +2,9 @@ package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
+import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.mapper.HolidayMapper;
 import com.leavemanager.openapi.model.HolidayConfigDTO;
@@ -50,7 +52,7 @@ public class HolidayConfigService {
     @Transactional
     public HolidayConfigDTO getHolidayConfigById(Long holidayConfigId) {
 
-        return holidayRepository.findHolidayConfigByI(holidayConfigId)
+        return holidayRepository.findHolidayConfigById(holidayConfigId)
                 .map(holidayMapper::toDTO)
                 .orElseThrow(() -> new Error("Holiday config not found"));
 
@@ -62,5 +64,22 @@ public class HolidayConfigService {
                 .stream()
                 .map(holidayMapper::toDTO)
                 .toList();
+    }
+
+    @Transactional
+    public void activateHolidayById(Long holidayConfigId) {
+        HolidayConfig holidayConfig = fetchHolidayConfigById(holidayConfigId);
+        holidayConfig.activate(holidayRepository);
+    }
+
+    private HolidayConfig fetchHolidayConfigById(Long holidayConfigId) {
+        return holidayRepository.findHolidayConfigById(holidayConfigId)
+                .orElseThrow(() -> new RuntimeException("holiday config Not Found"));
+    }
+
+    @Transactional
+    public void deactivateHolidayById(Long holidayConfigId) {
+        HolidayConfig holidayConfig = fetchHolidayConfigById(holidayConfigId);
+        holidayConfig.deactivate(holidayRepository);
     }
 }

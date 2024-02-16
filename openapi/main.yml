@@ -556,6 +556,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HolidayConfigDTO'
+  /config/holiday/{holidayConfigId}/activate:
+    put:
+      tags:
+        - HolidayConfig
+      summary: activate a HolidayConfig
+      description: activate a HolidayConfig
+      operationId: activateHolidayConfig
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      parameters:
+        - name: holidayConfigId
+          in: path
+          description: holiday config ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+  /config/holiday/{holidayConfigId}/deactivate:
+    put:
+      tags:
+        - HolidayConfig
+      summary: deactivate a HolidayConfig
+      description: deactivate a HolidayConfig
+      operationId: deactivateHolidayConfig
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      parameters:
+        - name: holidayConfigId
+          in: path
+          description: holiday config ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
 
 components:
   securitySchemes:
@@ -672,6 +714,8 @@ components:
         - APPROVED
         - VALIDATED
         - REFUSED
+        - IN_PROGRESS
+        - PASSED
     HolidayTypeDTO:
       type: object
       properties:

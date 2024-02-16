@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface HolidayConfigSpringRepository extends JpaRepository<HolidayConfig, Long> {
 
-    Optional<HolidayConfig> findByTypeIdAndActiveIsTrue(Long id);
+    Optional<HolidayConfig> findByTypeId(Long id);
 }

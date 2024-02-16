@@ -4,6 +4,7 @@ import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
@@ -162,7 +163,11 @@ public class Employee {
                 .createdBy(this)
                 .build();
 
-        if (holidayConfig.isRespectedBy(holidayToCreate)) {
+        long numberOfHolidayPassed = this.holidays
+                .stream()
+                .filter(holiday -> holiday.getType().equals(holidayType))
+                .count();
+        if (holidayConfig.isRespectedBy(holidayToCreate, numberOfHolidayPassed)) {
             return holidayRepository.save(holidayToCreate);
         } else {
             throw new RuntimeException("holiday config is not respected");

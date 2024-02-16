@@ -5,5 +5,7 @@ public enum HolidayStatus {
     PUBLISH,
     APPROVED,
     VALIDATED,
-    REFUSED
+    REFUSED,
+    IN_PROGRESS,
+    PASSED
 }
