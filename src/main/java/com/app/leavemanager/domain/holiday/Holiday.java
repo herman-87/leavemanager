@@ -132,4 +132,9 @@ public class Holiday {
             return false;
         }
     }
+
+    public void passed(HolidayRepository holidayRepository) {
+        this.status = HolidayStatus.IN_PROGRESS;
+        holidayRepository.save(this);
+    }
 }

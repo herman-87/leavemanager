@@ -1,19 +1,23 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
+import com.app.leavemanager.domain.employee.EmployeeRepository;
 import com.app.leavemanager.domain.holiday.Holiday;
+import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.mapper.HolidayMapper;
-import com.app.leavemanager.domain.employee.EmployeeRepository;
-import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -188,5 +192,14 @@ public class HolidayService {
 
         HolidayType holidayType = fetchHolidayTypeById(holidayTypeId);
         holidayType.delete(holidayRepository);
+    }
+
+    @Transactional
+    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
+    public void closeAllPassedHolidays() {
+         holidayRepository
+                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus.IN_PROGRESS, LocalDate.now())
+                 .stream()
+                 .peek(holiday -> holiday.passed(holidayRepository));
     }
 }
