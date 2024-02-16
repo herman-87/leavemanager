@@ -1,19 +1,18 @@
 package com.app.leavemanager.configurations.security.service;
 
-import com.app.leavemanager.configurations.security.model.AuthenticationRequest;
 import com.app.leavemanager.configurations.security.model.token.Token;
 import com.app.leavemanager.configurations.security.model.token.TokenType;
 import com.app.leavemanager.configurations.security.repository.TokenSpringRepository;
 import com.app.leavemanager.configurations.security.repository.UserSpringRepository;
 import com.app.leavemanager.domain.employee.user.User;
-import com.app.leavemanager.dto.TokenDTO;
+import com.leavemanager.openapi.model.AuthenticationRequestDTO;
+import com.leavemanager.openapi.model.TokenDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,21 +47,21 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public TokenDTO authenticate(AuthenticationRequest authenticationRequest) {
+    public TokenDTO authenticate(AuthenticationRequestDTO authenticationRequestDTO) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(),
-                        authenticationRequest.getPassword()
+                        authenticationRequestDTO.getEmail(),
+                        authenticationRequestDTO.getPassword()
                 )
         );
 
-        User user = userSpringRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
+        User user = userSpringRepository.findByEmail(authenticationRequestDTO.getEmail()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
 
-        return new TokenDTO(jwtToken);
+        return new TokenDTO().value(jwtToken);
     }
 
     public Object getUsername() {

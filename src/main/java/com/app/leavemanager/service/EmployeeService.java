@@ -36,14 +36,16 @@ public class EmployeeService {
     private final UserSpringRepository userSpringRepository;
     private final EmployeeMapper employeeMapper;
 
-    @Value("${api.super.admin.email}")
-    private String adminEmail;
-    @Value("${api.super.admin.password}")
-    private String adminPassword;
-    @Value("${api.default.employee.password}")
+    @Value("${default.super.admin.email}")
+    private String defaultSuperAdminEmail;
+    @Value("${default.super.admin.password}")
+    private String defaultSuperAdminPassword;
+    @Value("${default.admin.password}")
+    private String defaultAdminPassword;
+    @Value("${default.employee.password}")
     private String defaultEmployeePassword;
-    @Value("${api.default.admin.email.suffix}")
-    private String emailSuffix;
+    @Value("${default.email.suffix}")
+    private String defaultEmailSuffix;
 
     private void revokeAllUserTokens(User user) {
 
@@ -112,8 +114,8 @@ public class EmployeeService {
 
         if (!employeeRepository.existsByRole(Scope.SUPER_ADMIN)) {
             User user = User.builder()
-                    .email(adminEmail)
-                    .password(passwordEncoder.encode(adminPassword))
+                    .email(defaultSuperAdminEmail)
+                    .password(passwordEncoder.encode(defaultSuperAdminPassword))
                     .role(Scope.SUPER_ADMIN)
                     .build();
             User savedUser = userSpringRepository.save(user);
@@ -155,7 +157,7 @@ public class EmployeeService {
                         Employee.generatedEmail(
                                 registrationDTO.getFirstname(),
                                 registrationDTO.getLastname(),
-                                emailSuffix
+                                defaultEmailSuffix
                         )
                 )
                 .password(passwordEncoder.encode(defaultEmployeePassword))

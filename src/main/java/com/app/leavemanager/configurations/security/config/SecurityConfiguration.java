@@ -38,6 +38,10 @@ public class SecurityConfiguration {
                                         "/admin/add"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/employee/{employeeId}"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
+                                .requestMatchers(
                                         HttpMethod.POST,
                                         "/admin/employee/add"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
@@ -105,7 +109,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/actuator/health/**")
                 .requestMatchers("/actuator/swagger-ui")
                 .requestMatchers("/v2/**")
-                .requestMatchers("/api/auth/authenticate")
+                .requestMatchers("/auth/authenticate")
                 .requestMatchers("/hello")
                 .requestMatchers(
                         HttpMethod.POST,

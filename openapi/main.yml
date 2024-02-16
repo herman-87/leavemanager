@@ -12,6 +12,8 @@ tags:
     description: Everything about the Holidays
   - name: Admin
     description: Everything about the Admin
+  - name: Authentication
+    description: All about the security
 paths:
   /admin/registration:
     post:
@@ -600,6 +602,28 @@ paths:
       responses:
         204:
           description: successful operation
+  /auth/authenticate:
+    post:
+      tags:
+        - Authentication
+      summary: authenticate user
+      description: get access token after identified the user
+      operationId: authenticate
+      requestBody:
+        description: object that need to be use for create HolidayConfig
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequestDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenDTO'
+
 
 components:
   securitySchemes:
@@ -757,3 +781,16 @@ components:
         - DRAFT
         - APPLY
         - CLOSED
+    AuthenticationRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    TokenDTO:
+      type: object
+      properties:
+        value:
+          type: string
+
