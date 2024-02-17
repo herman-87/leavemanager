@@ -23,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
-@Table(name = "t_holiday_config")
+@Table(name = "t_holiday_type")
 public class HolidayType {
 
     @Id

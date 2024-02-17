@@ -25,7 +25,7 @@ public class HolidayConfigService {
     public Long create(HolidayConfigDTO holidayConfigDTO, String currentUsername) {
 
         Employee employee = getEmployeeByUsername(currentUsername);
-        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getHolidayId());
+        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getHolidayTypeId());
 
         return employee.createHolidayConfig(
                 holidayConfigDTO.getDescription(),

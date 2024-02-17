@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/holiday"
-                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.ADMIN.name(), Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/holiday/type"
@@ -71,7 +71,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.DELETE,
                                         "/holiday/{holidayId}"
-                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.PUT,
                                         "/holiday/{holidayId}",
@@ -79,11 +79,11 @@ public class SecurityConfiguration {
                                         "/publish/{holidayId}",
                                         "/unapproved/{holidayId}",
                                         "/unpublished/{holidayId}"
-                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/holiday/{holidayId}"
-                                ).hasAuthority(Scope.EMPLOYEE.name())
+                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/config/holiday"

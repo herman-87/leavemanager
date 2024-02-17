@@ -453,7 +453,7 @@ paths:
       operationId: updateHolidayType
       security:
         - oAuth:
-            - EMPLOYEE
+            - SUPER_ADMIN
       parameters:
         - name: holidayTypeId
           in: path
@@ -480,7 +480,7 @@ paths:
       operationId: deleteHolidayTypeById
       security:
         - oAuth:
-            - SUPER_ADMIN,ADMIN
+            - SUPER_ADMIN
       parameters:
         - name: holidayTypeId
           in: path
@@ -501,7 +501,7 @@ paths:
       operationId: createHolidayConfig
       security:
         - oAuth:
-            - SUPER_ADMIN,ADMIN
+            - SUPER_ADMIN
       requestBody:
         description: object that need to be use for create HolidayConfig
         required: true
@@ -623,7 +623,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenDTO'
-
 
 components:
   securitySchemes:
@@ -771,10 +770,10 @@ components:
           description: maximal duration of leave in days
         status:
           $ref: '#/components/schemas/HolidayConfigStatusDTO'
-        holidayId:
+        holidayTypeId:
           type: integer
           format: int64
-          description: the identifier of holiday concerning by this configuration
+          description: the identifier of holiday type concerning by this configuration
     HolidayConfigStatusDTO:
       type: string
       enum:

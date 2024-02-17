@@ -2,6 +2,7 @@ package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
 import com.app.leavemanager.repository.spring.HolidayConfigSpringRepository;
@@ -9,6 +10,7 @@ import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +57,8 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public Optional<HolidayType> findHolidayTypeById(Long holidayId) {
-        return holidayTypeSpringRepository.findById(holidayId);
+    public Optional<HolidayType> findHolidayTypeById(Long holidayTypeId) {
+        return holidayTypeSpringRepository.findById(holidayTypeId);
     }
 
     @Override
@@ -82,5 +84,10 @@ public class DefaultHolidayRepository implements HolidayRepository {
     @Override
     public Optional<HolidayConfig> findHolidayConfigByTypeId(Long typeId) {
         return holidayConfigSpringRepository.findByTypeId(typeId);
+    }
+
+    @Override
+    public List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate currentTime) {
+        return holidaySpringRepository.findAllByStatusAndPeriodEndDateBefore(status, currentTime);
     }
 }

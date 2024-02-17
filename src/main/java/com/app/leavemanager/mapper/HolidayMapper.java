@@ -46,7 +46,7 @@ public interface HolidayMapper {
     @Mapping(target = "numberOfTime")
     @Mapping(target = "minimumOfDays")
     @Mapping(target = "maximumOfDays")
-    @Mapping(target = "holidayId", source = "type.id")
+    @Mapping(target = "holidayTypeId", source = "type.id")
     HolidayConfigDTO toDTO(HolidayConfig holidayConfig);
 
     @BeanMapping(ignoreByDefault = true)

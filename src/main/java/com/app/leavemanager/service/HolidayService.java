@@ -17,7 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -198,8 +197,9 @@ public class HolidayService {
     @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
     public void closeAllPassedHolidays() {
          holidayRepository
-                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus.IN_PROGRESS, LocalDate.now())
-                 .stream()
+                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(
+                         HolidayStatus.IN_PROGRESS, LocalDate.now()
+                 ).stream()
                  .peek(holiday -> holiday.passed(holidayRepository));
     }
 }
