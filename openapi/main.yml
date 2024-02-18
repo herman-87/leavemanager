@@ -293,13 +293,13 @@ paths:
       responses:
         204:
           description: successful operation
-  /approve/{holidayId}:
+  /notice/{holidayId}:
     put:
       tags:
         - Holiday
-      summary: approve a Holiday
-      description: approve a Holiday
-      operationId: approveHoliday
+      summary: notice a Holiday
+      description: notice a Holiday
+      operationId: noticeHoliday
       security:
         - oAuth:
             - EMPLOYEE
@@ -312,33 +312,12 @@ paths:
             type: integer
             format: int64
       requestBody:
-        description: Holiday object that need to be update
+        description: Holiday object that need to be notice
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/NoticeDTO'
-      responses:
-        201:
-          description: successful operation
-  /unapproved/{holidayId}:
-    put:
-      tags:
-        - Holiday
-      summary: unapproved a Holiday
-      description: unapproved a Holiday
-      operationId: unapprovedHoliday
-      security:
-        - oAuth:
-            - EMPLOYEE
-      parameters:
-        - name: holidayId
-          in: path
-          description: holiday ID
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         201:
           description: successful operation

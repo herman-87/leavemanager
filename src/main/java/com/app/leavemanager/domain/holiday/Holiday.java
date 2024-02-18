@@ -118,20 +118,6 @@ public class Holiday {
         }
     }
 
-    public void unapprovedHoliday(HolidayRepository holidayRepository) {
-
-        if (isApproved()) {
-            this.status = HolidayStatus.PUBLISH;
-            holidayRepository.save(this);
-        } else {
-            log.error("This operation is not possible");
-        }
-    }
-
-    private boolean isApproved() {
-        return HolidayStatus.APPROVED.equals(this.status);
-    }
-
     public boolean isCreatedBy(Employee employee) {
         return this.createdBy.equals(employee);
     }

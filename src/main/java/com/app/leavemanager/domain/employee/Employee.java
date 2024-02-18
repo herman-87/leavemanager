@@ -206,14 +206,6 @@ public class Employee {
         }
     }
 
-    public void unapprovedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
-        if (hasRoleEmployee()) {
-            holiday.unapprovedHoliday(holidayRepository);
-        } else {
-            throw new RuntimeException("Forbidden for the current user");
-        }
-    }
-
     public void unpublishedHoliday(Holiday holiday, HolidayRepository holidayRepository) {
         if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
             holiday.unpublished(holidayRepository);

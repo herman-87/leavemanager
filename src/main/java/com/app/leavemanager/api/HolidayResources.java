@@ -25,12 +25,6 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
-    public ResponseEntity<Void> _approveHoliday(Long holidayId, NoticeDTO noticeDTO) {
-        holidayService.approveHolidayById(holidayId, noticeDTO, getCurrentUsername());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @Override
     public ResponseEntity<Long> _createHoliday(CreationHolidayDTO creationHolidayDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED).
@@ -88,14 +82,14 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
-    public ResponseEntity<Void> _publishHoliday(Long holidayId) {
-        holidayService.publishHolidayById(holidayId, getCurrentUsername());
+    public ResponseEntity<Void> _noticeHoliday(Long holidayId, NoticeDTO noticeDTO) {
+        holidayService.approveHolidayById(holidayId, noticeDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
-    public ResponseEntity<Void> _unapprovedHoliday(Long holidayId) {
-        holidayService.unapprovedHolidayById(holidayId, getCurrentUsername());
+    public ResponseEntity<Void> _publishHoliday(Long holidayId) {
+        holidayService.publishHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

@@ -132,14 +132,6 @@ public class HolidayService {
     }
 
     @Transactional
-    public void unapprovedHolidayById(Long holidayId, String currentUsername) {
-
-        Holiday holiday = getHolidayById(holidayId);
-        Employee employee = getEmployeeByUsername(currentUsername);
-        employee.unapprovedHoliday(holiday, holidayRepository);
-    }
-
-    @Transactional
     public void unpublishedHolidayById(Long holidayId, String currentUsername) {
 
         Holiday holiday = getHolidayById(holidayId);
