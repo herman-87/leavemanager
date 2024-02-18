@@ -1,19 +1,25 @@
 package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
-import com.app.leavemanager.domain.holiday.Holiday;
-import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
-import com.app.leavemanager.mapper.HolidayMapper;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
+import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayStatus;
+import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
+import com.app.leavemanager.mapper.HolidayMapper;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
+import com.leavemanager.openapi.model.NoticeDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -105,11 +111,17 @@ public class HolidayService {
     }
 
     @Transactional
-    public void approveHolidayById(Long holidayId, String currentUsername) {
-
+    public void approveHolidayById(Long holidayId,
+                                   NoticeDTO noticeDTO,
+                                   String currentUsername) {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        employee.approveHoliday(holiday, holidayRepository);
+        employee.approveHoliday(
+                holidayMapper.fromDTO(noticeDTO.getType()),
+                noticeDTO.getDescription(),
+                holiday,
+                holidayRepository
+        );
     }
 
     @Transactional
@@ -118,14 +130,6 @@ public class HolidayService {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
         employee.publishHoliday(holiday, holidayRepository);
-    }
-
-    @Transactional
-    public void unapprovedHolidayById(Long holidayId, String currentUsername) {
-
-        Holiday holiday = getHolidayById(holidayId);
-        Employee employee = getEmployeeByUsername(currentUsername);
-        employee.unapprovedHoliday(holiday, holidayRepository);
     }
 
     @Transactional
@@ -188,5 +192,28 @@ public class HolidayService {
 
         HolidayType holidayType = fetchHolidayTypeById(holidayTypeId);
         holidayType.delete(holidayRepository);
+    }
+
+    @Transactional
+    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
+    public void closeAllPassedHolidays() {
+        log.info("Scheduler tour "+ LocalDateTime.now());
+         holidayRepository
+                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(
+                         HolidayStatus.IN_PROGRESS, LocalDate.now()
+                 ).stream()
+                 .peek(holiday -> {
+                     holiday.passed(holidayRepository);
+                     log.info(" Scheduler close the holiday: "+ holiday.getTitle() +" "+ holiday.getType().getName());
+                 });
+    }
+
+    @Transactional
+    public List<NoticeDTO> getNoticesByHoliday(Long holidayId) {
+        List<Notice> allNoticeByHolidayId = holidayRepository.findAllNoticeByHolidayId(holidayId);
+        return allNoticeByHolidayId
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
     }
 }

@@ -2,13 +2,17 @@ package com.app.leavemanager.repository.dao;
 
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
+import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
 import com.app.leavemanager.repository.spring.HolidayConfigSpringRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
+import com.app.leavemanager.repository.spring.NoticeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,7 @@ public class DefaultHolidayRepository implements HolidayRepository {
     private final HolidaySpringRepository holidaySpringRepository;
     private final HolidayTypeSpringRepository holidayTypeSpringRepository;
     private final HolidayConfigSpringRepository holidayConfigSpringRepository;
+    private final NoticeSpringRepository noticeSpringRepository;
 
     @Override
     public Holiday save(Holiday holiday) {
@@ -55,8 +60,13 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public Optional<HolidayType> findHolidayTypeById(Long holidayId) {
-        return holidayTypeSpringRepository.findById(holidayId);
+    public Optional<HolidayType> findHolidayTypeById(Long holidayTypeId) {
+        return holidayTypeSpringRepository.findById(holidayTypeId);
+    }
+
+    @Override
+    public List<Notice> findAllNoticeByHolidayId(Long holidayId) {
+        return noticeSpringRepository.findAllByHolidayId(holidayId);
     }
 
     @Override
@@ -82,5 +92,15 @@ public class DefaultHolidayRepository implements HolidayRepository {
     @Override
     public Optional<HolidayConfig> findHolidayConfigByTypeId(Long typeId) {
         return holidayConfigSpringRepository.findByTypeId(typeId);
+    }
+
+    @Override
+    public List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate currentTime) {
+        return holidaySpringRepository.findAllByStatusAndPeriodEndDateBefore(status, currentTime);
+    }
+
+    @Override
+    public Notice save(Notice notice) {
+        return noticeSpringRepository.save(notice);
     }
 }

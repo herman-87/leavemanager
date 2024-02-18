@@ -9,6 +9,7 @@ import com.app.leavemanager.repository.spring.EmployeeSpringRepository;
 import com.app.leavemanager.repository.spring.HolidayConfigSpringRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
+import com.app.leavemanager.repository.spring.NoticeSpringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ public class LeaveManagerBean {
     private final HolidaySpringRepository holidaySpringRepository;
     private final HolidayTypeSpringRepository holidayTypeSpringRepository;
     private final HolidayConfigSpringRepository holidayConfigSpringRepository;
+    private final NoticeSpringRepository noticeSpringRepository;
 
     @Bean
     public EmployeeRepository employeeRepository() {
@@ -36,7 +38,8 @@ public class LeaveManagerBean {
         return new DefaultHolidayRepository(
                 holidaySpringRepository,
                 holidayTypeSpringRepository,
-                holidayConfigSpringRepository
+                holidayConfigSpringRepository,
+                noticeSpringRepository
         );
     }
 

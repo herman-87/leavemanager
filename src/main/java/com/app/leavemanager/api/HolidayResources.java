@@ -5,6 +5,7 @@ import com.leavemanager.openapi.api.HolidayApi;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
+import com.leavemanager.openapi.model.NoticeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,6 @@ public class HolidayResources implements HolidayApi {
 
     private static String getCurrentUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
-    @Override
-    public ResponseEntity<Void> _approveHoliday(Long holidayId) {
-        holidayService.approveHolidayById(holidayId, getCurrentUsername());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
@@ -87,14 +82,21 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
-    public ResponseEntity<Void> _publishHoliday(Long holidayId) {
-        holidayService.publishHolidayById(holidayId, getCurrentUsername());
+    public ResponseEntity<List<NoticeDTO>> _getNoticesByHoliday(Long holidayId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(holidayService.getNoticesByHoliday(holidayId));
+    }
+
+    @Override
+    public ResponseEntity<Void> _noticeHoliday(Long holidayId, NoticeDTO noticeDTO) {
+        holidayService.approveHolidayById(holidayId, noticeDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
-    public ResponseEntity<Void> _unapprovedHoliday(Long holidayId) {
-        holidayService.unapprovedHolidayById(holidayId, getCurrentUsername());
+    public ResponseEntity<Void> _publishHoliday(Long holidayId) {
+        holidayService.publishHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

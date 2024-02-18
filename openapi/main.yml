@@ -293,13 +293,13 @@ paths:
       responses:
         204:
           description: successful operation
-  /approve/{holidayId}:
+  /holiday/{holidayId}/notice:
     put:
       tags:
         - Holiday
-      summary: approve a Holiday
-      description: approve a Holiday
-      operationId: approveHoliday
+      summary: notice a Holiday
+      description: notice a Holiday
+      operationId: noticeHoliday
       security:
         - oAuth:
             - EMPLOYEE
@@ -311,30 +311,41 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        description: Holiday object that need to be notice
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeDTO'
       responses:
         201:
           description: successful operation
-  /unapproved/{holidayId}:
-    put:
+    get:
       tags:
         - Holiday
-      summary: unapproved a Holiday
-      description: unapproved a Holiday
-      operationId: unapprovedHoliday
+      summary: Get all notices by holiday
+      description: Get all notices by holiday
+      operationId: getNoticesByHoliday
       security:
         - oAuth:
-            - EMPLOYEE
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
       parameters:
         - name: holidayId
           in: path
-          description: holiday ID
+          description: holiday ID to get all notices
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        201:
+        200:
           description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/NoticeDTO'
   /publish/{holidayId}:
     put:
       tags:
@@ -453,7 +464,7 @@ paths:
       operationId: updateHolidayType
       security:
         - oAuth:
-            - EMPLOYEE
+            - SUPER_ADMIN
       parameters:
         - name: holidayTypeId
           in: path
@@ -480,7 +491,7 @@ paths:
       operationId: deleteHolidayTypeById
       security:
         - oAuth:
-            - SUPER_ADMIN,ADMIN
+            - SUPER_ADMIN
       parameters:
         - name: holidayTypeId
           in: path
@@ -501,7 +512,7 @@ paths:
       operationId: createHolidayConfig
       security:
         - oAuth:
-            - SUPER_ADMIN,ADMIN
+            - SUPER_ADMIN
       requestBody:
         description: object that need to be use for create HolidayConfig
         required: true
@@ -623,7 +634,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenDTO'
-
 
 components:
   securitySchemes:
@@ -771,16 +781,21 @@ components:
           description: maximal duration of leave in days
         status:
           $ref: '#/components/schemas/HolidayConfigStatusDTO'
-        holidayId:
+        holidayTypeId:
           type: integer
           format: int64
-          description: the identifier of holiday concerning by this configuration
+          description: the identifier of holiday type concerning by this configuration
     HolidayConfigStatusDTO:
       type: string
       enum:
         - DRAFT
         - APPLY
         - CLOSED
+    NoticeStatusDTO:
+      type: string
+      enum:
+        - OK
+        - NOT_OK
     AuthenticationRequestDTO:
       type: object
       properties:
@@ -792,5 +807,12 @@ components:
       type: object
       properties:
         value:
+          type: string
+    NoticeDTO:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/NoticeStatusDTO'
+        description:
           type: string
 

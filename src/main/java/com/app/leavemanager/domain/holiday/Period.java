@@ -2,15 +2,13 @@ package com.app.leavemanager.domain.holiday;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Embeddable
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Period {
@@ -19,7 +17,15 @@ public class Period {
     @Column(name = "c_end_date")
     private LocalDate endDate;
 
+    public Period(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
+            throw new RuntimeException("start date is after end date");
+        }
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public long getNumberOfDays() {
-        return Duration.between(startDate, endDate).toDays();
+        return ChronoUnit.DAYS.between(startDate, endDate);
     }
 }

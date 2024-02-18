@@ -2,7 +2,6 @@ package com.app.leavemanager.service;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.employee.EmployeeRepository;
-import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
@@ -17,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class HolidayConfigService {
-    
+
     private final EmployeeRepository employeeRepository;
     private final HolidayRepository holidayRepository;
     private final HolidayMapper holidayMapper;
@@ -26,7 +25,7 @@ public class HolidayConfigService {
     public Long create(HolidayConfigDTO holidayConfigDTO, String currentUsername) {
 
         Employee employee = getEmployeeByUsername(currentUsername);
-        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getHolidayId());
+        HolidayType holidayType = getHolidayTypeById(holidayConfigDTO.getHolidayTypeId());
 
         return employee.createHolidayConfig(
                 holidayConfigDTO.getDescription(),
