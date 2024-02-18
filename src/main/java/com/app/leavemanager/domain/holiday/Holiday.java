@@ -2,6 +2,8 @@ package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.employee.Employee;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
+import com.app.leavemanager.domain.holiday.notice.NoticeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +24,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "t_holiday")
@@ -53,6 +58,9 @@ public class Holiday {
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "c_id")
     private Employee createdBy;
+    @Builder.Default
+    @OneToMany(mappedBy = "holiday")
+    List<Notice> notices = new ArrayList<>();
 
     public void update(HolidayType type,
                        String description,
@@ -67,11 +75,20 @@ public class Holiday {
         holidayRepository.save(this);
     }
 
-    public void approve(HolidayRepository holidayRepository) {
-
+    public void approve(NoticeType noticeType,
+                        String description,
+                        Employee employee,
+                        HolidayRepository holidayRepository) {
         if (isPublished()) {
-            this.status = HolidayStatus.APPROVED;
-            holidayRepository.save(this);
+            Notice notice = Notice.builder()
+                    .type(noticeType)
+                    .description(description)
+                    .createdBy(employee)
+                    .holiday(this)
+                    .build();
+            this.notices.add(notice);
+
+            holidayRepository.save(notice);
         } else {
             log.error("this improvement is not possible");
         }

@@ -5,6 +5,7 @@ import com.leavemanager.openapi.api.HolidayApi;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
+import com.leavemanager.openapi.model.NoticeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
-    public ResponseEntity<Void> _approveHoliday(Long holidayId) {
-        holidayService.approveHolidayById(holidayId, getCurrentUsername());
+    public ResponseEntity<Void> _approveHoliday(Long holidayId, NoticeDTO noticeDTO) {
+        holidayService.approveHolidayById(holidayId, noticeDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

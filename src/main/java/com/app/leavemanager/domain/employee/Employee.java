@@ -4,10 +4,11 @@ import com.app.leavemanager.domain.employee.user.Scope;
 import com.app.leavemanager.domain.employee.user.User;
 import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
-import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
+import com.app.leavemanager.domain.holiday.notice.NoticeType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,6 +63,9 @@ public class Employee {
     @OneToMany(mappedBy = "createdBy")
     @Builder.Default
     private List<Holiday> holidays = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "createdBy")
+    private List<Notice> notices = new ArrayList<>();
 
     public static Employee create(String firstname,
                                   String lastname,
@@ -187,12 +191,11 @@ public class Employee {
         return user.hasRole(Scope.ADMIN);
     }
 
-    public void approveHoliday(Holiday holiday, HolidayRepository holidayRepository) {
-        if (this.hasRoleEmployee()) {
-            holiday.approve(holidayRepository);
-        } else {
-            throw new RuntimeException("Forbidden for the current user");
-        }
+    public void approveHoliday(NoticeType noticeType,
+                               String description,
+                               Holiday holiday,
+                               HolidayRepository holidayRepository) {
+        holiday.approve(noticeType, description, this, holidayRepository);
     }
 
     public void publishHoliday(Holiday holiday, HolidayRepository holidayRepository) {

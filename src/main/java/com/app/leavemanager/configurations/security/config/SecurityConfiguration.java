@@ -60,6 +60,10 @@ public class SecurityConfiguration {
                                         "/holiday/type"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/holiday/type/{holidayTypeId}"
+                                ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                .requestMatchers(
                                         HttpMethod.GET,
                                         "/holiday/type",
                                         "/holiday/type/{holidayTypeId}"
@@ -87,6 +91,15 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.POST,
                                         "/config/holiday"
+                                ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/config/holiday/{holidayConfigId}/activate"
+                                ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/config/holiday",
+                                        "/config/holiday/{holidayConfigId}"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .anyRequest().denyAll()
                 )

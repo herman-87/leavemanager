@@ -5,9 +5,11 @@ import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
 import com.app.leavemanager.repository.spring.HolidayConfigSpringRepository;
 import com.app.leavemanager.repository.spring.HolidaySpringRepository;
 import com.app.leavemanager.repository.spring.HolidayTypeSpringRepository;
+import com.app.leavemanager.repository.spring.NoticeSpringRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ public class DefaultHolidayRepository implements HolidayRepository {
     private final HolidaySpringRepository holidaySpringRepository;
     private final HolidayTypeSpringRepository holidayTypeSpringRepository;
     private final HolidayConfigSpringRepository holidayConfigSpringRepository;
+    private final NoticeSpringRepository noticeSpringRepository;
 
     @Override
     public Holiday save(Holiday holiday) {
@@ -89,5 +92,10 @@ public class DefaultHolidayRepository implements HolidayRepository {
     @Override
     public List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate currentTime) {
         return holidaySpringRepository.findAllByStatusAndPeriodEndDateBefore(status, currentTime);
+    }
+
+    @Override
+    public Notice save(Notice notice) {
+        return noticeSpringRepository.save(notice);
     }
 }

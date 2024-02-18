@@ -2,6 +2,7 @@ package com.app.leavemanager.domain.holiday;
 
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,4 +37,6 @@ public interface HolidayRepository {
     Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 
     List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate date);
+
+    Notice save(Notice notice);
 }

@@ -311,6 +311,13 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        description: Holiday object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeDTO'
       responses:
         201:
           description: successful operation
@@ -780,6 +787,11 @@ components:
         - DRAFT
         - APPLY
         - CLOSED
+    NoticeStatusDTO:
+      type: string
+      enum:
+        - OK
+        - NOT_OK
     AuthenticationRequestDTO:
       type: object
       properties:
@@ -791,5 +803,12 @@ components:
       type: object
       properties:
         value:
+          type: string
+    NoticeDTO:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/NoticeStatusDTO'
+        description:
           type: string
 
