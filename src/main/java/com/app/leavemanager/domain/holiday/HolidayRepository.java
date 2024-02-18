@@ -25,6 +25,7 @@ public interface HolidayRepository {
     Optional<Holiday> findById(Long holidayId);
 
     Optional<HolidayType> findHolidayTypeById(Long holidayId);
+    List<Notice> findAllNoticeByHolidayId(Long holidayId);
 
     boolean existHolidayByTypeId(Long holidayTypeId);
 

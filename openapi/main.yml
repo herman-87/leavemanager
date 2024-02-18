@@ -293,7 +293,7 @@ paths:
       responses:
         204:
           description: successful operation
-  /notice/{holidayId}:
+  /holiday/{holidayId}/notice:
     put:
       tags:
         - Holiday
@@ -321,6 +321,31 @@ paths:
       responses:
         201:
           description: successful operation
+    get:
+      tags:
+        - Holiday
+      summary: Get all notices by holiday
+      description: Get all notices by holiday
+      operationId: getNoticesByHoliday
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID to get all notices
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/NoticeDTO'
   /publish/{holidayId}:
     put:
       tags:

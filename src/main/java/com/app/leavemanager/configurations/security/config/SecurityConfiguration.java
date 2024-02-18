@@ -101,6 +101,10 @@ public class SecurityConfiguration {
                                         "/config/holiday",
                                         "/config/holiday/{holidayConfigId}"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/holiday/{holidayId}/notice"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

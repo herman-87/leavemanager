@@ -4,10 +4,12 @@ import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.Period;
 import com.app.leavemanager.domain.holiday.config.HolidayConfig;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
 import com.app.leavemanager.domain.holiday.notice.NoticeType;
 import com.leavemanager.openapi.model.HolidayConfigDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
+import com.leavemanager.openapi.model.NoticeDTO;
 import com.leavemanager.openapi.model.NoticeStatusDTO;
 import com.leavemanager.openapi.model.PeriodDTO;
 import org.mapstruct.BeanMapping;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Mapper(
         componentModel = "spring",
@@ -64,4 +68,7 @@ public interface HolidayMapper {
 
     @BeanMapping(ignoreByDefault = true)
     NoticeType fromDTO(NoticeStatusDTO type);
+
+    @BeanMapping(ignoreByDefault = true)
+    NoticeDTO toDTO(Notice notice);
 }

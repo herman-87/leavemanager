@@ -65,6 +65,11 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
+    public List<Notice> findAllNoticeByHolidayId(Long holidayId) {
+        return noticeSpringRepository.findAllByHolidayId(holidayId);
+    }
+
+    @Override
     public boolean existHolidayByTypeId(Long holidayTypeId) {
         return holidaySpringRepository.existsByTypeId(holidayTypeId);
     }

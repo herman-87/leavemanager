@@ -6,6 +6,7 @@ import com.app.leavemanager.domain.holiday.Holiday;
 import com.app.leavemanager.domain.holiday.HolidayRepository;
 import com.app.leavemanager.domain.holiday.HolidayStatus;
 import com.app.leavemanager.domain.holiday.holidayType.HolidayType;
+import com.app.leavemanager.domain.holiday.notice.Notice;
 import com.app.leavemanager.mapper.HolidayMapper;
 import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
@@ -205,5 +206,14 @@ public class HolidayService {
                      holiday.passed(holidayRepository);
                      log.info(" Scheduler close the holiday: "+ holiday.getTitle() +" "+ holiday.getType().getName());
                  });
+    }
+
+    @Transactional
+    public List<NoticeDTO> getNoticesByHoliday(Long holidayId) {
+        List<Notice> allNoticeByHolidayId = holidayRepository.findAllNoticeByHolidayId(holidayId);
+        return allNoticeByHolidayId
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
     }
 }
