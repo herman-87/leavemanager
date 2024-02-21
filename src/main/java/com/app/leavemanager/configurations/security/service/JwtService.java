@@ -1,5 +1,6 @@
 package com.app.leavemanager.configurations.security.service;
 
+import com.app.leavemanager.domain.employee.user.Scope;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,6 +44,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .claim("Scopes", Scope.SUPER_ADMIN.name())
                 .compact();
     }
 
