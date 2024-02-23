@@ -202,6 +202,15 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- maven config -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.app.leavemanager.LeavemanagerApplication</mainClass>
+					<imageName>leavemanager-v1-image</imageName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
