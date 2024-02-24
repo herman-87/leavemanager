@@ -1,5 +1,6 @@
 package com.app.leavemanager.configurations.security.service;
 
+import com.app.leavemanager.domain.employee.user.Scope;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

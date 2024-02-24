@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class AuthenticationService {
         );
 
         User user = userSpringRepository.findByEmail(authenticationRequestDTO.getEmail()).orElseThrow();
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(Map.of("scopes", user.getRole()), user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
 
