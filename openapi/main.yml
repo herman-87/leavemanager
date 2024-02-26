@@ -733,6 +733,8 @@ components:
           $ref: '#/components/schemas/PeriodDTO'
         status:
           $ref: '#/components/schemas/HolidayStatusDTO'
+        createdBy:
+          $ref: '#/components/schemas/EmployeeDTO'
     PeriodDTO:
       type: object
       properties:
