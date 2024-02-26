@@ -61,6 +61,8 @@ public class Holiday {
     @Builder.Default
     @OneToMany(mappedBy = "holiday")
     List<Notice> notices = new ArrayList<>();
+    @Column(name = "c_reason")
+    private String reason;
 
     public void update(HolidayType type,
                        String description,
@@ -75,10 +77,10 @@ public class Holiday {
         holidayRepository.save(this);
     }
 
-    public void approve(NoticeType noticeType,
-                        String description,
-                        Employee employee,
-                        HolidayRepository holidayRepository) {
+    public void notice(NoticeType noticeType,
+                       String description,
+                       Employee employee,
+                       HolidayRepository holidayRepository) {
         if (isPublished()) {
             Notice notice = Notice.builder()
                     .type(noticeType)
@@ -138,6 +140,18 @@ public class Holiday {
 
     public void passed(HolidayRepository holidayRepository) {
         this.status = HolidayStatus.IN_PROGRESS;
+        holidayRepository.save(this);
+    }
+
+    public void approve(String value, HolidayRepository holidayRepository) {
+        this.status = HolidayStatus.VALIDATED;
+        this.reason = value;
+        holidayRepository.save(this);
+    }
+
+    public void reject(String value, HolidayRepository holidayRepository) {
+        this.status = HolidayStatus.REFUSED;
+        this.reason = value;
         holidayRepository.save(this);
     }
 }

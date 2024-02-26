@@ -39,6 +39,7 @@ public interface HolidayMapper {
     @Mapping(target = "createdAt")
     @Mapping(target = "period")
     @Mapping(target = "status")
+    @Mapping(target = "createdBy")
     HolidayDTO toDTO(Holiday holiday);
 
     @BeanMapping(ignoreByDefault = true)

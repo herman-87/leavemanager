@@ -12,6 +12,7 @@ import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
 import com.leavemanager.openapi.model.NoticeDTO;
+import com.leavemanager.openapi.model.ReasonDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +90,7 @@ public class HolidayService {
     }
 
     @Transactional
-    public HolidayDTO getHolidayById(Long holidayId, String currentUsername) {
+    public HolidayDTO fetchHolidayById(Long holidayId, String currentUsername) {
 
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
@@ -104,19 +105,18 @@ public class HolidayService {
         throw new RuntimeException("Forbidden for the current user");
     }
 
-    @Transactional
     public Holiday getHolidayById(Long holidayId) {
         return holidayRepository.findById(holidayId)
                 .orElseThrow(() -> new RuntimeException("Holiday Not Found"));
     }
 
     @Transactional
-    public void approveHolidayById(Long holidayId,
-                                   NoticeDTO noticeDTO,
-                                   String currentUsername) {
+    public void noticeHolidayById(Long holidayId,
+                                  NoticeDTO noticeDTO,
+                                  String currentUsername) {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        employee.approveHoliday(
+        employee.noticeHoliday(
                 holidayMapper.fromDTO(noticeDTO.getType()),
                 noticeDTO.getDescription(),
                 holiday,
@@ -215,5 +215,19 @@ public class HolidayService {
                 .stream()
                 .map(holidayMapper::toDTO)
                 .toList();
+    }
+
+    @Transactional
+    public void approvedHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+        employee.approvedHoliday(holiday, reasonDTO.getValue(), holidayRepository);
+    }
+
+    @Transactional
+    public void rejectHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
+        Holiday holiday = getHolidayById(holidayId);
+        Employee employee = getEmployeeByUsername(currentUsername);
+        employee.rejectHoliday(holiday, reasonDTO.getValue(), holidayRepository);
     }
 }

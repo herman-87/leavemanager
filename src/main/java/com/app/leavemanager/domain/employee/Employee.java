@@ -67,21 +67,6 @@ public class Employee {
     @OneToMany(mappedBy = "createdBy")
     private List<Notice> notices = new ArrayList<>();
 
-    public static Employee create(String firstname,
-                                  String lastname,
-                                  LocalDate dateOfBirth,
-                                  User user,
-                                  EmployeeRepository employeeRepository) {
-        return employeeRepository.save(
-                Employee.builder()
-                        .firstname(firstname)
-                        .lastname(lastname)
-                        .dateOfBirth(dateOfBirth)
-                        .user(user)
-                        .build()
-        );
-    }
-
     public static Employee createSuperAdmin(String firstname,
                                             String lastname,
                                             LocalDate dateOfBirth,
@@ -125,11 +110,6 @@ public class Employee {
                 .password(password)
                 .build();
         employeeDAO.save(this);
-    }
-
-    public void setUser(User user, EmployeeRepository employeeRepository) {
-        this.user = user;
-        employeeRepository.save(this);
     }
 
     public Employee createEmployee(String firstname,
@@ -191,15 +171,15 @@ public class Employee {
         return user.hasRole(Scope.ADMIN);
     }
 
-    public void approveHoliday(NoticeType noticeType,
-                               String description,
-                               Holiday holiday,
-                               HolidayRepository holidayRepository) {
-        holiday.approve(noticeType, description, this, holidayRepository);
+    public void noticeHoliday(NoticeType noticeType,
+                              String description,
+                              Holiday holiday,
+                              HolidayRepository holidayRepository) {
+        holiday.notice(noticeType, description, this, holidayRepository);
     }
 
     public void publishHoliday(Holiday holiday, HolidayRepository holidayRepository) {
-        if (hasRoleEmployee() && holiday.isCreatedBy(this)) {
+        if (holiday.isCreatedBy(this)) {
             holiday.publish(holidayRepository);
         } else {
             throw new RuntimeException("Forbidden for the current user");
@@ -249,5 +229,19 @@ public class Employee {
                         .type(holidayType)
                         .build()
         );
+    }
+
+    public void approvedHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
+        if (!holiday.isCreatedBy(this)) {
+            throw new RuntimeException("current user is not authorize to do this action");
+        }
+        holiday.approve(value, holidayRepository);
+    }
+
+    public void rejectHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
+        if (!holiday.isCreatedBy(this)) {
+            throw new RuntimeException("current user is not authorize to do this action");
+        }
+        holiday.reject(value, holidayRepository);
     }
 }
