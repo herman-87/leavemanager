@@ -16,7 +16,8 @@ import java.time.ZoneId;
 
 @Mapper(
         componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        uses = EmployeeMapper.class
 )
 @Component
 public interface EmployeeMapper {

@@ -388,6 +388,62 @@ paths:
       responses:
         201:
           description: successful operation
+  /validate/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: approved a Holiday
+      description: approved a Holiday
+      operationId: approvedHoliday
+      security:
+        - oAuth:
+            - SUPER_ADMIN,ADMIN
+      requestBody:
+        description: the reason of the agreement
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonDTO'
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID to approved
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
+  /reject/{holidayId}:
+    put:
+      tags:
+        - Holiday
+      summary: reject a Holiday
+      description: reject a Holiday
+      operationId: rejectHoliday
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      requestBody:
+        description: reason of the rejection
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonDTO'
+      parameters:
+        - name: holidayId
+          in: path
+          description: holiday ID to approved
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: successful operation
   /holiday/type:
     post:
       tags:
@@ -634,7 +690,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenDTO'
-
+  /holiday/my-holidays:
+    get:
+      tags:
+        - Holiday
+      summary: get all my Holidays
+      description: get all my Holidays
+      operationId: getAllMyHolidays
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HolidayDTO'
 components:
   securitySchemes:
     oAuth:
@@ -816,5 +890,10 @@ components:
         type:
           $ref: '#/components/schemas/NoticeStatusDTO'
         description:
+          type: string
+    ReasonDTO:
+      type: object
+      properties:
+        value:
           type: string
 

@@ -6,6 +6,7 @@ import com.leavemanager.openapi.model.CreationHolidayDTO;
 import com.leavemanager.openapi.model.HolidayDTO;
 import com.leavemanager.openapi.model.HolidayTypeDTO;
 import com.leavemanager.openapi.model.NoticeDTO;
+import com.leavemanager.openapi.model.ReasonDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class HolidayResources implements HolidayApi {
 
     private static String getCurrentUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @Override
+    public ResponseEntity<Void> _approvedHoliday(Long holidayId, ReasonDTO reasonDTO) {
+        holidayService.approvedHoliday(holidayId, reasonDTO, getCurrentUsername());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
@@ -68,10 +75,18 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
+    public ResponseEntity<List<HolidayDTO>> _getAllMyHolidays() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(holidayService.getAllMyHolidays(getCurrentUsername()));
+
+    }
+
+    @Override
     public ResponseEntity<HolidayDTO> _getHolidayById(Long holidayId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(holidayService.getHolidayById(holidayId, getCurrentUsername()));
+                .body(holidayService.fetchHolidayById(holidayId, getCurrentUsername()));
     }
 
     @Override
@@ -90,7 +105,7 @@ public class HolidayResources implements HolidayApi {
 
     @Override
     public ResponseEntity<Void> _noticeHoliday(Long holidayId, NoticeDTO noticeDTO) {
-        holidayService.approveHolidayById(holidayId, noticeDTO, getCurrentUsername());
+        holidayService.noticeHolidayById(holidayId, noticeDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -98,6 +113,12 @@ public class HolidayResources implements HolidayApi {
     public ResponseEntity<Void> _publishHoliday(Long holidayId) {
         holidayService.publishHolidayById(holidayId, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> _rejectHoliday(Long holidayId, ReasonDTO reasonDTO) {
+        holidayService.rejectHoliday(holidayId, reasonDTO, getCurrentUsername());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override

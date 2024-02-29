@@ -95,12 +95,22 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate currentTime) {
-        return holidaySpringRepository.findAllByStatusAndPeriodEndDateBefore(status, currentTime);
+    public List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate currentDate) {
+        return holidaySpringRepository.findAllByStatusAndPeriodEndDateBefore(status, currentDate);
+    }
+
+    @Override
+    public List<Holiday> findAllHolidayByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate currentDate) {
+        return holidaySpringRepository.findAllByStatusAndPeriodStartDateIsBefore(status, currentDate);
     }
 
     @Override
     public Notice save(Notice notice) {
         return noticeSpringRepository.save(notice);
+    }
+
+    @Override
+    public List<Holiday> findAllByCreatedById(Long id) {
+        return null;
     }
 }
