@@ -100,7 +100,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/config/holiday",
-                                        "/config/holiday/{holidayConfigId}"
+                                        "/config/holiday/{holidayConfigId}",
+                                        "/config/holiday/{holidayTypeId}"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,

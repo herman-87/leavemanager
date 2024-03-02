@@ -34,6 +34,7 @@ public interface HolidayRepository {
     HolidayConfig save(HolidayConfig build);
 
     List<HolidayConfig> findAllHolidayConfig();
+    List<HolidayConfig> findAllHolidayConfigByHolidayTypeId(Long holidayTypeId);
 
     Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 

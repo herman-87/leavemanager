@@ -627,6 +627,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HolidayConfigDTO'
+  /config/holiday/{holidayTypeId}:
+    get:
+      tags:
+        - HolidayConfig
+      summary: Get HolidayConfig by id
+      description: Get HolidayConfig by holiday type id
+      operationId: getAllHolidayConfigByHolidayType
+      security:
+        - oAuth:
+            - SUPER_ADMIN
+      parameters:
+        - name: holidayTypeId
+          in: path
+          description: HolidayConfig ID to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/HolidayConfigDTO'
   /config/holiday/{holidayConfigId}/activate:
     put:
       tags:
