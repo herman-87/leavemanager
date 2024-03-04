@@ -34,10 +34,14 @@ public interface HolidayRepository {
     HolidayConfig save(HolidayConfig build);
 
     List<HolidayConfig> findAllHolidayConfig();
+    List<HolidayConfig> findAllHolidayConfigByHolidayTypeId(Long holidayTypeId);
 
     Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 
     List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate date);
+    List<Holiday> findAllHolidayByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate date);
 
     Notice save(Notice notice);
+
+    List<Holiday> findAllByCreatedById(Long id);
 }

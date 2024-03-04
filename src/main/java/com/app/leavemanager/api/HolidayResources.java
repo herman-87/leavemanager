@@ -75,6 +75,14 @@ public class HolidayResources implements HolidayApi {
     }
 
     @Override
+    public ResponseEntity<List<HolidayDTO>> _getAllMyHolidays() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(holidayService.getAllMyHolidays(getCurrentUsername()));
+
+    }
+
+    @Override
     public ResponseEntity<HolidayDTO> _getHolidayById(Long holidayId) {
         return ResponseEntity
                 .status(HttpStatus.OK)

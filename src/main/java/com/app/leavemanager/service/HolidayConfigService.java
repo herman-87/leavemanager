@@ -81,4 +81,12 @@ public class HolidayConfigService {
         HolidayConfig holidayConfig = fetchHolidayConfigById(holidayConfigId);
         holidayConfig.deactivate(holidayRepository);
     }
+
+    @Transactional
+    public List<HolidayConfigDTO> getAllHolidayConfigsByHolidayType(Long holidayTypeId) {
+        return holidayRepository.findHolidayConfigByTypeId(holidayTypeId)
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
+    }
 }

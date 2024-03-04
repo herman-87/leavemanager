@@ -197,15 +197,31 @@ public class HolidayService {
     @Transactional
     @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
     public void closeAllPassedHolidays() {
-        log.info("Scheduler tour "+ LocalDateTime.now());
+        log.info("Scheduler tour (to close Holidays)"+ LocalDateTime.now());
          holidayRepository
                  .findAllHolidayByStatusAndPeriodEndDateIsBefore(
                          HolidayStatus.IN_PROGRESS, LocalDate.now()
                  ).stream()
                  .peek(holiday -> {
                      holiday.passed(holidayRepository);
-                     log.info(" Scheduler close the holiday: "+ holiday.getTitle() +" "+ holiday.getType().getName());
+                     log.info("<<new event>>: Scheduler start one passed holiday: "
+                             + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
                  });
+    }
+
+    @Transactional
+    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
+    public void startAllValidatedHolidays() {
+        log.info("Scheduler tour (to start Holidays)"+ LocalDateTime.now());
+        holidayRepository
+                .findAllHolidayByStatusAndPeriodStartDateIsBefore(
+                        HolidayStatus.IN_PROGRESS, LocalDate.now()
+                ).stream()
+                .peek(holiday -> {
+                    holiday.passed(holidayRepository);
+                    log.info("<<new event>>: Scheduler start one validated holiday: "
+                            + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
+                });
     }
 
     @Transactional
@@ -229,5 +245,14 @@ public class HolidayService {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
         employee.rejectHoliday(holiday, reasonDTO.getValue(), holidayRepository);
+    }
+
+    @Transactional
+    public List<HolidayDTO> getAllMyHolidays(String currentUsername) {
+        Employee employee = getEmployeeByUsername(currentUsername);
+        return holidayRepository.findAllByCreatedById(employee.getId())
+                .stream()
+                .map(holidayMapper::toDTO)
+                .toList();
     }
 }
