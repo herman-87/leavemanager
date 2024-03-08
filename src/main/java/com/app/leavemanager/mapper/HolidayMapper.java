@@ -54,6 +54,7 @@ public interface HolidayMapper {
     @Mapping(target = "numberOfTime")
     @Mapping(target = "minimumOfDays")
     @Mapping(target = "maximumOfDays")
+    @Mapping(target = "isActivate", source = "activate")
     @Mapping(target = "holidayTypeId", source = "type.id")
     HolidayConfigDTO toDTO(HolidayConfig holidayConfig);
 

@@ -95,7 +95,8 @@ public class SecurityConfiguration {
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.PUT,
-                                        "/config/holiday/{holidayConfigId}/activate"
+                                        "/config/holiday/{holidayConfigId}/activate",
+                                        "/config/holiday/{holidayConfigId}/deactivate"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,

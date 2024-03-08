@@ -116,6 +116,6 @@ public class DefaultHolidayRepository implements HolidayRepository {
 
     @Override
     public List<Holiday> findAllByCreatedById(Long id) {
-        return null;
+        return holidaySpringRepository.findAllByCreatedById(id);
     }
 }
