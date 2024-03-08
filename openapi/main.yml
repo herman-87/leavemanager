@@ -881,18 +881,12 @@ components:
         maximumOfDays:
           type: integer
           description: maximal duration of leave in days
-        status:
-          $ref: '#/components/schemas/HolidayConfigStatusDTO'
+        isActivate:
+          type: boolean
         holidayTypeId:
           type: integer
           format: int64
           description: the identifier of holiday type concerning by this configuration
-    HolidayConfigStatusDTO:
-      type: string
-      enum:
-        - DRAFT
-        - APPLY
-        - CLOSED
     NoticeStatusDTO:
       type: string
       enum:

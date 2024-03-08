@@ -102,7 +102,7 @@ public class SecurityConfiguration {
                                         "/config/holiday",
                                         "/config/{holidayConfigId}",
                                         "/holiday-type/{holidayTypeId}/config"
-                                ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/holiday/{holidayId}/notice"
