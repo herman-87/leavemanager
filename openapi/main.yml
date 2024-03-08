@@ -602,7 +602,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HolidayConfigDTO'
-  /config/holiday/{holidayConfigId}:
+  /config/{holidayConfigId}:
     get:
       tags:
         - HolidayConfig
@@ -627,11 +627,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HolidayConfigDTO'
-  /config/holiday/{holidayTypeId}:
+  /holiday-type/{holidayTypeId}/config:
     get:
       tags:
         - HolidayConfig
-      summary: Get HolidayConfig by id
+      summary: Get HolidayConfig by holiday type id
       description: Get HolidayConfig by holiday type id
       operationId: getAllHolidayConfigByHolidayType
       security:
