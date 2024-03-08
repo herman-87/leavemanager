@@ -26,7 +26,11 @@ import java.util.stream.Stream;
 
 @Mapper(
         componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        uses = {
+                EmployeeMapper.class,
+                CommonMapper.class
+        }
 )
 @Component
 public interface HolidayMapper {
@@ -62,11 +66,6 @@ public interface HolidayMapper {
     @Mapping(target = "startDate")
     @Mapping(target = "endDate")
     Period toDTO(PeriodDTO value);
-
-    default OffsetDateTime map(LocalDateTime value) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        return value.atZone(zoneId).toOffsetDateTime();
-    }
 
     @BeanMapping(ignoreByDefault = true)
     NoticeType fromDTO(NoticeStatusDTO type);

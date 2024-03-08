@@ -17,7 +17,9 @@ import java.time.ZoneId;
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = EmployeeMapper.class
+        uses = {
+                CommonMapper.class
+        }
 )
 @Component
 public interface EmployeeMapper {
@@ -30,11 +32,6 @@ public interface EmployeeMapper {
     @Mapping(target = "isActivated", source = "activated")
     @Mapping(target = "email", source = "user", qualifiedByName = "getUserEmail")
     EmployeeDTO toDTO(Employee employee);
-
-    default OffsetDateTime map(LocalDateTime value) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        return value.atZone(zoneId).toOffsetDateTime();
-    }
 
     @Named("getUserEmail")
     default String getUserEmail(User user) {
