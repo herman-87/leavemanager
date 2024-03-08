@@ -136,7 +136,7 @@ public class Employee {
 
         HolidayConfig holidayConfig = holidayRepository
                 .findHolidayConfigByTypeId(holidayType.getId())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("No config with present to this holiday type"));
 
         Holiday holidayToCreate = Holiday.builder()
                 .title(title)

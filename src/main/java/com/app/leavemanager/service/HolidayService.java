@@ -76,8 +76,9 @@ public class HolidayService {
                     holidayMapper.toDTO(holidayDTO.getPeriod()),
                     holidayRepository
             );
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
         }
-        throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional

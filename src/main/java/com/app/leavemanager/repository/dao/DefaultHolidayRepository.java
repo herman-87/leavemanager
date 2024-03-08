@@ -96,7 +96,7 @@ public class DefaultHolidayRepository implements HolidayRepository {
 
     @Override
     public Optional<HolidayConfig> findHolidayConfigByTypeId(Long typeId) {
-        return holidayConfigSpringRepository.findByTypeId(typeId);
+        return holidayConfigSpringRepository.findFirstByTypeIdAndIsActivateTrue(typeId);
     }
 
     @Override
