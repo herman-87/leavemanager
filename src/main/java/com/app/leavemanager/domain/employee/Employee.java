@@ -136,7 +136,7 @@ public class Employee {
 
         HolidayConfig holidayConfig = holidayRepository
                 .findHolidayConfigByTypeId(holidayType.getId())
-                .orElseThrow(() -> new RuntimeException("No config with present to this holiday type"));
+                .orElseThrow(() -> new RuntimeException("No config present to this holiday type"));
 
         Holiday holidayToCreate = Holiday.builder()
                 .title(title)
@@ -222,10 +222,10 @@ public class Employee {
                                              HolidayRepository holidayRepository) {
         return holidayRepository.save(
                 HolidayConfig.builder()
-                        .description(description)
                         .numberOfTime(numberOfTime)
-                        .minimumOfDays(minimumOfDays)
+                        .description(description)
                         .maximumOfDays(maximumOfDays)
+                        .minimumOfDays(minimumOfDays)
                         .type(holidayType)
                         .build()
         );
