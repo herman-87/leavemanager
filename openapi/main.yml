@@ -735,6 +735,31 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HolidayDTO'
+  /holiday-type/{holidayTypeId}/config/active:
+    get:
+      tags:
+        - HolidayConfig
+      summary: get activated holiday by holidayType
+      description: get activated holiday by holidayType
+      operationId: getActivatedHolidayConfigByHolidayTypeId
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayTypeId
+          in: path
+          required: true
+          description: holiday type ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayConfigDTO'
 components:
   securitySchemes:
     oAuth:

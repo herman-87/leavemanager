@@ -13,4 +13,6 @@ public interface HolidayConfigSpringRepository extends JpaRepository<HolidayConf
     Optional<HolidayConfig> findFirstByTypeIdAndIsActivateTrue(Long id);
 
     List<HolidayConfig> findHolidayConfigByTypeId(Long holidayTypeId);
+
+    boolean existsByTypeIdAndIsActivateTrue(Long holidayTypeId);
 }

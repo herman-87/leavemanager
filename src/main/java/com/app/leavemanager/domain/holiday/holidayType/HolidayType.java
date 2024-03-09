@@ -47,7 +47,7 @@ public class HolidayType {
                        HolidayRepository holidayRepository) {
         this.name = name;
         this.description = description;
-        holidayRepository.save(this);
+        holidayRepository.saveAndFlush(this);
     }
 
     public void delete(HolidayRepository holidayRepository) {

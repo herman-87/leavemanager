@@ -25,12 +25,12 @@ public class DefaultHolidayRepository implements HolidayRepository {
     private final NoticeSpringRepository noticeSpringRepository;
 
     @Override
-    public Holiday save(Holiday holiday) {
+    public Holiday saveAndFlush(Holiday holiday) {
         return holidaySpringRepository.saveAndFlush(holiday);
     }
 
     @Override
-    public HolidayType save(HolidayType holidayType) {
+    public HolidayType saveAndFlush(HolidayType holidayType) {
         return holidayTypeSpringRepository.save(holidayType);
     }
 
@@ -80,8 +80,8 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public HolidayConfig save(HolidayConfig holidayConfig) {
-        return holidayConfigSpringRepository.save(holidayConfig);
+    public HolidayConfig saveAndFlush(HolidayConfig holidayConfig) {
+        return holidayConfigSpringRepository.saveAndFlush(holidayConfig);
     }
 
     @Override
@@ -110,12 +110,17 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public Notice save(Notice notice) {
+    public Notice saveAndFlush(Notice notice) {
         return noticeSpringRepository.save(notice);
     }
 
     @Override
     public List<Holiday> findAllByCreatedById(Long id) {
         return holidaySpringRepository.findAllByCreatedById(id);
+    }
+
+    @Override
+    public boolean holidayConfigExistByTypeAndIsActivateTrue(Long holidayTypeId) {
+        return holidayConfigSpringRepository.existsByTypeIdAndIsActivateTrue(holidayTypeId);
     }
 }

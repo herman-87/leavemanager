@@ -89,4 +89,11 @@ public class HolidayConfigService {
                 .map(holidayMapper::toDTO)
                 .toList();
     }
+
+    @Transactional
+    public HolidayConfigDTO getActivatedHolidayConfigsByHolidayType(Long holidayTypeId) {
+        return holidayRepository.findHolidayConfigByTypeId(holidayTypeId)
+                .map(holidayMapper::toDTO)
+                .orElseThrow();
+    }
 }

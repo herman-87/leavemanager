@@ -152,7 +152,7 @@ public class Employee {
                 .filter(holiday -> holiday.getType().equals(holidayType))
                 .count();
         if (holidayConfig.isRespectedBy(holidayToCreate, numberOfHolidayPassed)) {
-            return holidayRepository.save(holidayToCreate);
+            return holidayRepository.saveAndFlush(holidayToCreate);
         } else {
             throw new RuntimeException("holiday config is not respected");
         }
@@ -205,7 +205,7 @@ public class Employee {
     public HolidayType createHolidayType(String name,
                                          String description,
                                          HolidayRepository holidayRepository) {
-        return holidayRepository.save(
+        return holidayRepository.saveAndFlush(
                 HolidayType.builder()
                         .name(name)
                         .description(description)
@@ -220,7 +220,7 @@ public class Employee {
                                              int maximumOfDays,
                                              HolidayType holidayType,
                                              HolidayRepository holidayRepository) {
-        return holidayRepository.save(
+        return holidayRepository.saveAndFlush(
                 HolidayConfig.builder()
                         .numberOfTime(numberOfTime)
                         .description(description)

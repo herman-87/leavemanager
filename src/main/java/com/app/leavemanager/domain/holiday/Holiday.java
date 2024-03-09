@@ -74,7 +74,7 @@ public class Holiday {
         this.type = type;
         this.title = title;
         this.description = description;
-        holidayRepository.save(this);
+        holidayRepository.saveAndFlush(this);
     }
 
     public void notice(NoticeType noticeType,
@@ -90,7 +90,7 @@ public class Holiday {
                     .build();
             this.notices.add(notice);
 
-            holidayRepository.save(notice);
+            holidayRepository.saveAndFlush(notice);
         } else {
             log.error("this improvement is not possible");
         }
@@ -104,7 +104,7 @@ public class Holiday {
 
         if (HolidayStatus.DRAFT.equals(this.status)) {
             this.status = HolidayStatus.PUBLISH;
-            holidayRepository.save(this);
+            holidayRepository.saveAndFlush(this);
         } else {
             log.error("The publish is not possible");
         }
@@ -114,7 +114,7 @@ public class Holiday {
 
         if (isPublished()) {
             this.status = HolidayStatus.DRAFT;
-            holidayRepository.save(this);
+            holidayRepository.saveAndFlush(this);
         } else {
             log.error("this unpublished is not possible");
         }
@@ -140,18 +140,18 @@ public class Holiday {
 
     public void passed(HolidayRepository holidayRepository) {
         this.status = HolidayStatus.IN_PROGRESS;
-        holidayRepository.save(this);
+        holidayRepository.saveAndFlush(this);
     }
 
     public void approve(String value, HolidayRepository holidayRepository) {
         this.status = HolidayStatus.VALIDATED;
         this.reason = value;
-        holidayRepository.save(this);
+        holidayRepository.saveAndFlush(this);
     }
 
     public void reject(String value, HolidayRepository holidayRepository) {
         this.status = HolidayStatus.REFUSED;
         this.reason = value;
-        holidayRepository.save(this);
+        holidayRepository.saveAndFlush(this);
     }
 }
