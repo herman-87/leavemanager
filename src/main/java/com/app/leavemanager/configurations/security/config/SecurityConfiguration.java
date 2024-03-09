@@ -106,7 +106,8 @@ public class SecurityConfiguration {
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
-                                        "/holiday/{holidayId}/notice"
+                                        "/holiday/{holidayId}/notice",
+                                        "/holiday-type/{holidayTypeId}/config/active"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .anyRequest().denyAll()
                 )
