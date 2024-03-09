@@ -84,7 +84,7 @@ public class HolidayConfigService {
 
     @Transactional
     public List<HolidayConfigDTO> getAllHolidayConfigsByHolidayType(Long holidayTypeId) {
-        return holidayRepository.findHolidayConfigByTypeId(holidayTypeId)
+        return holidayRepository.findAllHolidayConfigByHolidayTypeId(holidayTypeId)
                 .stream()
                 .map(holidayMapper::toDTO)
                 .toList();
