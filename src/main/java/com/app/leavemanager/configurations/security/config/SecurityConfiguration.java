@@ -84,7 +84,7 @@ public class SecurityConfiguration {
                                         "/publish/{holidayId}",
                                         "/unapproved/{holidayId}",
                                         "/unpublished/{holidayId}"
-                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.SUPER_ADMIN.name())
+                                ).hasAnyAuthority(Scope.ADMIN.name(), Scope.SUPER_ADMIN.name(), Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/holiday/{holidayId}"
