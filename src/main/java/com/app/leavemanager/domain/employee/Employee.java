@@ -231,8 +231,8 @@ public class Employee {
         );
     }
 
-    public void approvedHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
-        if (!holiday.isCreatedBy(this)) {
+    public void validateHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
+        if (this.hasRoleEmployee()) {
             throw new RuntimeException("current user is not authorize to do this action");
         }
         holiday.approve(value, holidayRepository);

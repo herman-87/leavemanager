@@ -16,6 +16,8 @@ public interface HolidayRepository {
 
     List<Holiday> findAll();
 
+    List<Holiday> findAllByStatusIsNot(HolidayStatus status);
+
     List<HolidayType> findAllHolidayTypes();
 
     void deleteById(Long holidayId);

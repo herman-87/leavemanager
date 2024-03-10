@@ -16,5 +16,6 @@ public interface HolidaySpringRepository extends JpaRepository<Holiday, Long> {
     List<Holiday> findAllByStatusAndPeriodEndDateBefore(HolidayStatus status, LocalDate currentTime);
     List<Holiday> findAllByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate currentDate);
     List<Holiday> findAllByCreatedById(Long createdById);
+    List<Holiday> findAllByStatusIsNot(HolidayStatus status);
 
 }

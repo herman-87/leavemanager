@@ -40,6 +40,11 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
+    public List<Holiday> findAllByStatusIsNot(HolidayStatus status) {
+        return holidaySpringRepository.findAllByStatusIsNot(status);
+    }
+
+    @Override
     public List<HolidayType> findAllHolidayTypes() {
         return holidayTypeSpringRepository.findAll();
     }

@@ -53,7 +53,7 @@ public class HolidayService {
 
     @Transactional
     public List<HolidayDTO> getAllHolidays() {
-        return holidayRepository.findAll()
+        return holidayRepository.findAllByStatusIsNot(HolidayStatus.DRAFT)
                 .stream()
                 .map(holidayMapper::toDTO)
                 .toList();
@@ -235,10 +235,10 @@ public class HolidayService {
     }
 
     @Transactional
-    public void approvedHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
+    public void validateHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        employee.approvedHoliday(holiday, reasonDTO.getValue(), holidayRepository);
+        employee.validateHoliday(holiday, reasonDTO.getValue(), holidayRepository);
     }
 
     @Transactional
