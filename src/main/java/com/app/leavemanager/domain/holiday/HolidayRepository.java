@@ -42,7 +42,7 @@ public interface HolidayRepository {
     Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 
     List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate date);
-    List<Holiday> findAllHolidayByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate date);
+    List<Holiday> findAllByStatusAndPeriodStartDateEquals(HolidayStatus status, LocalDate date);
 
     Notice saveAndFlush(Notice notice);
 

@@ -204,7 +204,7 @@ public class HolidayService {
                          HolidayStatus.IN_PROGRESS, LocalDate.now()
                  ).stream()
                  .peek(holiday -> {
-                     holiday.passed(holidayRepository);
+                     holiday.start(holidayRepository);
                      log.info("<<new event>>: Scheduler start one passed holiday: "
                              + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
                  });
@@ -215,13 +215,14 @@ public class HolidayService {
     public void startAllValidatedHolidays() {
         log.info("Scheduler tour (to start Holidays)"+ LocalDateTime.now());
         holidayRepository
-                .findAllHolidayByStatusAndPeriodStartDateIsBefore(
-                        HolidayStatus.IN_PROGRESS, LocalDate.now()
+                .findAllByStatusAndPeriodStartDateEquals(
+                        HolidayStatus.VALIDATED, LocalDate.now()
                 ).stream()
-                .peek(holiday -> {
-                    holiday.passed(holidayRepository);
+                .map(holiday -> {
+                    holiday.start(holidayRepository);
                     log.info("<<new event>>: Scheduler start one validated holiday: "
                             + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
+                    return null;
                 });
     }
 

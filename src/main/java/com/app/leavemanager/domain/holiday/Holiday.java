@@ -138,7 +138,7 @@ public class Holiday {
         }
     }
 
-    public void passed(HolidayRepository holidayRepository) {
+    public void start(HolidayRepository holidayRepository) {
         this.status = HolidayStatus.IN_PROGRESS;
         holidayRepository.saveAndFlush(this);
     }
