@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -197,32 +195,21 @@ public class HolidayService {
 
     @Transactional
     @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
-    public void closeAllPassedHolidays() {
-        log.info("Scheduler tour (to close Holidays)"+ LocalDateTime.now());
-         holidayRepository
-                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(
-                         HolidayStatus.IN_PROGRESS, LocalDate.now()
-                 ).stream()
-                 .peek(holiday -> {
-                     holiday.start(holidayRepository);
-                     log.info("<<new event>>: Scheduler start one passed holiday: "
-                             + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
-                 });
-    }
+    public void startScheduledTasks() {
+        holidayRepository.findAllByStatus(HolidayStatus.IN_PROGRESS)
+                .stream()
+                .filter(Holiday::isPassed)
+                .peek(holiday -> {
+                    holiday.close(holidayRepository);
+                    log.info("I close the holiday with id: ".concat(holiday.getId().toString()));
+                });
 
-    @Transactional
-    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
-    public void startAllValidatedHolidays() {
-        log.info("Scheduler tour (to start Holidays)"+ LocalDateTime.now());
-        holidayRepository
-                .findAllByStatusAndPeriodStartDateEquals(
-                        HolidayStatus.VALIDATED, LocalDate.now()
-                ).stream()
-                .map(holiday -> {
+        holidayRepository.findAllByStatus(HolidayStatus.VALIDATED)
+                .stream()
+                .filter(Holiday::isReadyToStart)
+                .peek(holiday -> {
                     holiday.start(holidayRepository);
-                    log.info("<<new event>>: Scheduler start one validated holiday: "
-                            + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
-                    return null;
+                    log.info("I start the holiday with id: ".concat(holiday.getId().toString()));
                 });
     }
 

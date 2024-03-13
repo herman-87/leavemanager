@@ -154,4 +154,17 @@ public class Holiday {
         this.reason = value;
         holidayRepository.saveAndFlush(this);
     }
+
+    public boolean isReadyToStart() {
+        return this.period.isStarted();
+    }
+
+    public void close(HolidayRepository holidayRepository) {
+        this.status = HolidayStatus.PASSED;
+        holidayRepository.saveAndFlush(this);
+    }
+
+    public boolean isPassed() {
+        return this.period.isPassed();
+    }
 }

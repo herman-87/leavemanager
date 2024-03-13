@@ -3,6 +3,7 @@ package com.app.leavemanager.api;
 import com.app.leavemanager.service.EmployeeService;
 import com.leavemanager.openapi.api.EmployeeApi;
 import com.leavemanager.openapi.model.EmployeeDTO;
+import com.leavemanager.openapi.model.PassWordDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,18 @@ public class EmployeeResources implements EmployeeApi {
     }
 
     @Override
+    public ResponseEntity<PassWordDTO> _getPassword() {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<Void> _updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
         employeeService.updateEmployee(employeeDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> _updatePassword(PassWordDTO passWordDTO) {
+        return null;
     }
 }

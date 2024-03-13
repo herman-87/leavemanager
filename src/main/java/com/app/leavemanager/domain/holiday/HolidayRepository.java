@@ -49,4 +49,6 @@ public interface HolidayRepository {
     List<Holiday> findAllByCreatedById(Long id);
 
     boolean holidayConfigExistByTypeAndIsActivateTrue(Long holidayTypeId);
+
+    List<Holiday> findAllByStatus(HolidayStatus holidayStatus);
 }

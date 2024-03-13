@@ -28,4 +28,12 @@ public class Period {
     public long getNumberOfDays() {
         return ChronoUnit.DAYS.between(startDate, endDate);
     }
+
+    public boolean isStarted() {
+        return startDate.isBefore(LocalDate.now());
+    }
+
+    public boolean isPassed() {
+        return endDate.isBefore(LocalDate.now());
+    }
 }

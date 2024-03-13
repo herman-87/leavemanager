@@ -18,4 +18,5 @@ public interface HolidaySpringRepository extends JpaRepository<Holiday, Long> {
     List<Holiday> findAllByCreatedById(Long createdById);
     List<Holiday> findAllByStatusIsNot(HolidayStatus status);
 
+    List<Holiday> findAllByStatus(HolidayStatus holidayStatus);
 }

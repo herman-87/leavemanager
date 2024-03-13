@@ -128,4 +128,9 @@ public class DefaultHolidayRepository implements HolidayRepository {
     public boolean holidayConfigExistByTypeAndIsActivateTrue(Long holidayTypeId) {
         return holidayConfigSpringRepository.existsByTypeIdAndIsActivateTrue(holidayTypeId);
     }
+
+    @Override
+    public List<Holiday> findAllByStatus(HolidayStatus holidayStatus) {
+        return holidaySpringRepository.findAllByStatus(holidayStatus);
+    }
 }
