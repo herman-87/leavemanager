@@ -84,7 +84,7 @@ public class SecurityConfiguration {
                                         "/publish/{holidayId}",
                                         "/unapproved/{holidayId}",
                                         "/unpublished/{holidayId}"
-                                ).hasAnyAuthority(Scope.EMPLOYEE.name(), Scope.SUPER_ADMIN.name())
+                                ).hasAnyAuthority(Scope.ADMIN.name(), Scope.SUPER_ADMIN.name(), Scope.EMPLOYEE.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/holiday/{holidayId}"
@@ -95,17 +95,19 @@ public class SecurityConfiguration {
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.PUT,
-                                        "/config/holiday/{holidayConfigId}/activate"
+                                        "/config/holiday/{holidayConfigId}/activate",
+                                        "/config/holiday/{holidayConfigId}/deactivate"
                                 ).hasAuthority(Scope.SUPER_ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/config/holiday",
-                                        "/config/holiday/{holidayConfigId}",
-                                        "/config/holiday/{holidayTypeId}"
-                                ).hasAuthority(Scope.SUPER_ADMIN.name())
+                                        "/config/{holidayConfigId}",
+                                        "/holiday-type/{holidayTypeId}/config"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())
                                 .requestMatchers(
                                         HttpMethod.GET,
-                                        "/holiday/{holidayId}/notice"
+                                        "/holiday/{holidayId}/notice",
+                                        "/holiday-type/{holidayTypeId}/config/active"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .anyRequest().denyAll()
                 )

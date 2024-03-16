@@ -136,7 +136,7 @@ public class Employee {
 
         HolidayConfig holidayConfig = holidayRepository
                 .findHolidayConfigByTypeId(holidayType.getId())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("No config present to this holiday type"));
 
         Holiday holidayToCreate = Holiday.builder()
                 .title(title)
@@ -152,7 +152,7 @@ public class Employee {
                 .filter(holiday -> holiday.getType().equals(holidayType))
                 .count();
         if (holidayConfig.isRespectedBy(holidayToCreate, numberOfHolidayPassed)) {
-            return holidayRepository.save(holidayToCreate);
+            return holidayRepository.saveAndFlush(holidayToCreate);
         } else {
             throw new RuntimeException("holiday config is not respected");
         }
@@ -205,7 +205,7 @@ public class Employee {
     public HolidayType createHolidayType(String name,
                                          String description,
                                          HolidayRepository holidayRepository) {
-        return holidayRepository.save(
+        return holidayRepository.saveAndFlush(
                 HolidayType.builder()
                         .name(name)
                         .description(description)
@@ -220,19 +220,19 @@ public class Employee {
                                              int maximumOfDays,
                                              HolidayType holidayType,
                                              HolidayRepository holidayRepository) {
-        return holidayRepository.save(
+        return holidayRepository.saveAndFlush(
                 HolidayConfig.builder()
-                        .description(description)
                         .numberOfTime(numberOfTime)
-                        .minimumOfDays(minimumOfDays)
+                        .description(description)
                         .maximumOfDays(maximumOfDays)
+                        .minimumOfDays(minimumOfDays)
                         .type(holidayType)
                         .build()
         );
     }
 
-    public void approvedHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
-        if (!holiday.isCreatedBy(this)) {
+    public void validateHoliday(Holiday holiday, String value, HolidayRepository holidayRepository) {
+        if (this.hasRoleEmployee()) {
             throw new RuntimeException("current user is not authorize to do this action");
         }
         holiday.approve(value, holidayRepository);

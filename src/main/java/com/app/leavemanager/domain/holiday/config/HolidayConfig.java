@@ -51,16 +51,18 @@ public class HolidayConfig {
     }
 
     public void activate(HolidayRepository holidayRepository) {
-        if (!this.isActivate) {
+        if (holidayRepository.holidayConfigExistByTypeAndIsActivateTrue(this.type.getId())) {
+            throw new RuntimeException("Activated config already exist");
+        } else {
             this.isActivate = true;
-            holidayRepository.save(this);
+            holidayRepository.saveAndFlush(this);
         }
     }
 
     public void deactivate(HolidayRepository holidayRepository) {
         if (this.isActivate) {
             this.isActivate = false;
-            holidayRepository.save(this);
+            holidayRepository.saveAndFlush(this);
         }
     }
 }

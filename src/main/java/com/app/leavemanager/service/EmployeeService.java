@@ -152,7 +152,7 @@ public class EmployeeService {
     }
 
     private User createUser(RegistrationDTO registrationDTO, Scope role) {
-        return User.builder()
+        User user = User.builder()
                 .email(
                         Employee.generatedEmail(
                                 registrationDTO.getFirstname(),
@@ -160,9 +160,14 @@ public class EmployeeService {
                                 defaultEmailSuffix
                         )
                 )
-                .password(passwordEncoder.encode(defaultEmployeePassword))
                 .role(role)
                 .build();
+        if (Scope.EMPLOYEE.equals(role)) {
+            user.setPassword(passwordEncoder.encode(defaultEmployeePassword));
+        } else if (Scope.ADMIN.equals(role)) {
+            user.setPassword(passwordEncoder.encode(defaultAdminPassword));
+        }
+        return user;
     }
 
     private Employee getEmployeeByUsername(String currentUsername) {

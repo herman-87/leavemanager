@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -53,7 +51,7 @@ public class HolidayService {
 
     @Transactional
     public List<HolidayDTO> getAllHolidays() {
-        return holidayRepository.findAll()
+        return holidayRepository.findAllByStatusIsNot(HolidayStatus.DRAFT)
                 .stream()
                 .map(holidayMapper::toDTO)
                 .toList();
@@ -76,8 +74,9 @@ public class HolidayService {
                     holidayMapper.toDTO(holidayDTO.getPeriod()),
                     holidayRepository
             );
+        } else {
+            throw new RuntimeException("Forbidden for the current user");
         }
-        throw new RuntimeException("Forbidden for the current user");
     }
 
     @Transactional
@@ -195,32 +194,20 @@ public class HolidayService {
     }
 
     @Transactional
-    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
-    public void closeAllPassedHolidays() {
-        log.info("Scheduler tour (to close Holidays)"+ LocalDateTime.now());
-         holidayRepository
-                 .findAllHolidayByStatusAndPeriodEndDateIsBefore(
-                         HolidayStatus.IN_PROGRESS, LocalDate.now()
-                 ).stream()
-                 .peek(holiday -> {
-                     holiday.passed(holidayRepository);
-                     log.info("<<new event>>: Scheduler start one passed holiday: "
-                             + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
-                 });
-    }
+    @Scheduled(fixedRate = 500000)
+    public void startScheduledTasks() {
+        log.info("scheduler tour");
 
-    @Transactional
-    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
-    public void startAllValidatedHolidays() {
-        log.info("Scheduler tour (to start Holidays)"+ LocalDateTime.now());
-        holidayRepository
-                .findAllHolidayByStatusAndPeriodStartDateIsBefore(
-                        HolidayStatus.IN_PROGRESS, LocalDate.now()
-                ).stream()
-                .peek(holiday -> {
-                    holiday.passed(holidayRepository);
-                    log.info("<<new event>>: Scheduler start one validated holiday: "
-                            + holiday.getId() + holiday.getTitle() +" "+ holiday.getType().getName());
+        holidayRepository.findAll()
+                .forEach(holiday -> {
+                    if (holiday.isValidated() && holiday.isStarted()) {
+                        holiday.start(holidayRepository);
+                        log.info("start : ".concat(holiday.getId().toString()));
+                    } else if (holiday.isInProgress() && holiday.isPassed()){
+                        holiday.close(holidayRepository);
+                        log.info("close : ".concat(holiday.getId().toString()));
+
+                    };
                 });
     }
 
@@ -234,10 +221,10 @@ public class HolidayService {
     }
 
     @Transactional
-    public void approvedHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
+    public void validateHoliday(Long holidayId, ReasonDTO reasonDTO, String currentUsername) {
         Holiday holiday = getHolidayById(holidayId);
         Employee employee = getEmployeeByUsername(currentUsername);
-        employee.approvedHoliday(holiday, reasonDTO.getValue(), holidayRepository);
+        employee.validateHoliday(holiday, reasonDTO.getValue(), holidayRepository);
     }
 
     @Transactional

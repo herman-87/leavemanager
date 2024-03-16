@@ -25,18 +25,23 @@ public class DefaultHolidayRepository implements HolidayRepository {
     private final NoticeSpringRepository noticeSpringRepository;
 
     @Override
-    public Holiday save(Holiday holiday) {
+    public Holiday saveAndFlush(Holiday holiday) {
         return holidaySpringRepository.saveAndFlush(holiday);
     }
 
     @Override
-    public HolidayType save(HolidayType holidayType) {
+    public HolidayType saveAndFlush(HolidayType holidayType) {
         return holidayTypeSpringRepository.save(holidayType);
     }
 
     @Override
     public List<Holiday> findAll() {
         return holidaySpringRepository.findAll();
+    }
+
+    @Override
+    public List<Holiday> findAllByStatusIsNot(HolidayStatus status) {
+        return holidaySpringRepository.findAllByStatusIsNot(status);
     }
 
     @Override
@@ -80,8 +85,8 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public HolidayConfig save(HolidayConfig holidayConfig) {
-        return holidayConfigSpringRepository.save(holidayConfig);
+    public HolidayConfig saveAndFlush(HolidayConfig holidayConfig) {
+        return holidayConfigSpringRepository.saveAndFlush(holidayConfig);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class DefaultHolidayRepository implements HolidayRepository {
 
     @Override
     public Optional<HolidayConfig> findHolidayConfigByTypeId(Long typeId) {
-        return holidayConfigSpringRepository.findByTypeId(typeId);
+        return holidayConfigSpringRepository.findFirstByTypeIdAndIsActivateTrue(typeId);
     }
 
     @Override
@@ -105,17 +110,27 @@ public class DefaultHolidayRepository implements HolidayRepository {
     }
 
     @Override
-    public List<Holiday> findAllHolidayByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate currentDate) {
-        return holidaySpringRepository.findAllByStatusAndPeriodStartDateIsBefore(status, currentDate);
+    public List<Holiday> findAllByStatusAndPeriodStartDateEquals(HolidayStatus status, LocalDate currentDate) {
+        return holidaySpringRepository.findAllByStatusAndPeriodStartDateEquals(status, currentDate);
     }
 
     @Override
-    public Notice save(Notice notice) {
+    public Notice saveAndFlush(Notice notice) {
         return noticeSpringRepository.save(notice);
     }
 
     @Override
     public List<Holiday> findAllByCreatedById(Long id) {
-        return null;
+        return holidaySpringRepository.findAllByCreatedById(id);
+    }
+
+    @Override
+    public boolean holidayConfigExistByTypeAndIsActivateTrue(Long holidayTypeId) {
+        return holidayConfigSpringRepository.existsByTypeIdAndIsActivateTrue(holidayTypeId);
+    }
+
+    @Override
+    public List<Holiday> findAllByStatus(HolidayStatus holidayStatus) {
+        return holidaySpringRepository.findAllByStatus(holidayStatus);
     }
 }

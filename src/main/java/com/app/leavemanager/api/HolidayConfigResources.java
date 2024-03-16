@@ -41,6 +41,13 @@ public class HolidayConfigResources implements HolidayConfigApi {
     }
 
     @Override
+    public ResponseEntity<HolidayConfigDTO> _getActivatedHolidayConfigByHolidayTypeId(Long holidayTypeId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(holidayConfigService.getActivatedHolidayConfigsByHolidayType(holidayTypeId));
+    }
+
+    @Override
     public ResponseEntity<List<HolidayConfigDTO>> _getAllHolidayConfigByHolidayType(Long holidayTypeId) {
         return ResponseEntity
                 .status(HttpStatus.OK)

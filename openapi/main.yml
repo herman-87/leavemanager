@@ -602,7 +602,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HolidayConfigDTO'
-  /config/holiday/{holidayConfigId}:
+  /config/{holidayConfigId}:
     get:
       tags:
         - HolidayConfig
@@ -627,11 +627,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HolidayConfigDTO'
-  /config/holiday/{holidayTypeId}:
+  /holiday-type/{holidayTypeId}/config:
     get:
       tags:
         - HolidayConfig
-      summary: Get HolidayConfig by id
+      summary: Get HolidayConfig by holiday type id
       description: Get HolidayConfig by holiday type id
       operationId: getAllHolidayConfigByHolidayType
       security:
@@ -735,6 +735,67 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HolidayDTO'
+  /holiday-type/{holidayTypeId}/config/active:
+    get:
+      tags:
+        - HolidayConfig
+      summary: get activated holiday by holidayType
+      description: get activated holiday by holidayType
+      operationId: getActivatedHolidayConfigByHolidayTypeId
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      parameters:
+        - name: holidayTypeId
+          in: path
+          required: true
+          description: holiday type ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayConfigDTO'
+  /employee/password:
+    get:
+      tags:
+        - Employee
+      summary: get employee password
+      description: get employee password
+      operationId: getPassword
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassWordDTO'
+    put:
+      tags:
+        - Employee
+      summary: update an employee password
+      description: update an employee password
+      operationId: updatePassword
+      security:
+        - oAuth:
+            - EMPLOYEE,SUPER_ADMIN,ADMIN
+      requestBody:
+        description: Holiday object that need to be update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassWordDTO'
+      responses:
+        201:
+          description: successful operation
 components:
   securitySchemes:
     oAuth:
@@ -814,6 +875,8 @@ components:
         isActivated:
           type: boolean
           description: the value is 'true' if the employee insert an existing email
+        role:
+          $ref: '#/components/schemas/RoleDTO'
     HolidayDTO:
       type: object
       properties:
@@ -881,18 +944,12 @@ components:
         maximumOfDays:
           type: integer
           description: maximal duration of leave in days
-        status:
-          $ref: '#/components/schemas/HolidayConfigStatusDTO'
+        isActivate:
+          type: boolean
         holidayTypeId:
           type: integer
           format: int64
           description: the identifier of holiday type concerning by this configuration
-    HolidayConfigStatusDTO:
-      type: string
-      enum:
-        - DRAFT
-        - APPLY
-        - CLOSED
     NoticeStatusDTO:
       type: string
       enum:
@@ -918,6 +975,17 @@ components:
         description:
           type: string
     ReasonDTO:
+      type: object
+      properties:
+        value:
+          type: string
+    RoleDTO:
+      type: string
+      enum:
+        - EMPLOYEE
+        - ADMIN
+        - SUPER_ADMIN
+    PassWordDTO:
       type: object
       properties:
         value:

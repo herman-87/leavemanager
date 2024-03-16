@@ -27,7 +27,7 @@ public class HolidayResources implements HolidayApi {
 
     @Override
     public ResponseEntity<Void> _approvedHoliday(Long holidayId, ReasonDTO reasonDTO) {
-        holidayService.approvedHoliday(holidayId, reasonDTO, getCurrentUsername());
+        holidayService.validateHoliday(holidayId, reasonDTO, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

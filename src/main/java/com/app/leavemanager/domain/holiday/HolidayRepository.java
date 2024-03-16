@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface HolidayRepository {
 
-    Holiday save(Holiday holiday);
+    Holiday saveAndFlush(Holiday holiday);
 
-    HolidayType save(HolidayType holidayType);
+    HolidayType saveAndFlush(HolidayType holidayType);
 
     List<Holiday> findAll();
+
+    List<Holiday> findAllByStatusIsNot(HolidayStatus status);
 
     List<HolidayType> findAllHolidayTypes();
 
@@ -31,7 +33,8 @@ public interface HolidayRepository {
 
     Optional<HolidayConfig> findHolidayConfigById(Long holidayConfigId);
 
-    HolidayConfig save(HolidayConfig build);
+    HolidayConfig saveAndFlush(HolidayConfig build);
+
 
     List<HolidayConfig> findAllHolidayConfig();
     List<HolidayConfig> findAllHolidayConfigByHolidayTypeId(Long holidayTypeId);
@@ -39,9 +42,13 @@ public interface HolidayRepository {
     Optional<HolidayConfig> findHolidayConfigByTypeId(Long id);
 
     List<Holiday> findAllHolidayByStatusAndPeriodEndDateIsBefore(HolidayStatus status, LocalDate date);
-    List<Holiday> findAllHolidayByStatusAndPeriodStartDateIsBefore(HolidayStatus status, LocalDate date);
+    List<Holiday> findAllByStatusAndPeriodStartDateEquals(HolidayStatus status, LocalDate date);
 
-    Notice save(Notice notice);
+    Notice saveAndFlush(Notice notice);
 
     List<Holiday> findAllByCreatedById(Long id);
+
+    boolean holidayConfigExistByTypeAndIsActivateTrue(Long holidayTypeId);
+
+    List<Holiday> findAllByStatus(HolidayStatus holidayStatus);
 }
