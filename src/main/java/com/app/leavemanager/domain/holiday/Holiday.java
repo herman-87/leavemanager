@@ -155,7 +155,7 @@ public class Holiday {
         holidayRepository.saveAndFlush(this);
     }
 
-    public boolean isReadyToStart() {
+    public boolean isStarted() {
         return this.period.isStarted();
     }
 
@@ -166,5 +166,13 @@ public class Holiday {
 
     public boolean isPassed() {
         return this.period.isPassed();
+    }
+
+    public boolean isValidated() {
+        return HolidayStatus.VALIDATED.equals(status);
+    }
+
+    public boolean isInProgress() {
+        return HolidayStatus.IN_PROGRESS.equals(status);
     }
 }

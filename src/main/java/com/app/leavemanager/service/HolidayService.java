@@ -194,22 +194,20 @@ public class HolidayService {
     }
 
     @Transactional
-    @Scheduled(fixedDelay = 60000L, initialDelay = 60000L)
+    @Scheduled(fixedRate = 500000)
     public void startScheduledTasks() {
-        holidayRepository.findAllByStatus(HolidayStatus.IN_PROGRESS)
-                .stream()
-                .filter(Holiday::isPassed)
-                .peek(holiday -> {
-                    holiday.close(holidayRepository);
-                    log.info("I close the holiday with id: ".concat(holiday.getId().toString()));
-                });
+        log.info("scheduler tour");
 
-        holidayRepository.findAllByStatus(HolidayStatus.VALIDATED)
-                .stream()
-                .filter(Holiday::isReadyToStart)
-                .peek(holiday -> {
-                    holiday.start(holidayRepository);
-                    log.info("I start the holiday with id: ".concat(holiday.getId().toString()));
+        holidayRepository.findAll()
+                .forEach(holiday -> {
+                    if (holiday.isValidated() && holiday.isStarted()) {
+                        holiday.start(holidayRepository);
+                        log.info("start : ".concat(holiday.getId().toString()));
+                    } else if (holiday.isInProgress() && holiday.isPassed()){
+                        holiday.close(holidayRepository);
+                        log.info("close : ".concat(holiday.getId().toString()));
+
+                    };
                 });
     }
 
