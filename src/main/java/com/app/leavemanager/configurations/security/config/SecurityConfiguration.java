@@ -42,6 +42,10 @@ public class SecurityConfiguration {
                                         "/employee/{employeeId}"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
                                 .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/employee/{employeeId}"
+                                ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name(), Scope.EMPLOYEE.name())
+                                .requestMatchers(
                                         HttpMethod.POST,
                                         "/admin/employee/add"
                                 ).hasAnyAuthority(Scope.SUPER_ADMIN.name(), Scope.ADMIN.name())

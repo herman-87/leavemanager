@@ -70,9 +70,9 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void updateEmployee(EmployeeDTO employeeDTO, String currentUsername) {
+    public void updateEmployee(EmployeeDTO employeeDTO, Long employeeId) {
 
-        Employee employee = employeeSpringRepository.findByUserEmail(currentUsername).orElseThrow();
+        Employee employee = employeeSpringRepository.findById(employeeId).orElseThrow();
         employee.update(
                 employeeDTO.getEmail(),
                 passwordEncoder.encode(employeeDTO.getPassword()),

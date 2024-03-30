@@ -40,7 +40,7 @@ public class EmployeeResources implements EmployeeApi {
 
     @Override
     public ResponseEntity<Void> _updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
-        employeeService.updateEmployee(employeeDTO, getCurrentUsername());
+        employeeService.updateEmployee(employeeDTO, employeeId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
