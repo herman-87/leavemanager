@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    show-sql: true
+
+  application:
+    name: sellam-api
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  springdoc:
+    default-produces-media-type: application/json
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH}
+
+default:
+  super:
+    admin:
+      email: ${DEFAULT_SUPER_ADMIN_EMAIL}
+      password: ${DEFAULT_SUPER_ADMIN_PASSWORD}
+  admin:
+    password: ${DEFAULT_ADMIN_PASSWORD}
+  employee:
+    password: ${DEFAULT_EMPLOYEE_PASSWORD}
+  email:
+    suffix: ${DEFAULT_EMAIL_SUFFIX}
+
+scheduler:
+  fixedRate: ${SCHEDULER_FIXED_RATE}

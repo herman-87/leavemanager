@@ -95,9 +95,7 @@ public class Employee {
         return generatedEmail;
     }
 
-    public void update(String email,
-                       String password,
-                       String firstname,
+    public void update(String firstname,
                        String lastname,
                        LocalDate dateOfBirth,
                        EmployeeRepository employeeDAO) {
@@ -105,11 +103,6 @@ public class Employee {
         this.firstname = firstname;
         this.lastname = lastname;
         this.dateOfBirth = dateOfBirth;
-        this.user = User.builder()
-                .email(email)
-                .password(password)
-                .build();
-        employeeDAO.save(this);
     }
 
     public Employee createEmployee(String firstname,

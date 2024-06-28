@@ -11,6 +11,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
@@ -38,6 +40,10 @@ public interface EmployeeMapper {
 
     @Named("getUserRole")
     default RoleDTO getUserRole(User user) {
-        return RoleDTO.fromValue(user.getRole().name());
+        return Optional.ofNullable(user)
+                .map(User::getRole)
+                .map(Enum::name)
+                .map(RoleDTO::valueOf)
+                .orElse(null);
     }
 }

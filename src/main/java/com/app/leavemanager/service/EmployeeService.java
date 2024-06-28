@@ -74,8 +74,6 @@ public class EmployeeService {
 
         Employee employee = employeeSpringRepository.findById(employeeId).orElseThrow();
         employee.update(
-                employeeDTO.getEmail(),
-                passwordEncoder.encode(employeeDTO.getPassword()),
                 employeeDTO.getFirstname(),
                 employeeDTO.getLastname(),
                 employeeDTO.getDateOfBirth(),
@@ -112,29 +110,29 @@ public class EmployeeService {
     @Transactional
     public RegistrationResponseDTO createSuperAdmin(RegistrationDTO registrationDTO) {
 
-        if (!employeeRepository.existsByRole(Scope.SUPER_ADMIN)) {
-            User user = User.builder()
-                    .email(defaultSuperAdminEmail)
-                    .password(passwordEncoder.encode(defaultSuperAdminPassword))
-                    .role(Scope.SUPER_ADMIN)
-                    .build();
-            User savedUser = userSpringRepository.save(user);
-
-            String jwtToken = createUserToken(savedUser);
-            Employee employee = Employee.createSuperAdmin(
-                    registrationDTO.getFirstname(),
-                    registrationDTO.getLastname(),
-                    registrationDTO.getDateOfBirth(),
-                    user,
-                    employeeRepository
-            );
-
-            return new RegistrationResponseDTO()
-                    .employeeId(employee.getId())
-                    .accessToken(jwtToken);
-        } else {
-            throw new Error("Super admin is already created");
+        if (employeeRepository.existsByRole(Scope.SUPER_ADMIN)) {
+            log.info("Super admin already created");
+            return null;
         }
+        User user = User.builder()
+                .email(defaultSuperAdminEmail)
+                .password(passwordEncoder.encode(defaultSuperAdminPassword))
+                .role(Scope.SUPER_ADMIN)
+                .build();
+        User savedUser = userSpringRepository.save(user);
+
+        String jwtToken = createUserToken(savedUser);
+        Employee employee = Employee.createSuperAdmin(
+                registrationDTO.getFirstname(),
+                registrationDTO.getLastname(),
+                registrationDTO.getDateOfBirth(),
+                user,
+                employeeRepository
+        );
+
+        return new RegistrationResponseDTO()
+                .employeeId(employee.getId())
+                .accessToken(jwtToken);
     }
 
     @Transactional

@@ -16,6 +16,7 @@ import com.leavemanager.openapi.model.ReasonDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public class HolidayService {
     private final HolidayRepository holidayRepository;
     private final EmployeeRepository employeeRepository;
     private final HolidayMapper holidayMapper;
+    @Value("${scheduler.fixedRate}")
+    private long fixedRate;
 
     private static boolean isAuthorOf(Employee employee, Holiday holiday) {
         return employee.hasRoleEmployee() && holiday.isCreatedBy(employee);
@@ -194,7 +197,7 @@ public class HolidayService {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 500000)
+    @Scheduled(fixedRateString = "${scheduler.fixedRate}")
     public void startScheduledTasks() {
         log.info("scheduler tour");
 

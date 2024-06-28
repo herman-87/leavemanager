@@ -19,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class LeaveManagerBean {
-
     private final UserSpringRepository userSpringRepository;
     private final EmployeeSpringRepository employeeSpringRepository;
     private final HolidaySpringRepository holidaySpringRepository;

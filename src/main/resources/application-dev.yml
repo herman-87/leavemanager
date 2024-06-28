@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/db_awae}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1234}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: true
+
+  application:
+    name: awae-api
+
+  springdoc:
+    default-produces-media-type: application/json
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api/leavemanager/v1}
+
+default:
+  super:
+    admin:
+      email: ${DEFAULT_SUPER_ADMIN_EMAIL:super_admin@awae.cm}
+      password: ${DEFAULT_SUPER_ADMIN_PASSWORD:super-admin}
+  admin:
+    password: ${DEFAULT_ADMIN_PASSWORD:admin}
+  employee:
+    password: ${DEFAULT_EMPLOYEE_PASSWORD:employee}
+  email:
+    suffix: ${DEFAULT_EMAIL_SUFFIX:@awae.cm}
+
+scheduler:
+  fixedRate: ${SCHEDULER_FIXED_RATE:5000}
