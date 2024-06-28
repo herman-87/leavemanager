@@ -38,3 +38,6 @@ default:
 
 scheduler:
   fixedRate: ${SCHEDULER_FIXED_RATE}
+
+token:
+  expiration-date: ${TOKEN_EXPIRATION_DATE:3}

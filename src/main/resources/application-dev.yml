@@ -19,7 +19,7 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
   servlet:
-    context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api/leavemanager/v1}
+      context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api/leavemanager/v1}
 
 default:
   super:
@@ -35,3 +35,6 @@ default:
 
 scheduler:
   fixedRate: ${SCHEDULER_FIXED_RATE:5000}
+
+token:
+  expiration-date: ${TOKEN_EXPIRATION_DATE:3}

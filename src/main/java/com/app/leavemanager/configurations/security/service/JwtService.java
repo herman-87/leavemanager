@@ -1,11 +1,11 @@
 package com.app.leavemanager.configurations.security.service;
 
-import com.app.leavemanager.domain.employee.user.Scope;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +19,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-
     private static final String SECRET_KEY = "93aad578814f94169dc6191cf32cf2a4a7ab22e07208fb23039262def1e3e6b3";
+    @Value("${token.expiration-date}")
+    private long expirationDate;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,8 +40,10 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
-        LocalDate localDate = LocalDate.now().plusDays(1L);
-        Date expirationDate = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        LocalDate localDate = LocalDate.now();
+        LocalDate expirationLocalDate = localDate.plusMonths(expirationDate);
+        Date expirationDate = Date.from(expirationLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
